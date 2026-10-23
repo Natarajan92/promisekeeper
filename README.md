@@ -11,6 +11,7 @@ The current implementation scope is **Gate I, T001–T020**: project tooling, st
 - [Tasks](specs/001-payment-case-mvp/tasks.md)
 - [Requirements-quality safety review](specs/001-payment-case-mvp/checklists/safety.md)
 - [Setup and future validation guide](specs/001-payment-case-mvp/quickstart.md)
+- [Gate I review and verification evidence](reports/phase-i.md)
 
 ## Gate I development
 

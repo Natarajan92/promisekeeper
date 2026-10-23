@@ -10,6 +10,17 @@ from promisekeeper.domain.evidence import Availability, Issue, require_same_case
 from promisekeeper.domain.money import parse_money
 
 
+def _whole_token(token, text):
+    # A terminal sentence period is punctuation; dots inside references are not.
+    return token is None or re.search(
+        r"(?<![\w/:+.\-])" + re.escape(token) + r"(?![\w/:+\-]|\.\w)", text) is not None
+
+
+def _has_stated_date(text):
+    return re.search(r"\b(?:today|tomorrow|[0-9]{1,2} [A-Za-z]+ [0-9]{4}|[0-9]{4}-[0-9]{2}-[0-9]{2})\b",
+                     text, re.I) is not None
+
+
 @dataclass(frozen=True, slots=True)
 class CommitmentState:
     id: UUID | None
@@ -66,6 +77,8 @@ def reconcile_commitments(case, extraction, financial):
                 raise ValueError("Candidate token is unsupported by its quote")
         if not amount_supported(candidate.amount_text, candidate.quote):
             raise ValueError("Candidate amount token is incomplete")
+        if not _whole_token(candidate.currency_text, candidate.quote):
+            raise ValueError("Candidate currency token is incomplete")
         if candidate.speaker is not None and candidate.speaker not in {original.speaker, case.client}:
             raise ValueError("Candidate speaker is unsupported")
         covered.add(candidate.source.id)
@@ -134,9 +147,11 @@ def reconcile_commitments(case, extraction, financial):
                 raise ValueError("Commitment token is unsupported by its anchored clause")
         if not amount_supported(candidate.amount_text, clause):
             raise ValueError("Commitment amount token is incomplete")
+        if not _whole_token(candidate.date_text, clause) or not _whole_token(candidate.date_text, candidate.quote):
+            raise ValueError("Commitment date token is incomplete")
         if re.search(r"\bINR\s+[-+]?[0-9]", clause) and (candidate.amount_text is None or candidate.currency_text is None):
             issue("MISSING_EXTRACTION", (candidate.source.source_id,), "A stated promise amount/currency was not extracted.")
-        if candidate.date_text is None and re.search(r"[0-9]{1,2} [A-Za-z]+ [0-9]{4}|[0-9]{4}-[0-9]{2}-[0-9]{2}", clause):
+        if candidate.date_text is None and _has_stated_date(clause):
             issue("MISSING_EXTRACTION", (candidate.source.source_id,), "A stated promise date was not extracted.")
         if anchor and anchor.id in seen_anchors:
             raise ValueError("Duplicate commitment candidate for one anchor")
@@ -190,8 +205,11 @@ def reconcile_commitments(case, extraction, financial):
     for candidate in extraction.claims:
         validate(candidate)
         for token in (candidate.payment_date_text, candidate.transaction_reference_text):
-            if token is not None and token not in candidate.quote:
+            if not _whole_token(token, candidate.quote):
                 raise ValueError("Claim token is unsupported by its quote")
+        omitted_date = candidate.payment_date_text is None and _has_stated_date(candidate.source.original_content)
+        if omitted_date:
+            issue("MISSING_EXTRACTION", (candidate.source.source_id,), "A stated payment date was not extracted.")
         amount = parse_money(candidate.amount_text, candidate.currency_text).minor_units
         stated_day = source_day(candidate.payment_date_text, original_at=candidate.source.event_at)
         matching = [payment for payment in financial.eligible_payments
@@ -201,7 +219,8 @@ def reconcile_commitments(case, extraction, financial):
         if len(matching) == 1 and amount is not None:
             payment = matching[0]
             actual_day = payment.source.event_at.astimezone(candidate.source.event_at.tzinfo if candidate.source.event_at else IST).date() if payment.source.event_at else None
-            compatible_day = candidate.payment_date_text is None or (stated_day is not None and (actual_day is None or stated_day == actual_day))
+            compatible_day = not omitted_date and (candidate.payment_date_text is None or
+                                                   (stated_day is not None and stated_day == actual_day))
             resolved = (parse_money(payment.amount_text, payment.currency_text).minor_units == amount and compatible_day)
         claims.append(ClaimState(candidate.source.source_id, resolved, candidate.transaction_reference_text is None))
     for message in case.messages:

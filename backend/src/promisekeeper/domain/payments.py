@@ -41,6 +41,7 @@ def reconcile_payments(case):
     def active(records, payment=False):
         by_id = {record.source.id: record for record in records}
         superseded = set()
+        successors = {}
         for record in records:
             target = record.source.supersedes_version_id
             if target is None:
@@ -64,7 +65,24 @@ def reconcile_payments(case):
                 cursor = by_id[cursor].source.supersedes_version_id
             else:
                 superseded.add(target)
-        return tuple(record for record in records if record.source.id not in superseded)
+                successors.setdefault(target, []).append(record)
+        ambiguous = set()
+        for target, corrections in successors.items():
+            if len(corrections) > 1:
+                issue("CONFLICTING_CORRECTIONS", (by_id[target], *corrections),
+                      "Competing successors do not establish independent settlements.", unknown=True)
+                ambiguous.update(record.source.id for record in corrections)
+        # A descendant cannot silently select one side of an unresolved fork.
+        while True:
+            descendants = {record.source.id for record in records
+                           if record.source.supersedes_version_id in ambiguous}
+            if descendants <= ambiguous:
+                break
+            ambiguous.update(descendants)
+        ambiguous_refs = {record.transaction_ref for record in records
+                          if payment and record.source.id in ambiguous}
+        return tuple(record for record in records if record.source.id not in superseded | ambiguous
+                     and not (payment and record.transaction_ref in ambiguous_refs))
 
     invoices = active(case.invoices)
     invoice_values = []

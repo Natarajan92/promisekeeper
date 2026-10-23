@@ -1,12 +1,12 @@
 # Implementation and Validation Guide
 
-**Status**: Planned commands for the future authorized implementation. This repository currently contains design artifacts; application files, lockfiles, scripts, tests and databases described below do not yet exist. None of the product commands/evaluations below were executed while writing this plan.
+**Status**: Gate I tooling, lockfiles, approved fixtures and pure domain rules are implemented under the owner's authorization. See [the Gate I report](../../reports/phase-i.md) for executed checks. Database/server commands, case UI, Investigator integration, review/closure workflows and release evaluations below remain planned for their later gates; they are not working application commands yet.
 
 ## Prerequisites and phase authorization
 
 Follow the separate human gates in [plan.md](plan.md). Generate tasks before implementation; get explicit authorization for each implementation phase. Use Windows 11, Node 24, npm.cmd, uv and a managed Python 3.12 environment. Do not use the currently installed Python 3.10 as the application interpreter. Provider credentials/account access are required only for LIVE mode; keep them server-side and out of source control/logs.
 
-During Phase I, create backend/frontend manifests, scripts and ignore rules for `.runtime/`, virtual environments, credentials and generated build output. Resolve/test compatible dependencies and commit uv.lock/package-lock.json. Subsequent setup uses frozen lockfiles. No Git repository/branch was created by planning.
+Phase I created backend/frontend manifests, test configuration and ignore rules for `.runtime/`, virtual environments, credentials and generated build output, with resolved uv.lock/package-lock.json. Subsequent setup uses frozen lockfiles. Repository setup was separately owner-authorized after planning: private Natarajan92/promisekeeper, feature branch 001-payment-case-mvp.
 
 ## Future setup (PowerShell, repository root)
 

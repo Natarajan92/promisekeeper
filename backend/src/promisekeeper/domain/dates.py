@@ -53,7 +53,7 @@ def deadline(raw, *, original_at=None):
     if raw is None:
         return DateValue(raw, None, "UNKNOWN_DATE")
     try:
-        if "T" in raw:
+        if re.match(r"^[0-9]{4}-[0-9]{2}-[0-9]{2}[Tt]", raw):
             instant = parse_instant(raw)
         else:
             day = _calendar_day(raw, original_at) + timedelta(days=1)
