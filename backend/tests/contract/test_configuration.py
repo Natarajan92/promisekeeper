@@ -65,3 +65,8 @@ def test_subprocess_storage_is_isolated_and_credentials_removed(run_python, monk
     assert result.returncode == 0
     assert "subprocess.sqlite" in result.stdout
     assert result.stdout.rstrip().endswith("False")
+
+
+def test_offline_subprocess_cannot_bypass_external_network_blocking(run_python):
+    result=run_python("import socket\ns=socket.socket();s.settimeout(0.05)\ntry: s.connect(('203.0.113.10',443))\nexcept RuntimeError: print('BLOCKED')\nexcept OSError: print('NOT_BLOCKED')")
+    assert result.returncode==0 and result.stdout.strip()=="BLOCKED"

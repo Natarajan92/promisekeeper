@@ -1,0 +1,876 @@
+{
+  "scope": "Gate I pure domain; no database, API, browser workflow or LLM calls",
+  "records": [
+    {
+      "scenario": "BASELINE",
+      "case": "PK-001",
+      "expected": {
+        "action": "FOLLOW_UP",
+        "balance_minor": "8000000",
+        "review_at": null
+      },
+      "actual": {
+        "action": "FOLLOW_UP",
+        "balance_minor": "8000000",
+        "review_at": null
+      },
+      "passed": true,
+      "status": "COMPLETE",
+      "reason": "VERIFIED_OVERDUE_BALANCE",
+      "source_refs": [
+        "PK-001-I1",
+        "PK-001-L1",
+        "PK-001-M1"
+      ]
+    },
+    {
+      "scenario": "PK-001-U1",
+      "case": "PK-001",
+      "expected": {
+        "action": "WAIT",
+        "balance_minor": "8000000",
+        "review_at": "2026-10-26T00:00:00+05:30"
+      },
+      "actual": {
+        "action": "WAIT",
+        "balance_minor": "8000000",
+        "review_at": "2026-10-25T18:30:00+00:00"
+      },
+      "passed": true,
+      "status": "COMPLETE",
+      "reason": "ACTIVE_PROMISE_OR_NOT_DUE",
+      "source_refs": [
+        "PK-001-I1",
+        "PK-001-L1",
+        "PK-001-M1",
+        "PK-001-M2"
+      ]
+    },
+    {
+      "scenario": "BASELINE",
+      "case": "PK-002",
+      "expected": {
+        "action": "WAIT",
+        "balance_minor": "5000000",
+        "review_at": "2026-10-26T00:00:00+05:30"
+      },
+      "actual": {
+        "action": "WAIT",
+        "balance_minor": "5000000",
+        "review_at": "2026-10-25T18:30:00+00:00"
+      },
+      "passed": true,
+      "status": "COMPLETE",
+      "reason": "ACTIVE_PROMISE_OR_NOT_DUE",
+      "source_refs": [
+        "PK-002-I1",
+        "PK-002-L1",
+        "PK-002-M1"
+      ]
+    },
+    {
+      "scenario": "PK-002-U1",
+      "case": "PK-002",
+      "expected": {
+        "action": "FOLLOW_UP",
+        "balance_minor": "5000000",
+        "review_at": null
+      },
+      "actual": {
+        "action": "FOLLOW_UP",
+        "balance_minor": "5000000",
+        "review_at": null
+      },
+      "passed": true,
+      "status": "COMPLETE",
+      "reason": "VERIFIED_OVERDUE_BALANCE",
+      "source_refs": [
+        "PK-002-I1",
+        "PK-002-L1",
+        "PK-002-M1"
+      ]
+    },
+    {
+      "scenario": "BASELINE",
+      "case": "PK-003",
+      "expected": {
+        "action": "VERIFY_PAYMENT",
+        "balance_minor": "6000000",
+        "review_at": null
+      },
+      "actual": {
+        "action": "VERIFY_PAYMENT",
+        "balance_minor": "6000000",
+        "review_at": null
+      },
+      "passed": true,
+      "status": "COMPLETE",
+      "reason": "PAYMENT_CLAIM_UNVERIFIED",
+      "source_refs": [
+        "PK-003-I1",
+        "PK-003-L1",
+        "PK-003-M1"
+      ]
+    },
+    {
+      "scenario": "PK-003-U1",
+      "case": "PK-003",
+      "expected": {
+        "action": "CLOSE",
+        "balance_minor": "0",
+        "review_at": null
+      },
+      "actual": {
+        "action": "CLOSE",
+        "balance_minor": "0",
+        "review_at": null
+      },
+      "passed": true,
+      "status": "COMPLETE",
+      "reason": "VERIFIED_SETTLEMENT",
+      "source_refs": [
+        "PK-003-I1",
+        "PK-003-L1",
+        "PK-003-L2",
+        "PK-003-M1"
+      ]
+    },
+    {
+      "scenario": "FV-01",
+      "case": "PK-001",
+      "expected": {
+        "action": "VERIFY_PAYMENT",
+        "balance_minor": null,
+        "review_at": null
+      },
+      "actual": {
+        "action": "VERIFY_PAYMENT",
+        "balance_minor": null,
+        "review_at": null
+      },
+      "passed": true,
+      "status": "LIMITED",
+      "reason": "INVOICE_UNAVAILABLE",
+      "source_refs": [
+        "PK-001-I1",
+        "PK-001-L1",
+        "PK-001-M1"
+      ]
+    },
+    {
+      "scenario": "FV-02-INVOICE",
+      "case": "PK-001",
+      "expected": {
+        "action": "VERIFY_PAYMENT",
+        "balance_minor": null,
+        "review_at": null
+      },
+      "actual": {
+        "action": "VERIFY_PAYMENT",
+        "balance_minor": null,
+        "review_at": null
+      },
+      "passed": true,
+      "status": "LIMITED",
+      "reason": "UNKNOWN_AMOUNT",
+      "source_refs": [
+        "PK-001-I1",
+        "PK-001-L1",
+        "PK-001-M1"
+      ]
+    },
+    {
+      "scenario": "FV-02-PROMISE",
+      "case": "PK-001",
+      "expected": {
+        "action": "FOLLOW_UP",
+        "balance_minor": "8000000",
+        "review_at": null
+      },
+      "actual": {
+        "action": "FOLLOW_UP",
+        "balance_minor": "8000000",
+        "review_at": null
+      },
+      "passed": true,
+      "status": "COMPLETE",
+      "reason": "VERIFIED_OVERDUE_BALANCE",
+      "source_refs": [
+        "PK-001-I1",
+        "PK-001-L1",
+        "PK-001-M1"
+      ]
+    },
+    {
+      "scenario": "FV-03",
+      "case": "PK-003",
+      "expected": {
+        "action": "VERIFY_PAYMENT",
+        "balance_minor": "6000000",
+        "review_at": null
+      },
+      "actual": {
+        "action": "VERIFY_PAYMENT",
+        "balance_minor": "6000000",
+        "review_at": null
+      },
+      "passed": true,
+      "status": "COMPLETE",
+      "reason": "UNALLOCATED_PAYMENT",
+      "source_refs": [
+        "PK-003-I1",
+        "PK-003-L1",
+        "PK-003-L2",
+        "PK-003-M1"
+      ]
+    },
+    {
+      "scenario": "FV-04",
+      "case": "PK-002",
+      "expected": {
+        "action": "VERIFY_PAYMENT",
+        "balance_minor": "5000000",
+        "review_at": null
+      },
+      "actual": {
+        "action": "VERIFY_PAYMENT",
+        "balance_minor": "5000000",
+        "review_at": null
+      },
+      "passed": true,
+      "status": "COMPLETE",
+      "reason": "CONFLICTING_PROMISES",
+      "source_refs": [
+        "PK-002-FV-04-M1",
+        "PK-002-I1",
+        "PK-002-L1",
+        "PK-002-M1"
+      ]
+    },
+    {
+      "scenario": "FV-05",
+      "case": "PK-003",
+      "expected": {
+        "action": "VERIFY_PAYMENT",
+        "balance_minor": null,
+        "review_at": null
+      },
+      "actual": {
+        "action": "VERIFY_PAYMENT",
+        "balance_minor": null,
+        "review_at": null
+      },
+      "passed": true,
+      "status": "LIMITED",
+      "reason": "LEDGER_UNAVAILABLE",
+      "source_refs": [
+        "PK-003-I1",
+        "PK-003-L1",
+        "PK-003-M1"
+      ]
+    },
+    {
+      "scenario": "FV-06-DUPLICATE",
+      "case": "PK-003",
+      "expected": {
+        "action": "CLOSE",
+        "balance_minor": "0",
+        "review_at": null
+      },
+      "actual": {
+        "action": "CLOSE",
+        "balance_minor": "0",
+        "review_at": null
+      },
+      "passed": true,
+      "status": "COMPLETE",
+      "reason": "VERIFIED_SETTLEMENT",
+      "source_refs": [
+        "PK-003-FV-06-L1",
+        "PK-003-I1",
+        "PK-003-L1",
+        "PK-003-L2",
+        "PK-003-M1"
+      ]
+    },
+    {
+      "scenario": "FV-06-REVERSAL",
+      "case": "PK-003",
+      "expected": {
+        "action": "VERIFY_PAYMENT",
+        "balance_minor": "6000000",
+        "review_at": null
+      },
+      "actual": {
+        "action": "VERIFY_PAYMENT",
+        "balance_minor": "6000000",
+        "review_at": null
+      },
+      "passed": true,
+      "status": "COMPLETE",
+      "reason": "PAYMENT_CLAIM_UNVERIFIED",
+      "source_refs": [
+        "PK-003-FV-06-R1",
+        "PK-003-I1",
+        "PK-003-L1",
+        "PK-003-L2",
+        "PK-003-M1"
+      ]
+    },
+    {
+      "scenario": "FV-07-CURRENCY",
+      "case": "PK-003",
+      "expected": {
+        "action": "VERIFY_PAYMENT",
+        "balance_minor": null,
+        "review_at": null
+      },
+      "actual": {
+        "action": "VERIFY_PAYMENT",
+        "balance_minor": null,
+        "review_at": null
+      },
+      "passed": true,
+      "status": "LIMITED",
+      "reason": "UNSUPPORTED_CURRENCY",
+      "source_refs": [
+        "PK-003-I1",
+        "PK-003-L1",
+        "PK-003-L2",
+        "PK-003-M1"
+      ]
+    },
+    {
+      "scenario": "FV-07-MISSING",
+      "case": "PK-003",
+      "expected": {
+        "action": "VERIFY_PAYMENT",
+        "balance_minor": null,
+        "review_at": null
+      },
+      "actual": {
+        "action": "VERIFY_PAYMENT",
+        "balance_minor": null,
+        "review_at": null
+      },
+      "passed": true,
+      "status": "LIMITED",
+      "reason": "UNKNOWN_AMOUNT",
+      "source_refs": [
+        "PK-003-I1",
+        "PK-003-L1",
+        "PK-003-L2",
+        "PK-003-M1"
+      ]
+    },
+    {
+      "scenario": "FV-07-NEGATIVE",
+      "case": "PK-003",
+      "expected": {
+        "action": "VERIFY_PAYMENT",
+        "balance_minor": null,
+        "review_at": null
+      },
+      "actual": {
+        "action": "VERIFY_PAYMENT",
+        "balance_minor": null,
+        "review_at": null
+      },
+      "passed": true,
+      "status": "LIMITED",
+      "reason": "NEGATIVE_AMOUNT",
+      "source_refs": [
+        "PK-003-I1",
+        "PK-003-L1",
+        "PK-003-L2",
+        "PK-003-M1"
+      ]
+    },
+    {
+      "scenario": "FV-07-OVERPAYMENT",
+      "case": "PK-003",
+      "expected": {
+        "action": "VERIFY_PAYMENT",
+        "balance_minor": "-1000000",
+        "review_at": null
+      },
+      "actual": {
+        "action": "VERIFY_PAYMENT",
+        "balance_minor": "-1000000",
+        "review_at": null
+      },
+      "passed": true,
+      "status": "COMPLETE",
+      "reason": "OVERPAYMENT",
+      "source_refs": [
+        "PK-003-I1",
+        "PK-003-L1",
+        "PK-003-L2",
+        "PK-003-M1"
+      ]
+    },
+    {
+      "scenario": "FV-07-PRECISION",
+      "case": "PK-003",
+      "expected": {
+        "action": "VERIFY_PAYMENT",
+        "balance_minor": null,
+        "review_at": null
+      },
+      "actual": {
+        "action": "VERIFY_PAYMENT",
+        "balance_minor": null,
+        "review_at": null
+      },
+      "passed": true,
+      "status": "LIMITED",
+      "reason": "INVALID_PRECISION",
+      "source_refs": [
+        "PK-003-I1",
+        "PK-003-L1",
+        "PK-003-L2",
+        "PK-003-M1"
+      ]
+    },
+    {
+      "scenario": "FV-08-SOON",
+      "case": "PK-002",
+      "expected": {
+        "action": "VERIFY_PAYMENT",
+        "balance_minor": "5000000",
+        "review_at": null
+      },
+      "actual": {
+        "action": "VERIFY_PAYMENT",
+        "balance_minor": "5000000",
+        "review_at": null
+      },
+      "passed": true,
+      "status": "COMPLETE",
+      "reason": "PROMISE_DATE_UNRESOLVED",
+      "source_refs": [
+        "PK-002-I1",
+        "PK-002-L1",
+        "PK-002-M1"
+      ]
+    },
+    {
+      "scenario": "FV-08-TOMORROW",
+      "case": "PK-002",
+      "expected": {
+        "action": "VERIFY_PAYMENT",
+        "balance_minor": "5000000",
+        "review_at": null
+      },
+      "actual": {
+        "action": "VERIFY_PAYMENT",
+        "balance_minor": "5000000",
+        "review_at": null
+      },
+      "passed": true,
+      "status": "COMPLETE",
+      "reason": "PROMISE_DATE_UNRESOLVED",
+      "source_refs": [
+        "PK-002-I1",
+        "PK-002-L1",
+        "PK-002-M1"
+      ]
+    },
+    {
+      "scenario": "FV-12",
+      "case": "PK-001",
+      "expected": {
+        "action": "FOLLOW_UP",
+        "balance_minor": "8000000",
+        "review_at": null
+      },
+      "actual": {
+        "action": "FOLLOW_UP",
+        "balance_minor": "8000000",
+        "review_at": null
+      },
+      "passed": true,
+      "status": "COMPLETE",
+      "reason": "VERIFIED_OVERDUE_BALANCE",
+      "source_refs": [
+        "PK-001-I1",
+        "PK-001-L1",
+        "PK-001-M1"
+      ]
+    },
+    {
+      "scenario": "FV-13",
+      "case": "PK-003",
+      "expected": {
+        "action": "VERIFY_PAYMENT",
+        "balance_minor": "6000000",
+        "review_at": null
+      },
+      "actual": {
+        "action": "VERIFY_PAYMENT",
+        "balance_minor": "6000000",
+        "review_at": null
+      },
+      "passed": true,
+      "status": "COMPLETE",
+      "reason": "PAYMENT_CLAIM_UNVERIFIED",
+      "source_refs": [
+        "PK-003-I1",
+        "PK-003-L1",
+        "PK-003-M1"
+      ]
+    },
+    {
+      "scenario": "FV-14-INVOICE",
+      "case": "PK-001",
+      "expected": {
+        "action": "VERIFY_PAYMENT",
+        "balance_minor": null,
+        "review_at": null
+      },
+      "actual": {
+        "action": "VERIFY_PAYMENT",
+        "balance_minor": null,
+        "review_at": null
+      },
+      "passed": true,
+      "status": "LIMITED",
+      "reason": "CONFLICTING_INVOICES",
+      "source_refs": [
+        "PK-001-FV-14-I1",
+        "PK-001-I1",
+        "PK-001-L1",
+        "PK-001-M1"
+      ]
+    },
+    {
+      "scenario": "FV-14-PAYMENT",
+      "case": "PK-001",
+      "expected": {
+        "action": "VERIFY_PAYMENT",
+        "balance_minor": null,
+        "review_at": null
+      },
+      "actual": {
+        "action": "VERIFY_PAYMENT",
+        "balance_minor": null,
+        "review_at": null
+      },
+      "passed": true,
+      "status": "LIMITED",
+      "reason": "CONFLICTING_PAYMENTS",
+      "source_refs": [
+        "PK-001-FV-14-L1",
+        "PK-001-I1",
+        "PK-001-L1",
+        "PK-001-M1"
+      ]
+    },
+    {
+      "scenario": "FV-15-TIE",
+      "case": "PK-001",
+      "expected": {
+        "action": "FOLLOW_UP",
+        "balance_minor": "8000000",
+        "review_at": null
+      },
+      "actual": {
+        "action": "FOLLOW_UP",
+        "balance_minor": "8000000",
+        "review_at": null
+      },
+      "passed": true,
+      "status": "COMPLETE",
+      "reason": "VERIFIED_OVERDUE_BALANCE",
+      "source_refs": [
+        "PK-001-I1",
+        "PK-001-L1",
+        "PK-001-M1"
+      ]
+    },
+    {
+      "scenario": "FV-15-UNDATED",
+      "case": "PK-001",
+      "expected": {
+        "action": "FOLLOW_UP",
+        "balance_minor": "8000000",
+        "review_at": null
+      },
+      "actual": {
+        "action": "FOLLOW_UP",
+        "balance_minor": "8000000",
+        "review_at": null
+      },
+      "passed": true,
+      "status": "COMPLETE",
+      "reason": "VERIFIED_OVERDUE_BALANCE",
+      "source_refs": [
+        "PK-001-I1",
+        "PK-001-L1",
+        "PK-001-M1"
+      ]
+    },
+    {
+      "scenario": "FV-16-LINKED",
+      "case": "PK-002",
+      "expected": {
+        "action": "FOLLOW_UP",
+        "balance_minor": "3000000",
+        "review_at": null
+      },
+      "actual": {
+        "action": "FOLLOW_UP",
+        "balance_minor": "3000000",
+        "review_at": null
+      },
+      "passed": true,
+      "status": "COMPLETE",
+      "reason": "VERIFIED_OVERDUE_BALANCE",
+      "source_refs": [
+        "PK-002-FV-16-A1",
+        "PK-002-FV-16-L1",
+        "PK-002-I1",
+        "PK-002-L1",
+        "PK-002-M1"
+      ]
+    },
+    {
+      "scenario": "FV-16-UNLINKED",
+      "case": "PK-002",
+      "expected": {
+        "action": "VERIFY_PAYMENT",
+        "balance_minor": "3000000",
+        "review_at": null
+      },
+      "actual": {
+        "action": "VERIFY_PAYMENT",
+        "balance_minor": "3000000",
+        "review_at": null
+      },
+      "passed": true,
+      "status": "COMPLETE",
+      "reason": "COMMITMENT_ATTRIBUTION_UNRESOLVED",
+      "source_refs": [
+        "PK-002-FV-16-L1",
+        "PK-002-I1",
+        "PK-002-L1",
+        "PK-002-M1"
+      ]
+    },
+    {
+      "scenario": "FV-18-A",
+      "case": "PK-002",
+      "expected": {
+        "action": "WAIT",
+        "balance_minor": "5000000",
+        "review_at": "2026-10-25T00:00:00+05:30"
+      },
+      "actual": {
+        "action": "WAIT",
+        "balance_minor": "5000000",
+        "review_at": "2026-10-24T18:30:00+00:00"
+      },
+      "passed": true,
+      "status": "COMPLETE",
+      "reason": "ACTIVE_PROMISE_OR_NOT_DUE",
+      "source_refs": [
+        "PK-002-I1",
+        "PK-002-L1",
+        "PK-002-M1"
+      ]
+    },
+    {
+      "scenario": "FV-18-A-CLOCK-1",
+      "case": "PK-002",
+      "expected": {
+        "action": "WAIT",
+        "balance_minor": "5000000",
+        "review_at": "2026-10-27T00:00:00+05:30"
+      },
+      "actual": {
+        "action": "WAIT",
+        "balance_minor": "5000000",
+        "review_at": "2026-10-26T18:30:00+00:00"
+      },
+      "passed": true,
+      "status": "COMPLETE",
+      "reason": "ACTIVE_PROMISE_OR_NOT_DUE",
+      "source_refs": [
+        "PK-002-I1",
+        "PK-002-L1",
+        "PK-002-M1"
+      ]
+    },
+    {
+      "scenario": "FV-18-A-CLOCK-2",
+      "case": "PK-002",
+      "expected": {
+        "action": "FOLLOW_UP",
+        "balance_minor": "5000000",
+        "review_at": null
+      },
+      "actual": {
+        "action": "FOLLOW_UP",
+        "balance_minor": "5000000",
+        "review_at": null
+      },
+      "passed": true,
+      "status": "COMPLETE",
+      "reason": "VERIFIED_OVERDUE_BALANCE",
+      "source_refs": [
+        "PK-002-I1",
+        "PK-002-L1",
+        "PK-002-M1"
+      ]
+    },
+    {
+      "scenario": "FV-18-B",
+      "case": "PK-002",
+      "expected": {
+        "action": "WAIT",
+        "balance_minor": "5000000",
+        "review_at": "2026-10-25T00:00:00+05:30"
+      },
+      "actual": {
+        "action": "WAIT",
+        "balance_minor": "5000000",
+        "review_at": "2026-10-24T18:30:00+00:00"
+      },
+      "passed": true,
+      "status": "COMPLETE",
+      "reason": "ACTIVE_PROMISE_OR_NOT_DUE",
+      "source_refs": [
+        "PK-002-I1",
+        "PK-002-L1",
+        "PK-002-M1"
+      ]
+    },
+    {
+      "scenario": "FV-18-B-CLOCK-1",
+      "case": "PK-002",
+      "expected": {
+        "action": "WAIT",
+        "balance_minor": "5000000",
+        "review_at": "2026-10-27T00:00:00+05:30"
+      },
+      "actual": {
+        "action": "WAIT",
+        "balance_minor": "5000000",
+        "review_at": "2026-10-26T18:30:00+00:00"
+      },
+      "passed": true,
+      "status": "COMPLETE",
+      "reason": "ACTIVE_PROMISE_OR_NOT_DUE",
+      "source_refs": [
+        "PK-002-I1",
+        "PK-002-L1",
+        "PK-002-M1"
+      ]
+    },
+    {
+      "scenario": "FV-18-B-CLOCK-2",
+      "case": "PK-002",
+      "expected": {
+        "action": "FOLLOW_UP",
+        "balance_minor": "5000000",
+        "review_at": null
+      },
+      "actual": {
+        "action": "FOLLOW_UP",
+        "balance_minor": "5000000",
+        "review_at": null
+      },
+      "passed": true,
+      "status": "COMPLETE",
+      "reason": "VERIFIED_OVERDUE_BALANCE",
+      "source_refs": [
+        "PK-002-I1",
+        "PK-002-L1",
+        "PK-002-M1"
+      ]
+    }
+  ],
+  "passed": 35,
+  "total": 35,
+  "workflow_presets": [
+    {
+      "variant": "FV-09-EXTRACTION",
+      "workflow_execution": "UNEXECUTED"
+    },
+    {
+      "variant": "FV-09-INTERRUPTION",
+      "workflow_execution": "UNEXECUTED"
+    },
+    {
+      "variant": "FV-09-RETRIEVAL",
+      "workflow_execution": "UNEXECUTED"
+    },
+    {
+      "variant": "FV-09-RETRY",
+      "workflow_execution": "UNEXECUTED"
+    },
+    {
+      "variant": "FV-10-EDIT",
+      "workflow_execution": "UNEXECUTED"
+    },
+    {
+      "variant": "FV-10-EVIDENCE",
+      "workflow_execution": "UNEXECUTED"
+    },
+    {
+      "variant": "FV-10-RECIPIENT",
+      "workflow_execution": "UNEXECUTED"
+    },
+    {
+      "variant": "FV-10-REPEAT",
+      "workflow_execution": "UNEXECUTED"
+    },
+    {
+      "variant": "FV-11-AMOUNT",
+      "workflow_execution": "UNEXECUTED"
+    },
+    {
+      "variant": "FV-11-FEE",
+      "workflow_execution": "UNEXECUTED"
+    },
+    {
+      "variant": "FV-11-NEUTRAL",
+      "workflow_execution": "UNEXECUTED"
+    },
+    {
+      "variant": "FV-11-PLACEHOLDER",
+      "workflow_execution": "UNEXECUTED"
+    },
+    {
+      "variant": "FV-12",
+      "workflow_execution": "UNEXECUTED"
+    },
+    {
+      "variant": "FV-13",
+      "workflow_execution": "UNEXECUTED"
+    },
+    {
+      "variant": "FV-17-EVIDENCE",
+      "workflow_execution": "UNEXECUTED"
+    },
+    {
+      "variant": "FV-17-SUPERSEDED",
+      "workflow_execution": "UNEXECUTED"
+    },
+    {
+      "variant": "FV-17-UNCHANGED",
+      "workflow_execution": "UNEXECUTED"
+    }
+  ],
+  "environment": {
+    "python": "3.12.15",
+    "sqlite": "3.53.1",
+    "packages": {
+      "fastapi": "0.161.1",
+      "pydantic": "2.14.1",
+      "openai": "2.54.0",
+      "pytest": "9.1.1",
+      "tzdata": "2026.5"
+    }
+  }
+}

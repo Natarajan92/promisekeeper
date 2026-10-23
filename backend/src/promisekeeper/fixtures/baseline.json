@@ -1,0 +1,299 @@
+{
+  "schema_version": "1",
+  "catalogue_version": "release-0.1",
+  "reference_at": "2026-10-23T10:00:00+05:30",
+  "cases": [
+    {
+      "id": "PK-001",
+      "client": "Northstar Analytics",
+      "invoice_id": "NS-104",
+      "ledger_availability": "AVAILABLE",
+      "ledger_complete": true,
+      "sources": [
+        {
+          "source_id": "PK-001-I1",
+          "kind": "INVOICE",
+          "original_content": "Fictional invoice NS-104; client Northstar Analytics; INR 120,000.00; due 10 October 2026.",
+          "data": {
+            "invoice_id": "NS-104",
+            "client": "Northstar Analytics",
+            "amount_text": "120,000.00",
+            "currency_text": "INR",
+            "due_text": "10 October 2026"
+          },
+          "event_at": null,
+          "arrived_at": "2026-10-23T10:00:00+05:30",
+          "availability": "AVAILABLE",
+          "authoritative": true,
+          "version": 1
+        },
+        {
+          "source_id": "PK-001-L1",
+          "kind": "LEDGER",
+          "original_content": "Fictional verified settled ledger transaction NS-T1; INR 40,000.00; invoice NS-104.",
+          "data": {
+            "transaction_ref": "NS-T1",
+            "amount_text": "40,000.00",
+            "currency_text": "INR",
+            "invoice_id": "NS-104",
+            "verification_status": "VERIFIED",
+            "settled": true
+          },
+          "event_at": "2026-10-12T09:00:00+05:30",
+          "arrived_at": "2026-10-23T10:00:00+05:30",
+          "availability": "AVAILABLE",
+          "authoritative": true,
+          "version": 1
+        },
+        {
+          "source_id": "PK-001-M1",
+          "kind": "MESSAGE",
+          "original_content": "We will pay INR 80,000 by 20 October 2026.",
+          "data": {
+            "speaker": "Fictional client",
+            "candidate": {
+              "kind": "COMMITMENT",
+              "clause": "We will pay INR 80,000 by 20 October 2026.",
+              "commitment_key": "PK-001-M1-C1",
+              "amount_text": "80,000",
+              "currency_text": "INR",
+              "date_text": "20 October 2026",
+              "explicitly_replaces_source_id": null
+            }
+          },
+          "event_at": "2026-10-13T11:00:00+05:30",
+          "arrived_at": "2026-10-23T10:00:00+05:30",
+          "availability": "AVAILABLE",
+          "authoritative": false,
+          "version": 1
+        }
+      ],
+      "expected": {
+        "action": "FOLLOW_UP",
+        "balance_minor": "8000000",
+        "review_at": null
+      }
+    },
+    {
+      "id": "PK-002",
+      "client": "Meridian Software",
+      "invoice_id": "MS-208",
+      "ledger_availability": "AVAILABLE",
+      "ledger_complete": true,
+      "sources": [
+        {
+          "source_id": "PK-002-I1",
+          "kind": "INVOICE",
+          "original_content": "Fictional invoice MS-208; client Meridian Software; INR 75,000.00; due 18 October 2026.",
+          "data": {
+            "invoice_id": "MS-208",
+            "client": "Meridian Software",
+            "amount_text": "75,000.00",
+            "currency_text": "INR",
+            "due_text": "18 October 2026"
+          },
+          "event_at": null,
+          "arrived_at": "2026-10-23T10:00:00+05:30",
+          "availability": "AVAILABLE",
+          "authoritative": true,
+          "version": 1
+        },
+        {
+          "source_id": "PK-002-L1",
+          "kind": "LEDGER",
+          "original_content": "Fictional verified settled ledger transaction MS-T1; INR 25,000.00; invoice MS-208.",
+          "data": {
+            "transaction_ref": "MS-T1",
+            "amount_text": "25,000.00",
+            "currency_text": "INR",
+            "invoice_id": "MS-208",
+            "verification_status": "VERIFIED",
+            "settled": true
+          },
+          "event_at": "2026-10-19T09:00:00+05:30",
+          "arrived_at": "2026-10-23T10:00:00+05:30",
+          "availability": "AVAILABLE",
+          "authoritative": true,
+          "version": 1
+        },
+        {
+          "source_id": "PK-002-M1",
+          "kind": "MESSAGE",
+          "original_content": "We will pay INR 50,000 by 25 October 2026.",
+          "data": {
+            "speaker": "Fictional client",
+            "candidate": {
+              "kind": "COMMITMENT",
+              "clause": "We will pay INR 50,000 by 25 October 2026.",
+              "commitment_key": "PK-002-M1-C1",
+              "amount_text": "50,000",
+              "currency_text": "INR",
+              "date_text": "25 October 2026",
+              "explicitly_replaces_source_id": null
+            }
+          },
+          "event_at": "2026-10-21T15:00:00+05:30",
+          "arrived_at": "2026-10-23T10:00:00+05:30",
+          "availability": "AVAILABLE",
+          "authoritative": false,
+          "version": 1
+        }
+      ],
+      "expected": {
+        "action": "WAIT",
+        "balance_minor": "5000000",
+        "review_at": "2026-10-26T00:00:00+05:30"
+      }
+    },
+    {
+      "id": "PK-003",
+      "client": "Cedar Retail Labs",
+      "invoice_id": "CR-312",
+      "ledger_availability": "AVAILABLE",
+      "ledger_complete": true,
+      "sources": [
+        {
+          "source_id": "PK-003-I1",
+          "kind": "INVOICE",
+          "original_content": "Fictional invoice CR-312; client Cedar Retail Labs; INR 90,000.00; due 15 October 2026.",
+          "data": {
+            "invoice_id": "CR-312",
+            "client": "Cedar Retail Labs",
+            "amount_text": "90,000.00",
+            "currency_text": "INR",
+            "due_text": "15 October 2026"
+          },
+          "event_at": null,
+          "arrived_at": "2026-10-23T10:00:00+05:30",
+          "availability": "AVAILABLE",
+          "authoritative": true,
+          "version": 1
+        },
+        {
+          "source_id": "PK-003-L1",
+          "kind": "LEDGER",
+          "original_content": "Fictional verified settled ledger transaction CR-T1; INR 30,000.00; invoice CR-312.",
+          "data": {
+            "transaction_ref": "CR-T1",
+            "amount_text": "30,000.00",
+            "currency_text": "INR",
+            "invoice_id": "CR-312",
+            "verification_status": "VERIFIED",
+            "settled": true
+          },
+          "event_at": "2026-10-16T09:00:00+05:30",
+          "arrived_at": "2026-10-23T10:00:00+05:30",
+          "availability": "AVAILABLE",
+          "authoritative": true,
+          "version": 1
+        },
+        {
+          "source_id": "PK-003-M1",
+          "kind": "MESSAGE",
+          "original_content": "We paid the remaining INR 60,000 today; reference CR-T2.",
+          "data": {
+            "speaker": "Fictional client",
+            "candidate": {
+              "kind": "CLAIM",
+              "clause": "We paid the remaining INR 60,000 today; reference CR-T2.",
+              "amount_text": "60,000",
+              "currency_text": "INR",
+              "payment_date_text": "today",
+              "transaction_reference_text": "CR-T2"
+            }
+          },
+          "event_at": "2026-10-22T16:00:00+05:30",
+          "arrived_at": "2026-10-23T10:00:00+05:30",
+          "availability": "AVAILABLE",
+          "authoritative": false,
+          "version": 1
+        }
+      ],
+      "expected": {
+        "action": "VERIFY_PAYMENT",
+        "balance_minor": "6000000",
+        "review_at": null
+      }
+    }
+  ],
+  "events": [
+    {
+      "id": "PK-001-U1",
+      "case_id": "PK-001",
+      "kind": "EVIDENCE",
+      "evaluation_at": "2026-10-23T11:00:00+05:30",
+      "append": [
+        {
+          "source_id": "PK-001-M2",
+          "kind": "MESSAGE",
+          "original_content": "We explicitly replace our 20 October promise: INR 80,000 by 25 October 2026.",
+          "data": {
+            "speaker": "Fictional client",
+            "candidate": {
+              "kind": "COMMITMENT",
+              "clause": "We explicitly replace our 20 October promise: INR 80,000 by 25 October 2026.",
+              "commitment_key": "PK-001-M2-C1",
+              "amount_text": "80,000",
+              "currency_text": "INR",
+              "date_text": "25 October 2026",
+              "explicitly_replaces_source_id": "PK-001-M1"
+            }
+          },
+          "event_at": "2026-10-23T10:30:00+05:30",
+          "arrived_at": "2026-10-23T10:30:00+05:30",
+          "availability": "AVAILABLE",
+          "authoritative": false,
+          "version": 1
+        }
+      ],
+      "expected": {
+        "action": "WAIT",
+        "balance_minor": "8000000",
+        "review_at": "2026-10-26T00:00:00+05:30"
+      }
+    },
+    {
+      "id": "PK-002-U1",
+      "case_id": "PK-002",
+      "kind": "CLOCK",
+      "evaluation_at": "2026-10-26T00:00:00+05:30",
+      "append": [],
+      "expected": {
+        "action": "FOLLOW_UP",
+        "balance_minor": "5000000",
+        "review_at": null
+      }
+    },
+    {
+      "id": "PK-003-U1",
+      "case_id": "PK-003",
+      "kind": "EVIDENCE",
+      "evaluation_at": "2026-10-23T11:05:00+05:30",
+      "append": [
+        {
+          "source_id": "PK-003-L2",
+          "kind": "LEDGER",
+          "original_content": "Fictional verified settled ledger transaction CR-T2; INR 60,000.00; invoice CR-312.",
+          "data": {
+            "transaction_ref": "CR-T2",
+            "amount_text": "60,000.00",
+            "currency_text": "INR",
+            "invoice_id": "CR-312",
+            "verification_status": "VERIFIED",
+            "settled": true
+          },
+          "event_at": "2026-10-22T14:00:00+05:30",
+          "arrived_at": "2026-10-23T11:00:00+05:30",
+          "availability": "AVAILABLE",
+          "authoritative": true,
+          "version": 1
+        }
+      ],
+      "expected": {
+        "action": "CLOSE",
+        "balance_minor": "0",
+        "review_at": null
+      }
+    }
+  ]
+}

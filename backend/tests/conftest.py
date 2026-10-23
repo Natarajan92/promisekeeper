@@ -10,6 +10,7 @@ import subprocess
 import sys
 
 import pytest
+from support.network_guard import install as install_network_guard
 
 
 @dataclass
@@ -49,6 +50,7 @@ def run_python(tmp_path):
         env = {key: value for key, value in os.environ.items()
                if key not in {"OPENAI_API_KEY", "GH_TOKEN", "GITHUB_TOKEN"}}
         env.update(PK_AGENT_MODE="STUB", PK_DB_PATH=str(tmp_path / "subprocess.sqlite"))
+        env["PYTHONPATH"] = str(Path(__file__).resolve().parent / "support")
         return subprocess.run([sys.executable, "-c", script], cwd=tmp_path,
                               env=env, capture_output=True, text=True, timeout=timeout)
     return run
@@ -62,33 +64,4 @@ def block_external_network(monkeypatch, request):
             pytest.skip("Live evaluation requires explicit PK_ALLOW_LIVE_TESTS=1")
         return
 
-    def allowed(host):
-        if host == "localhost":
-            return True
-        try:
-            return ipaddress.ip_address(host).is_loopback
-        except ValueError:
-            return False
-
-    connect = socket.socket.connect
-    connect_ex = socket.socket.connect_ex
-    getaddrinfo = socket.getaddrinfo
-
-    def guard_connect(sock, address):
-        if isinstance(address, tuple) and not allowed(address[0]):
-            raise RuntimeError("External networking is blocked in offline tests")
-        return connect(sock, address)
-
-    def guard_connect_ex(sock, address):
-        if isinstance(address, tuple) and not allowed(address[0]):
-            raise RuntimeError("External networking is blocked in offline tests")
-        return connect_ex(sock, address)
-
-    def guard_resolve(host, *args, **kwargs):
-        if host is not None and not allowed(host):
-            raise RuntimeError("External networking is blocked in offline tests")
-        return getaddrinfo(host, *args, **kwargs)
-
-    monkeypatch.setattr(socket.socket, "connect", guard_connect)
-    monkeypatch.setattr(socket.socket, "connect_ex", guard_connect_ex)
-    monkeypatch.setattr(socket, "getaddrinfo", guard_resolve)
+    install_network_guard(monkeypatch.setattr)
