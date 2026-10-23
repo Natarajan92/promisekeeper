@@ -1,0 +1,94 @@
+from __future__ import annotations
+
+from dataclasses import dataclass
+from datetime import datetime, timedelta, timezone
+import ipaddress
+import os
+from pathlib import Path
+import socket
+import subprocess
+import sys
+
+import pytest
+
+
+@dataclass
+class BusinessClock:
+    now: datetime
+
+    def advance(self, seconds: float) -> None:
+        self.now += timedelta(seconds=seconds)
+
+
+@dataclass
+class ExecutionClock:
+    elapsed: float = 0
+
+    def advance(self, seconds: float) -> None:
+        self.elapsed += seconds
+
+
+@pytest.fixture
+def business_clock():
+    return BusinessClock(datetime(2026, 10, 23, 4, 30, tzinfo=timezone.utc))
+
+
+@pytest.fixture
+def execution_clock():
+    return ExecutionClock()
+
+
+@pytest.fixture
+def isolated_db_path(tmp_path):
+    return tmp_path / "isolated.sqlite"
+
+
+@pytest.fixture
+def run_python(tmp_path):
+    def run(script: str, *, timeout: float = 5):
+        env = {key: value for key, value in os.environ.items()
+               if key not in {"OPENAI_API_KEY", "GH_TOKEN", "GITHUB_TOKEN"}}
+        env.update(PK_AGENT_MODE="STUB", PK_DB_PATH=str(tmp_path / "subprocess.sqlite"))
+        return subprocess.run([sys.executable, "-c", script], cwd=tmp_path,
+                              env=env, capture_output=True, text=True, timeout=timeout)
+    return run
+
+
+@pytest.fixture(autouse=True)
+def block_external_network(monkeypatch, request):
+    """Local integration is permitted; offline tests cannot reach external hosts."""
+    if request.node.get_closest_marker("live"):
+        if os.environ.get("PK_ALLOW_LIVE_TESTS") != "1":
+            pytest.skip("Live evaluation requires explicit PK_ALLOW_LIVE_TESTS=1")
+        return
+
+    def allowed(host):
+        if host == "localhost":
+            return True
+        try:
+            return ipaddress.ip_address(host).is_loopback
+        except ValueError:
+            return False
+
+    connect = socket.socket.connect
+    connect_ex = socket.socket.connect_ex
+    getaddrinfo = socket.getaddrinfo
+
+    def guard_connect(sock, address):
+        if isinstance(address, tuple) and not allowed(address[0]):
+            raise RuntimeError("External networking is blocked in offline tests")
+        return connect(sock, address)
+
+    def guard_connect_ex(sock, address):
+        if isinstance(address, tuple) and not allowed(address[0]):
+            raise RuntimeError("External networking is blocked in offline tests")
+        return connect_ex(sock, address)
+
+    def guard_resolve(host, *args, **kwargs):
+        if host is not None and not allowed(host):
+            raise RuntimeError("External networking is blocked in offline tests")
+        return getaddrinfo(host, *args, **kwargs)
+
+    monkeypatch.setattr(socket.socket, "connect", guard_connect)
+    monkeypatch.setattr(socket.socket, "connect_ex", guard_connect_ex)
+    monkeypatch.setattr(socket, "getaddrinfo", guard_resolve)

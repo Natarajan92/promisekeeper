@@ -18,3 +18,14 @@ Authorization: the project owner requested safety-checklist review, private GitH
 
 - T001: complete — workspace directories and Python 3.12 selector inspected; git check-ignore confirmed credentials, runtime/build output, environments and worktrees are excluded. No application test exists yet.
 - GitHub: connected profile Natarajan92; sandboxed CLI returned HTTP 401, escalated verification succeeded. Use authenticated CLI outside that restriction for repository operations.
+
+- Repository: private https://github.com/Natarajan92/promisekeeper verified; main baseline bd5357f pushed; feature branch 001-payment-case-mvp checked out. Default sandbox Git ownership differs; read-only commands use per-command safe.directory for this explicitly trusted workspace, not a global setting.
+- T002: complete — uv sync and frozen sync succeeded; CPython 3.12.15, SQLite 3.53.1, tzdata/Asia/Kolkata verified; 35 resolved packages in backend/uv.lock.
+- T003: complete — Node 24.19.0/npm 12.2.0 dependencies resolved and lockfile produced; frontend build/typecheck succeeded.
+- T004: complete — temporary storage, separate clocks, subprocess environment isolation and external socket blocking exercised by test_configuration; all saved demonstrations remain separate. Pytest OS temp was inaccessible; explicit workspace .runtime/pytest-temp resolved it.
+- T005: complete — TypeScript/Vite/Vitest and real-API/isolated-DB Playwright lifecycle configuration compiled. Build succeeded; Vitest reports zero test files (no UI tests claimed). Actual API/browser journeys remain unexecuted until Gate III.
+- T006: complete — 8 meaningful configuration/redaction failures observed after correcting temporary storage; 11 checks passed after implementation (t006-red.log/t006-green.log).
+- T007: complete — evidence contracts/identity tests written and run; 10 unsafe/coercion/ownership/identity failures plus 2 existing passes observed (t007-red.log).
+- T008: complete — strict immutable evidence/projection types and copy/source-version commitment identity implemented; full backend suite 23 passed (t008-green.log).
+- T009/T010: complete — monetary/date tests written and run; 29 meaningful failures and 7 passes observed (t009-t010-red.log).
+- T011/T012: complete — exact arbitrary-size paise, decimal-string encoding, explicit unknowns, aware IST boundaries/relative dates, monotonic reference time, earliest WAIT boundary and stable timeline implemented; full backend suite 59 passed (t011-t012-green.log).
