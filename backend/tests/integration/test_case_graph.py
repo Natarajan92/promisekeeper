@@ -62,7 +62,7 @@ def test_follow_up_case_runs_all_agents_and_waits_for_owner(tmp_path):
         assert view['draft']['validation_status'] == 'VALID'
         rows = activity(db, iid)
         assert [r['agent'] for r in rows if r['outcome'] != 'STARTED'] == [
-            'INTAKE', 'EXTRACTOR', 'RULES_ENGINE', 'COMMUNICATOR', 'SAFETY_CHECK', 'TONE_REVIEWER', 'OWNER']
+            'INTAKE', 'EXTRACTOR', 'RULES_ENGINE', 'MEMORY', 'COMMUNICATOR', 'SAFETY_CHECK', 'TONE_REVIEWER', 'OWNER']
         assert rows[-1]['outcome'] == 'WAITING'
         detail = get_investigation(db, did, iid)
         assert [r['agent'] for r in detail['agent_activity']] == [r['agent'] for r in rows]

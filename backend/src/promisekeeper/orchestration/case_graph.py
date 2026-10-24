@@ -1,7 +1,7 @@
 """Graph 1: one case investigation as a LangGraph multi-agent graph.
 
 Evidence Intake -> Promise Extractor (LLM) -> Rules Engine (code) -> [draft needed?]
-  -> Communicator (LLM) -> Safety Check (code) -> Tone Reviewer (LLM) -> save draft -> Owner review (pause).
+  -> Client Memory -> Communicator (LLM) -> Safety Check (code) -> Tone Reviewer (LLM) -> save draft -> Owner review (pause).
 
 Nodes reuse the persisted step machinery (run_step, deadlines, fencing), so recovery and
 idempotency rules are unchanged. Code owns money, actions and eligibility; LLM agents only
@@ -19,6 +19,7 @@ from langgraph.graph import END, START, StateGraph
 from langgraph.types import Command, interrupt
 
 from promisekeeper.agents.communicator import NoteContext
+from promisekeeper.agents.memory import LocalMemory, facts_from_result
 from promisekeeper.agents.protocol import EXTRACTION_POLICY_VERSION, PROMPT_VERSION, InvestigatorFailure
 from promisekeeper.agents.validation import validate_output
 from promisekeeper.application.agent_activity import record_agent
@@ -53,6 +54,7 @@ class CaseState(TypedDict, total=False):
     note: str | None
     feedback: str | None
     memory: str | None
+    client: str
     revisions: int
     final_text: str | None
     draft_version_id: str | None
@@ -184,7 +186,14 @@ def build_case_graph(db, agents, *, draft_generator=None, pause_for_owner=True):
         db.reservations.discard(iid)
         record(state, 'RULES_ENGINE', 'Apply payment rules and choose one action', 'SUCCEEDED',
                note=f"{result['action']}: {recommendation.reason_code}", started=started)
-        return {'committed': True, 'action': result['action'], 'draft_attempt_id': aid}
+        try:
+            store = memory_store()
+            for fact in facts_from_result(result):
+                store.remember(evidence.client, fact, scope=state['demonstration_id'])
+        except Exception as exc:
+            record(state, 'MEMORY', 'Remember payment history', 'FAILED',
+                   note=f"{getattr(exc, 'code', type(exc).__name__)}; the recommendation is saved without updating memory.")
+        return {'committed': True, 'action': result['action'], 'draft_attempt_id': aid, 'client': evidence.client}
 
     def after_rules(state):
         aid = state.get('draft_attempt_id')
@@ -192,7 +201,24 @@ def build_case_graph(db, agents, *, draft_generator=None, pause_for_owner=True):
             return END
         with db.connection() as con:
             row = con.execute('SELECT status FROM draft_generation_attempts WHERE id=?', (aid,)).fetchone()
-        return 'communicator' if row is not None and row['status'] == 'RUNNING' else END
+        return 'client_memory' if row is not None and row['status'] == 'RUNNING' else END
+
+    def memory_store():
+        return agents.memory if agents.memory is not None else LocalMemory(db)
+
+    def client_memory(state):
+        started = time.monotonic()
+        try:
+            remembered = memory_store().recall(state['client'])
+        except Exception as exc:
+            record(state, 'MEMORY', 'Recall payment history', 'FAILED',
+                   note=f"{getattr(exc, 'code', type(exc).__name__)}; the note is written without history.", started=started)
+            return {'memory': None, 'route': 'communicator'}
+        if not remembered:
+            record(state, 'MEMORY', 'Recall payment history', 'SKIPPED', note='No earlier payment history for this client.', started=started)
+            return {'memory': None, 'route': 'communicator'}
+        record(state, 'MEMORY', 'Recall payment history', 'SUCCEEDED', note=remembered, started=started)
+        return {'memory': remembered, 'route': 'communicator'}
 
     def communicator(state):
         revisions = state.get('revisions', 0)
@@ -304,14 +330,15 @@ def build_case_graph(db, agents, *, draft_generator=None, pause_for_owner=True):
 
     graph = StateGraph(CaseState)
     for name, node in (('evidence_intake', evidence_intake), ('promise_extractor', promise_extractor), ('rules_engine', rules_engine),
-                       ('communicator', guarded('COMMUNICATOR', communicator)), ('safety_check', guarded('SAFETY_CHECK', safety_check)),
+                       ('client_memory', guarded('MEMORY', client_memory)), ('communicator', guarded('COMMUNICATOR', communicator)), ('safety_check', guarded('SAFETY_CHECK', safety_check)),
                        ('tone_reviewer', guarded('TONE_REVIEWER', tone_reviewer)),
                        ('save_draft', save_draft), ('owner_review', owner_review), ('record_decision', record_decision)):
         graph.add_node(name, node)
     graph.add_edge(START, 'evidence_intake')
     graph.add_edge('evidence_intake', 'promise_extractor')
     graph.add_edge('promise_extractor', 'rules_engine')
-    graph.add_conditional_edges('rules_engine', after_rules, ['communicator', END])
+    graph.add_conditional_edges('rules_engine', after_rules, ['client_memory', END])
+    graph.add_conditional_edges('client_memory', by_route, ['communicator', 'save_draft'])
     graph.add_conditional_edges('communicator', by_route, ['safety_check', 'save_draft'])
     graph.add_conditional_edges('safety_check', by_route, ['tone_reviewer', 'communicator', 'save_draft'])
     graph.add_conditional_edges('tone_reviewer', by_route, ['save_draft', 'communicator'])

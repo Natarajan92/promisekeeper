@@ -28,4 +28,9 @@ def build_agents(settings, *, usage_sink=None):
         communicator, briefing = NebiusCommunicator(settings), NebiusBriefing(settings)
     reviewer_key = settings.fireworks_api_key if settings.reviewer_provider == 'FIREWORKS' else settings.api_key
     reviewer = LlmToneReviewer(settings) if reviewer_key else None
-    return AgentSet(investigator, communicator, reviewer, briefing)
+    # mem0 is opt-in for LIVE; otherwise the case graph uses the local SQLite memory.
+    memory = None
+    if settings.mem0_api_key:
+        from promisekeeper.agents.memory import Mem0Memory
+        memory = Mem0Memory(settings.mem0_api_key)
+    return AgentSet(investigator, communicator, reviewer, briefing, memory)
