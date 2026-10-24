@@ -1,22 +1,29 @@
-"""Append-only record of what each agent did, with per-step usage for the trace."""
+"""Append-only record of what each agent did and whom it handed work to, with per-step usage for the trace."""
 import logging
 from uuid import uuid4
+from promisekeeper.agents.messages import route_for
 from promisekeeper.application.operations import instant, utcnow
 
 _log = logging.getLogger(__name__)
 _COLUMNS = ('agent', 'event', 'outcome', 'note', 'model', 'input_tokens', 'output_tokens', 'latency_ms', 'at',
-            'case_id', 'investigation_id', 'morning_review_id')
+            'case_id', 'investigation_id', 'morning_review_id', 'recipient', 'message_kind')
 
 
 def record_agent(db, *, demonstration_id, case_id, agent, event, outcome, note=None, model=None, input_tokens=None,
-                 output_tokens=None, latency_ms=None, investigation_id=None, morning_review_id=None):
+                 output_tokens=None, latency_ms=None, investigation_id=None, morning_review_id=None, to=None, kind=None):
     """The trace is explanatory. A failed write is logged and never interrupts the agent workflow."""
+    try:
+        message = route_for(agent, outcome, to=to, kind=kind)
+    except ValueError:
+        _log.warning('Hand-off outside the agent protocol was not recorded: %s -> %s', agent, to)
+        message = None
     try:
         with db.transaction() as con:
             con.execute('''INSERT INTO agent_activity (id,demonstration_id,case_id,investigation_id,morning_review_id,agent,event,
-                outcome,note,model,input_tokens,output_tokens,latency_ms,at) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)''',
+                outcome,note,model,input_tokens,output_tokens,latency_ms,at,recipient,message_kind) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)''',
                 (str(uuid4()), demonstration_id, case_id, investigation_id, morning_review_id, agent, event, outcome,
-                 note, model, input_tokens, output_tokens, latency_ms, instant(utcnow())))
+                 note, model, input_tokens, output_tokens, latency_ms, instant(utcnow()),
+                 message.recipient if message else None, message.kind if message else None))
     except Exception:
         _log.warning('Agent activity was not recorded for %s/%s', agent, event)
 

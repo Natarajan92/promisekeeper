@@ -104,9 +104,9 @@ def _remaining(db, state):
 
 
 def build_case_graph(db, agents, *, draft_generator=None, pause_for_owner=True):
-    def record(state, agent, event, outcome, note=None, call=None, started=None):
+    def record(state, agent, event, outcome, note=None, call=None, started=None, to=None, kind=None):
         record_agent(db, demonstration_id=state['demonstration_id'], case_id=state['case_id'], investigation_id=state['investigation_id'],
-                     agent=agent, event=event, outcome=outcome, note=note, model=getattr(call, 'model', None),
+                     agent=agent, event=event, outcome=outcome, note=note, model=getattr(call, 'model', None), to=to, kind=kind,
                      input_tokens=getattr(call, 'input_tokens', None), output_tokens=getattr(call, 'output_tokens', None),
                      latency_ms=call.latency_ms if call else (int((time.monotonic() - started) * 1000) if started else None))
 
@@ -192,10 +192,12 @@ def build_case_graph(db, agents, *, draft_generator=None, pause_for_owner=True):
             append_event(con, dict(id=attempt['case_id'], demonstration_id=attempt['demonstration_id']), 'INVESTIGATION_COMPLETED', attempt['operation_id'],
                          dict(investigation_id=iid, status=recommendation.status, result_hash=result['result_hash']))
             aid = reserve_initial(con, iid)
+            drafting = aid is not None and con.execute('SELECT status FROM draft_generation_attempts WHERE id=?', (aid,)).fetchone()[0] == 'RUNNING'
         db.capacity.release(iid)
         db.reservations.discard(iid)
         record(state, 'RULES_ENGINE', 'Apply payment rules and choose one action', 'SUCCEEDED',
-               note=f"{result['action']}: {recommendation.reason_code}", started=started)
+               note=f"{result['action']}: {recommendation.reason_code}", started=started,
+               to='MEMORY' if drafting else 'OWNER', kind='DECISION')
         try:
             store = memory_store()
             for fact in facts_from_result(result):
@@ -222,7 +224,8 @@ def build_case_graph(db, agents, *, draft_generator=None, pause_for_owner=True):
             remembered = memory_store().recall(state['client'])
         except Exception as exc:
             record(state, 'MEMORY', 'Recall payment history', 'FAILED',
-                   note=f"{getattr(exc, 'code', type(exc).__name__)}; the note is written without history.", started=started)
+                   note=f"{getattr(exc, 'code', type(exc).__name__)}; the note is written without history.", started=started,
+                   to='COMMUNICATOR', kind='CLIENT_HISTORY')
             return {'memory': None, 'route': 'communicator'}
         if not remembered:
             record(state, 'MEMORY', 'Recall payment history', 'SKIPPED', note='No earlier payment history for this client.', started=started)

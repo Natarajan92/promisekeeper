@@ -99,9 +99,9 @@ def _fact(summary, outcome, reason=None, draft_ready=False):
 def build_morning_review_graph(db, agents):
     from promisekeeper.orchestration.investigate import investigate
 
-    def record(state, agent, event, outcome, note=None, call=None, case_id=None, started=None):
+    def record(state, agent, event, outcome, note=None, call=None, case_id=None, started=None, to=None, kind=None):
         record_agent(db, demonstration_id=state['demonstration_id'], case_id=case_id, morning_review_id=state['morning_review_id'],
-                     agent=agent, event=event, outcome=outcome, note=note, model=getattr(call, 'model', None),
+                     agent=agent, event=event, outcome=outcome, note=note, model=getattr(call, 'model', None), to=to, kind=kind,
                      input_tokens=getattr(call, 'input_tokens', None), output_tokens=getattr(call, 'output_tokens', None),
                      latency_ms=call.latency_ms if call else (int((time.monotonic() - started) * 1000) if started else None))
 
@@ -121,7 +121,8 @@ def build_morning_review_graph(db, agents):
                 outcomes.append(_fact(summary, 'SKIPPED', reason))
                 record(state, 'SUPERVISOR', f"Skip {summary['client']}", 'SKIPPED', note=reason, case_id=summary['id'])
         record(state, 'SUPERVISOR', 'Choose which cases need work', 'SUCCEEDED',
-               note=f'{len(queue)} of {len(listing["cases"])} cases need a fresh investigation.', started=started)
+               note=f'{len(queue)} of {len(listing["cases"])} cases need a fresh investigation.', started=started,
+               to='INTAKE', kind='CASE_SELECTION')
         return {'queue': queue, 'outcomes': outcomes}
 
     def investigate_next(state):
@@ -140,7 +141,8 @@ def build_morning_review_graph(db, agents):
         draft_ready = bool(get_case(db, did, cid).get('draft'))
         fact = _fact(summary, outcome, reason, draft_ready)
         record(state, 'SUPERVISOR', f"Investigate {summary['client']}", 'SUCCEEDED' if outcome == 'INVESTIGATED' else 'FAILED',
-               note=reason or f"Recommended {summary['recommended_action']}.", case_id=cid, started=started)
+               note=reason or f"Recommended {summary['recommended_action']}.", case_id=cid, started=started,
+               to='BRIEFING', kind='CASE_OUTCOME')
         return {'queue': rest, 'outcomes': state['outcomes'] + [fact]}
 
     def briefing(state):

@@ -58,3 +58,4 @@ button{min-width:0;max-width:100%;white-space:normal}
 .briefing-outcome{font-weight:bold}.briefing-outcome.outcome-investigated{color:var(--blue)!important}.briefing-outcome.outcome-failed{color:var(--amber)!important}
 @media(max-width:720px){.morning-review{padding:1rem}.morning-head button{width:100%}}
 .agent-roster .agent-permission{font-size:.72rem;padding:0 .35rem;border:1px solid var(--line);border-radius:3px}
+.agent-handoff{font-size:.76rem;color:var(--blue);margin:.1rem 0;font-weight:bold}

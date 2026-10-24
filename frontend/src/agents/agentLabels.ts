@@ -18,6 +18,12 @@ export const OUTCOME_LABEL: Record<AgentOutcome, string> = {
   FAILED: 'could not finish', WAITING: 'waiting for you', SKIPPED: 'not used',
 };
 
+export const MESSAGE_LABEL: Record<string, string> = {
+  EVIDENCE_PACKET: 'evidence packet', PAYMENT_CANDIDATES: 'promises and payment claims', DECISION: 'recommended action',
+  CLIENT_HISTORY: 'client payment history', NOTE_DRAFT: 'personal note', REVISION_REQUEST: 'revision request',
+  DRAFT_FOR_APPROVAL: 'draft for your approval', CASE_SELECTION: 'case to investigate', CASE_OUTCOME: 'case outcome', BRIEFING: 'briefing',
+};
+
 export const PROVIDER_LABEL: Record<string, string> = {
   SCRIPTED: 'offline stand-in', NEBIUS: 'Nebius', FIREWORKS: 'Fireworks', MEM0: 'mem0', LOCAL: 'local store',
 };

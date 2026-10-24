@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import type { ApiClient } from '../api/client';
 import type { AgentActivity, AgentName, AgentTotals } from '../api/types';
-import { AGENT_LABEL, AGENT_ROLE, OUTCOME_LABEL, usage } from './agentLabels';
+import { AGENT_LABEL, AGENT_ROLE, MESSAGE_LABEL, OUTCOME_LABEL, usage } from './agentLabels';
 
 const POLL_MS = 1500;
 const MAX_POLL_MS = 45_000;
@@ -52,6 +52,7 @@ export function AgentTrace({api, did, investigationId, agents, title = 'How your
       </div>
       <p className="agent-role">{AGENT_ROLE[row.agent]}</p>
       {row.note && <p className="agent-note">{row.note}</p>}
+      {row.recipient && <p className="agent-handoff">{`→ ${AGENT_LABEL[row.recipient]}: ${MESSAGE_LABEL[row.message_kind ?? ''] ?? ''}`}</p>}
       {(row.model || row.latency_ms || row.input_tokens) && <p className="agent-usage">{[row.model, ...usage(row.latency_ms, row.input_tokens, row.output_tokens)].filter(Boolean).join(' · ')}</p>}
     </li>)}</ol>}
     {summary && !agents && <p className="agent-totals">Total: {summary}</p>}

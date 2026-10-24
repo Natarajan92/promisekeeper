@@ -226,6 +226,8 @@ class AgentActivityView(StrictInput):
     case_id: Id | None
     investigation_id: Id | None
     morning_review_id: str | None
+    recipient: Literal['INTAKE','EXTRACTOR','RULES_ENGINE','MEMORY','COMMUNICATOR','SAFETY_CHECK','TONE_REVIEWER','OWNER','SUPERVISOR','BRIEFING'] | None = None
+    message_kind: Literal['EVIDENCE_PACKET','PAYMENT_CANDIDATES','DECISION','CLIENT_HISTORY','NOTE_DRAFT','REVISION_REQUEST','DRAFT_FOR_APPROVAL','CASE_SELECTION','CASE_OUTCOME','BRIEFING'] | None = None
 
 class AgentTotals(StrictInput):
     input_tokens: int

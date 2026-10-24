@@ -81,3 +81,10 @@ it('disclosure loads the drafting trace only when opened', async () => {
   expect(await screen.findByText('Communicator')).toBeInTheDocument();
   expect(calls).toBe(1);
 });
+
+it('shows who each agent handed its work to', async () => {
+  render(<AgentTrace api={api([row('TONE_REVIEWER', 'REVISE', 'Warmer please', {recipient: 'COMMUNICATOR', message_kind: 'REVISION_REQUEST'}),
+    row('TONE_REVIEWER', 'SUCCEEDED', 'ok', {recipient: 'OWNER', message_kind: 'DRAFT_FOR_APPROVAL'}), row('OWNER', 'WAITING')])} did={did} investigationId={iid}/>);
+  expect(await screen.findByText('→ Communicator: revision request')).toBeInTheDocument();
+  expect(screen.getByText('→ Your approval: draft for your approval')).toBeInTheDocument();
+});
