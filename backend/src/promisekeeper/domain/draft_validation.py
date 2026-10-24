@@ -1,6 +1,7 @@
 """Bounded English clause validation; never general natural-language verification."""
-import re
-
+from promisekeeper.domain.personal_note import (
+    FEE_OR_THREAT, FOREIGN_CURRENCY, PAYMENT_ASSERTION, PAYMENT_INSTRUCTION, PLACEHOLDER, STATED_AMOUNT, note_reasons,
+)
 from promisekeeper.domain.review import (
     CLARIFICATION_REQUESTS, CLOSINGS, FOLLOW_UP_REQUESTS, GREETINGS, DraftPlan,
 )
@@ -18,6 +19,13 @@ def validate_draft(plan: DraftPlan, exact_text: str, recipient: str) -> tuple[st
     greetings = tuple(t.format(recipient=recipient) for t in GREETINGS)
     neutral = set(greetings + FOLLOW_UP_REQUESTS + CLARIFICATION_REQUESTS + CLOSINGS)
     required = tuple(c for c in plan.exact_text.split('\n\n') if c not in neutral)
+    if (len(paragraphs) == len(required) + 4 and paragraphs[0] in greetings
+            and paragraphs[1] not in neutral and paragraphs[1] not in plan.allowed_clauses):
+        # One optional personal note directly after the greeting; it never carries facts.
+        flags = note_reasons(paragraphs[1])
+        if flags:
+            reasons.extend((*flags, 'UNSUPPORTED_CLAUSE'))
+        paragraphs = paragraphs[:1] + paragraphs[2:]
     if any(c not in paragraphs for c in required):
         reasons.append('MISSING_REQUIRED_CLAUSE')
     requests = tuple(c for c in FOLLOW_UP_REQUESTS + CLARIFICATION_REQUESTS if c in plan.allowed_clauses)
@@ -30,17 +38,17 @@ def validate_draft(plan: DraftPlan, exact_text: str, recipient: str) -> tuple[st
             continue
         # These checks explain corrections. Exact clause membership and the
         # finite grammar above, never these lexical hints, decide eligibility.
-        if re.search(r'\[[^\]]*\]|\{[^}]*\}|<[^>]*>|\b(?:TODO|TBD)\b', clause, re.I):
+        if PLACEHOLDER.search(clause):
             reasons.append('UNRESOLVED_PLACEHOLDER')
-        if re.search(r'\b(?:fee|fees|interest|penalty|legal|threat|lawsuit)\b', clause, re.I):
+        if FEE_OR_THREAT.search(clause):
             reasons.append('UNSUPPORTED_FEE_OR_THREAT')
-        if re.search(r'\b(?:account|bank|UPI|IBAN|routing|transfer to|pay into)\b', clause, re.I):
+        if PAYMENT_INSTRUCTION.search(clause):
             reasons.append('UNSUPPORTED_PAYMENT_INSTRUCTION')
-        if re.search(r'\b(?:not paid|non-payment|never paid|payment (?:is |was )?(?:verified|received|settled))\b', clause, re.I):
+        if PAYMENT_ASSERTION.search(clause):
             reasons.append('UNSUPPORTED_PAYMENT_ASSERTION')
-        if re.search(r'\b(?:USD|EUR|GBP|AUD|CAD|JPY)\b|[$€£]', clause):
+        if FOREIGN_CURRENCY.search(clause):
             reasons.append('UNSUPPORTED_CURRENCY')
-        if re.search(r'\b(?:INR|USD|EUR|GBP)\s*[0-9,]+(?:\.[0-9]+)?', clause):
+        if STATED_AMOUNT.search(clause):
             reasons.append('UNSUPPORTED_AMOUNT')
         if 'UNSUPPORTED_CLAUSE' not in reasons:
             reasons.append('UNSUPPORTED_CLAUSE')
