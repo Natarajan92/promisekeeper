@@ -22,6 +22,11 @@ def main(argv=None):
     serve.add_argument("--host", default="127.0.0.1", choices=["127.0.0.1", "localhost", "::1"])
     serve.add_argument("--port", type=int, default=8000)
     serve.add_argument("--workers", type=int, default=1, choices=[1])
+    evaluate = sub.add_parser('evaluate')
+    evaluate.add_argument('--suite', required=True, choices=['live'])
+    evaluate.add_argument('--catalogue', required=True, choices=['release-0.1'])
+    evaluate.add_argument('--repeats', type=int, default=3)
+    evaluate.add_argument('--output', default='reports/live-evaluation.json')
     args = parser.parse_args(argv)
     try:
         settings = load_settings()
@@ -30,6 +35,11 @@ def main(argv=None):
                 response = create_demonstration(db, dict(schema_version="1", operation_id=str(uuid4()),
                     catalogue_version=args.catalogue, variant_id=args.variant, clock_mode=args.clock))
                 print(json.dumps(response))
+        elif args.command == 'evaluate':
+            from promisekeeper.application.evaluations import evaluate as run_evaluation
+            report=run_evaluation(settings,catalogue=args.catalogue,repeats=args.repeats,output=args.output)
+            print(json.dumps(dict(status=report['status'],qualification_scope=report['qualification_scope'],qualified=report['qualified'],requested_model=report['requested_model'],runs=len(report['runs']))))
+            if not report['qualified']:parser.exit(1,'LIVE release acceptance did not qualify. See the evaluation report.\n')
         else:
             if not 1 <= args.port <= 65535:
                 parser.error("port must be between 1 and 65535")

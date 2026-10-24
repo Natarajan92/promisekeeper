@@ -1,0 +1,1884 @@
+{
+  "schema_version": "1",
+  "inventory_version": "gate-iii-findings-1",
+  "catalogue_version": "release-0.1",
+  "manifest_definitions": [
+    {
+      "id": "baseline:PK-001",
+      "variant": null,
+      "case_id": "PK-001",
+      "events": []
+    },
+    {
+      "id": "baseline:PK-002",
+      "variant": null,
+      "case_id": "PK-002",
+      "events": []
+    },
+    {
+      "id": "baseline:PK-003",
+      "variant": null,
+      "case_id": "PK-003",
+      "events": []
+    },
+    {
+      "id": "PK-001-U1",
+      "variant": null,
+      "case_id": "PK-001",
+      "events": [
+        "PK-001-U1"
+      ]
+    },
+    {
+      "id": "PK-002-U1",
+      "variant": null,
+      "case_id": "PK-002",
+      "events": [
+        "PK-002-U1"
+      ]
+    },
+    {
+      "id": "PK-003-U1",
+      "variant": null,
+      "case_id": "PK-003",
+      "events": [
+        "PK-003-U1"
+      ]
+    },
+    {
+      "id": "FV-01",
+      "variant": "FV-01",
+      "case_id": "PK-001",
+      "events": []
+    },
+    {
+      "id": "FV-02-INVOICE",
+      "variant": "FV-02-INVOICE",
+      "case_id": "PK-001",
+      "events": []
+    },
+    {
+      "id": "FV-02-PROMISE",
+      "variant": "FV-02-PROMISE",
+      "case_id": "PK-001",
+      "events": []
+    },
+    {
+      "id": "FV-03",
+      "variant": "FV-03",
+      "case_id": "PK-003",
+      "events": []
+    },
+    {
+      "id": "FV-04",
+      "variant": "FV-04",
+      "case_id": "PK-002",
+      "events": []
+    },
+    {
+      "id": "FV-05",
+      "variant": "FV-05",
+      "case_id": "PK-003",
+      "events": []
+    },
+    {
+      "id": "FV-06-DUPLICATE",
+      "variant": "FV-06-DUPLICATE",
+      "case_id": "PK-003",
+      "events": []
+    },
+    {
+      "id": "FV-06-REVERSAL",
+      "variant": "FV-06-REVERSAL",
+      "case_id": "PK-003",
+      "events": []
+    },
+    {
+      "id": "FV-07-CURRENCY",
+      "variant": "FV-07-CURRENCY",
+      "case_id": "PK-003",
+      "events": []
+    },
+    {
+      "id": "FV-07-MISSING",
+      "variant": "FV-07-MISSING",
+      "case_id": "PK-003",
+      "events": []
+    },
+    {
+      "id": "FV-07-NEGATIVE",
+      "variant": "FV-07-NEGATIVE",
+      "case_id": "PK-003",
+      "events": []
+    },
+    {
+      "id": "FV-07-OVERPAYMENT",
+      "variant": "FV-07-OVERPAYMENT",
+      "case_id": "PK-003",
+      "events": []
+    },
+    {
+      "id": "FV-07-PRECISION",
+      "variant": "FV-07-PRECISION",
+      "case_id": "PK-003",
+      "events": []
+    },
+    {
+      "id": "FV-08-SOON",
+      "variant": "FV-08-SOON",
+      "case_id": "PK-002",
+      "events": []
+    },
+    {
+      "id": "FV-08-TOMORROW",
+      "variant": "FV-08-TOMORROW",
+      "case_id": "PK-002",
+      "events": []
+    },
+    {
+      "id": "FV-09-EXTRACTION",
+      "variant": "FV-09-EXTRACTION",
+      "case_id": "PK-001",
+      "events": []
+    },
+    {
+      "id": "FV-09-INTERRUPTION",
+      "variant": "FV-09-INTERRUPTION",
+      "case_id": "PK-001",
+      "events": []
+    },
+    {
+      "id": "FV-09-RETRIEVAL",
+      "variant": "FV-09-RETRIEVAL",
+      "case_id": "PK-001",
+      "events": []
+    },
+    {
+      "id": "FV-09-RETRY",
+      "variant": "FV-09-RETRY",
+      "case_id": "PK-001",
+      "events": []
+    },
+    {
+      "id": "FV-10-EDIT",
+      "variant": "FV-10-EDIT",
+      "case_id": "PK-001",
+      "events": []
+    },
+    {
+      "id": "FV-10-EVIDENCE",
+      "variant": "FV-10-EVIDENCE",
+      "case_id": "PK-001",
+      "events": []
+    },
+    {
+      "id": "FV-10-RECIPIENT",
+      "variant": "FV-10-RECIPIENT",
+      "case_id": "PK-001",
+      "events": []
+    },
+    {
+      "id": "FV-10-REPEAT",
+      "variant": "FV-10-REPEAT",
+      "case_id": "PK-001",
+      "events": []
+    },
+    {
+      "id": "FV-11-AMOUNT",
+      "variant": "FV-11-AMOUNT",
+      "case_id": "PK-001",
+      "events": []
+    },
+    {
+      "id": "FV-11-FEE",
+      "variant": "FV-11-FEE",
+      "case_id": "PK-001",
+      "events": []
+    },
+    {
+      "id": "FV-11-NEUTRAL",
+      "variant": "FV-11-NEUTRAL",
+      "case_id": "PK-001",
+      "events": []
+    },
+    {
+      "id": "FV-11-PLACEHOLDER",
+      "variant": "FV-11-PLACEHOLDER",
+      "case_id": "PK-001",
+      "events": []
+    },
+    {
+      "id": "FV-12",
+      "variant": "FV-12",
+      "case_id": "PK-001",
+      "events": []
+    },
+    {
+      "id": "FV-13",
+      "variant": "FV-13",
+      "case_id": "PK-003",
+      "events": []
+    },
+    {
+      "id": "FV-14-INVOICE",
+      "variant": "FV-14-INVOICE",
+      "case_id": "PK-001",
+      "events": []
+    },
+    {
+      "id": "FV-14-PAYMENT",
+      "variant": "FV-14-PAYMENT",
+      "case_id": "PK-001",
+      "events": []
+    },
+    {
+      "id": "FV-15-TIE",
+      "variant": "FV-15-TIE",
+      "case_id": "PK-001",
+      "events": []
+    },
+    {
+      "id": "FV-15-UNDATED",
+      "variant": "FV-15-UNDATED",
+      "case_id": "PK-001",
+      "events": []
+    },
+    {
+      "id": "FV-16-LINKED",
+      "variant": "FV-16-LINKED",
+      "case_id": "PK-002",
+      "events": []
+    },
+    {
+      "id": "FV-16-UNLINKED",
+      "variant": "FV-16-UNLINKED",
+      "case_id": "PK-002",
+      "events": []
+    },
+    {
+      "id": "FV-17-EVIDENCE",
+      "variant": "FV-17-EVIDENCE",
+      "case_id": "PK-001",
+      "events": []
+    },
+    {
+      "id": "FV-17-EVIDENCE-RUN-START",
+      "variant": "FV-17-EVIDENCE",
+      "case_id": "PK-001",
+      "events": [
+        "FV-17-EVIDENCE-RUN-START"
+      ]
+    },
+    {
+      "id": "FV-17-SUPERSEDED",
+      "variant": "FV-17-SUPERSEDED",
+      "case_id": "PK-001",
+      "events": []
+    },
+    {
+      "id": "FV-17-UNCHANGED",
+      "variant": "FV-17-UNCHANGED",
+      "case_id": "PK-001",
+      "events": []
+    },
+    {
+      "id": "FV-18-A",
+      "variant": "FV-18-A",
+      "case_id": "PK-002",
+      "events": []
+    },
+    {
+      "id": "FV-18-A-CLOCK-1",
+      "variant": "FV-18-A",
+      "case_id": "PK-002",
+      "events": [
+        "FV-18-A-CLOCK-1"
+      ]
+    },
+    {
+      "id": "FV-18-A-CLOCK-2",
+      "variant": "FV-18-A",
+      "case_id": "PK-002",
+      "events": [
+        "FV-18-A-CLOCK-1",
+        "FV-18-A-CLOCK-2"
+      ]
+    },
+    {
+      "id": "FV-18-B",
+      "variant": "FV-18-B",
+      "case_id": "PK-002",
+      "events": []
+    },
+    {
+      "id": "FV-18-B-CLOCK-1",
+      "variant": "FV-18-B",
+      "case_id": "PK-002",
+      "events": [
+        "FV-18-B-CLOCK-1"
+      ]
+    },
+    {
+      "id": "FV-18-B-CLOCK-2",
+      "variant": "FV-18-B",
+      "case_id": "PK-002",
+      "events": [
+        "FV-18-B-CLOCK-1",
+        "FV-18-B-CLOCK-2"
+      ]
+    }
+  ],
+  "manifest_hash": "17bcb26aa33ae4bab8fd37abf7e2260cda1089d47eaedc9bc67e7b89f38e1f81",
+  "entries": {
+    "FV-01": {
+      "contradictions": [],
+      "unresolved_questions": [
+        {
+          "field": "ATTRIBUTION",
+          "sources": [
+            "PK-001-M1"
+          ]
+        }
+      ],
+      "financial_issues": [
+        {
+          "code": "INVOICE_UNAVAILABLE",
+          "sources": [
+            "PK-001-I1"
+          ]
+        },
+        {
+          "code": "MISSING_INVOICE_AUTHORITY",
+          "sources": [
+            "PK-001-I1"
+          ]
+        }
+      ],
+      "commitment_issues": [],
+      "evidence_observations": [
+        {
+          "subject": "LEDGER",
+          "field": "availability",
+          "value": "AVAILABLE",
+          "source_id": null
+        },
+        {
+          "subject": "LEDGER",
+          "field": "complete",
+          "value": true,
+          "source_id": null
+        },
+        {
+          "subject": "SOURCE",
+          "field": "availability",
+          "value": "UNAVAILABLE",
+          "source_id": "PK-001-I1"
+        }
+      ]
+    },
+    "FV-02-INVOICE": {
+      "contradictions": [],
+      "unresolved_questions": [
+        {
+          "field": "AMOUNT",
+          "sources": [
+            "PK-001-I1"
+          ]
+        },
+        {
+          "field": "ATTRIBUTION",
+          "sources": [
+            "PK-001-M1"
+          ]
+        }
+      ],
+      "financial_issues": [
+        {
+          "code": "UNKNOWN_AMOUNT",
+          "sources": [
+            "PK-001-I1"
+          ]
+        }
+      ],
+      "commitment_issues": [],
+      "evidence_observations": [
+        {
+          "subject": "LEDGER",
+          "field": "availability",
+          "value": "AVAILABLE",
+          "source_id": null
+        },
+        {
+          "subject": "LEDGER",
+          "field": "complete",
+          "value": true,
+          "source_id": null
+        }
+      ]
+    },
+    "FV-02-PROMISE": {
+      "contradictions": [],
+      "unresolved_questions": [
+        {
+          "field": "AMOUNT",
+          "sources": [
+            "PK-001-M1"
+          ]
+        },
+        {
+          "field": "ATTRIBUTION",
+          "sources": [
+            "PK-001-M1"
+          ]
+        },
+        {
+          "field": "CURRENCY",
+          "sources": [
+            "PK-001-M1"
+          ]
+        }
+      ],
+      "financial_issues": [],
+      "commitment_issues": [],
+      "evidence_observations": [
+        {
+          "subject": "LEDGER",
+          "field": "availability",
+          "value": "AVAILABLE",
+          "source_id": null
+        },
+        {
+          "subject": "LEDGER",
+          "field": "complete",
+          "value": true,
+          "source_id": null
+        }
+      ]
+    },
+    "FV-03": {
+      "contradictions": [],
+      "unresolved_questions": [],
+      "financial_issues": [
+        {
+          "code": "UNALLOCATED_PAYMENT",
+          "sources": [
+            "PK-003-L2"
+          ]
+        }
+      ],
+      "commitment_issues": [],
+      "evidence_observations": [
+        {
+          "subject": "LEDGER",
+          "field": "availability",
+          "value": "AVAILABLE",
+          "source_id": null
+        },
+        {
+          "subject": "LEDGER",
+          "field": "complete",
+          "value": true,
+          "source_id": null
+        }
+      ]
+    },
+    "FV-04": {
+      "contradictions": [
+        {
+          "kind": "PROMISE_TIMING",
+          "sources": [
+            "PK-002-FV-04-M1",
+            "PK-002-M1"
+          ]
+        }
+      ],
+      "unresolved_questions": [
+        {
+          "field": "ATTRIBUTION",
+          "sources": [
+            "PK-002-FV-04-M1"
+          ]
+        },
+        {
+          "field": "ATTRIBUTION",
+          "sources": [
+            "PK-002-M1"
+          ]
+        },
+        {
+          "field": "PROMISE_DATE",
+          "sources": [
+            "PK-002-FV-04-M1"
+          ]
+        },
+        {
+          "field": "PROMISE_DATE",
+          "sources": [
+            "PK-002-M1"
+          ]
+        }
+      ],
+      "financial_issues": [],
+      "commitment_issues": [],
+      "evidence_observations": [
+        {
+          "subject": "LEDGER",
+          "field": "availability",
+          "value": "AVAILABLE",
+          "source_id": null
+        },
+        {
+          "subject": "LEDGER",
+          "field": "complete",
+          "value": true,
+          "source_id": null
+        }
+      ]
+    },
+    "FV-05": {
+      "contradictions": [],
+      "unresolved_questions": [],
+      "financial_issues": [
+        {
+          "code": "LEDGER_UNAVAILABLE",
+          "sources": [
+            "PK-003-L1"
+          ]
+        }
+      ],
+      "commitment_issues": [],
+      "evidence_observations": [
+        {
+          "subject": "LEDGER",
+          "field": "availability",
+          "value": "UNAVAILABLE",
+          "source_id": null
+        },
+        {
+          "subject": "LEDGER",
+          "field": "complete",
+          "value": true,
+          "source_id": null
+        }
+      ]
+    },
+    "FV-06-DUPLICATE": {
+      "contradictions": [],
+      "unresolved_questions": [],
+      "financial_issues": [],
+      "commitment_issues": [],
+      "evidence_observations": [
+        {
+          "subject": "LEDGER",
+          "field": "availability",
+          "value": "AVAILABLE",
+          "source_id": null
+        },
+        {
+          "subject": "LEDGER",
+          "field": "complete",
+          "value": true,
+          "source_id": null
+        }
+      ]
+    },
+    "FV-06-REVERSAL": {
+      "contradictions": [],
+      "unresolved_questions": [],
+      "financial_issues": [],
+      "commitment_issues": [],
+      "evidence_observations": [
+        {
+          "subject": "LEDGER",
+          "field": "availability",
+          "value": "AVAILABLE",
+          "source_id": null
+        },
+        {
+          "subject": "LEDGER",
+          "field": "complete",
+          "value": true,
+          "source_id": null
+        }
+      ]
+    },
+    "FV-07-CURRENCY": {
+      "contradictions": [
+        {
+          "kind": "PAYMENT_CLAIM",
+          "sources": [
+            "PK-003-L2",
+            "PK-003-M1"
+          ]
+        }
+      ],
+      "unresolved_questions": [
+        {
+          "field": "CURRENCY",
+          "sources": [
+            "PK-003-L2"
+          ]
+        },
+        {
+          "field": "CURRENCY",
+          "sources": [
+            "PK-003-M1"
+          ]
+        }
+      ],
+      "financial_issues": [
+        {
+          "code": "UNSUPPORTED_CURRENCY",
+          "sources": [
+            "PK-003-L2"
+          ]
+        }
+      ],
+      "commitment_issues": [],
+      "evidence_observations": [
+        {
+          "subject": "LEDGER",
+          "field": "availability",
+          "value": "AVAILABLE",
+          "source_id": null
+        },
+        {
+          "subject": "LEDGER",
+          "field": "complete",
+          "value": true,
+          "source_id": null
+        }
+      ]
+    },
+    "FV-07-MISSING": {
+      "contradictions": [],
+      "unresolved_questions": [
+        {
+          "field": "AMOUNT",
+          "sources": [
+            "PK-003-L2"
+          ]
+        }
+      ],
+      "financial_issues": [
+        {
+          "code": "UNKNOWN_AMOUNT",
+          "sources": [
+            "PK-003-L2"
+          ]
+        }
+      ],
+      "commitment_issues": [],
+      "evidence_observations": [
+        {
+          "subject": "LEDGER",
+          "field": "availability",
+          "value": "AVAILABLE",
+          "source_id": null
+        },
+        {
+          "subject": "LEDGER",
+          "field": "complete",
+          "value": true,
+          "source_id": null
+        }
+      ]
+    },
+    "FV-07-NEGATIVE": {
+      "contradictions": [],
+      "unresolved_questions": [
+        {
+          "field": "AMOUNT",
+          "sources": [
+            "PK-003-L2"
+          ]
+        }
+      ],
+      "financial_issues": [
+        {
+          "code": "NEGATIVE_AMOUNT",
+          "sources": [
+            "PK-003-L2"
+          ]
+        }
+      ],
+      "commitment_issues": [],
+      "evidence_observations": [
+        {
+          "subject": "LEDGER",
+          "field": "availability",
+          "value": "AVAILABLE",
+          "source_id": null
+        },
+        {
+          "subject": "LEDGER",
+          "field": "complete",
+          "value": true,
+          "source_id": null
+        }
+      ]
+    },
+    "FV-07-OVERPAYMENT": {
+      "contradictions": [
+        {
+          "kind": "PAYMENT_CLAIM",
+          "sources": [
+            "PK-003-L2",
+            "PK-003-M1"
+          ]
+        }
+      ],
+      "unresolved_questions": [
+        {
+          "field": "AMOUNT",
+          "sources": [
+            "PK-003-L2"
+          ]
+        },
+        {
+          "field": "AMOUNT",
+          "sources": [
+            "PK-003-M1"
+          ]
+        }
+      ],
+      "financial_issues": [
+        {
+          "code": "OVERPAYMENT",
+          "sources": [
+            "PK-003-L1",
+            "PK-003-L2"
+          ]
+        }
+      ],
+      "commitment_issues": [],
+      "evidence_observations": [
+        {
+          "subject": "LEDGER",
+          "field": "availability",
+          "value": "AVAILABLE",
+          "source_id": null
+        },
+        {
+          "subject": "LEDGER",
+          "field": "complete",
+          "value": true,
+          "source_id": null
+        }
+      ]
+    },
+    "FV-07-PRECISION": {
+      "contradictions": [],
+      "unresolved_questions": [
+        {
+          "field": "AMOUNT",
+          "sources": [
+            "PK-003-L2"
+          ]
+        }
+      ],
+      "financial_issues": [
+        {
+          "code": "INVALID_PRECISION",
+          "sources": [
+            "PK-003-L2"
+          ]
+        }
+      ],
+      "commitment_issues": [],
+      "evidence_observations": [
+        {
+          "subject": "LEDGER",
+          "field": "availability",
+          "value": "AVAILABLE",
+          "source_id": null
+        },
+        {
+          "subject": "LEDGER",
+          "field": "complete",
+          "value": true,
+          "source_id": null
+        }
+      ]
+    },
+    "FV-08-SOON": {
+      "contradictions": [],
+      "unresolved_questions": [
+        {
+          "field": "ATTRIBUTION",
+          "sources": [
+            "PK-002-M1"
+          ]
+        },
+        {
+          "field": "PROMISE_DATE",
+          "sources": [
+            "PK-002-M1"
+          ]
+        }
+      ],
+      "financial_issues": [],
+      "commitment_issues": [],
+      "evidence_observations": [
+        {
+          "subject": "LEDGER",
+          "field": "availability",
+          "value": "AVAILABLE",
+          "source_id": null
+        },
+        {
+          "subject": "LEDGER",
+          "field": "complete",
+          "value": true,
+          "source_id": null
+        }
+      ]
+    },
+    "FV-08-TOMORROW": {
+      "contradictions": [],
+      "unresolved_questions": [
+        {
+          "field": "ATTRIBUTION",
+          "sources": [
+            "PK-002-M1"
+          ]
+        },
+        {
+          "field": "PROMISE_DATE",
+          "sources": [
+            "PK-002-M1"
+          ]
+        }
+      ],
+      "financial_issues": [],
+      "commitment_issues": [],
+      "evidence_observations": [
+        {
+          "subject": "LEDGER",
+          "field": "availability",
+          "value": "AVAILABLE",
+          "source_id": null
+        },
+        {
+          "subject": "LEDGER",
+          "field": "complete",
+          "value": true,
+          "source_id": null
+        }
+      ]
+    },
+    "FV-09-EXTRACTION": {
+      "contradictions": [],
+      "unresolved_questions": [
+        {
+          "field": "ATTRIBUTION",
+          "sources": [
+            "PK-001-M1"
+          ]
+        }
+      ],
+      "financial_issues": [],
+      "commitment_issues": [],
+      "evidence_observations": [
+        {
+          "subject": "LEDGER",
+          "field": "availability",
+          "value": "AVAILABLE",
+          "source_id": null
+        },
+        {
+          "subject": "LEDGER",
+          "field": "complete",
+          "value": true,
+          "source_id": null
+        }
+      ]
+    },
+    "FV-09-INTERRUPTION": {
+      "contradictions": [],
+      "unresolved_questions": [
+        {
+          "field": "ATTRIBUTION",
+          "sources": [
+            "PK-001-M1"
+          ]
+        }
+      ],
+      "financial_issues": [],
+      "commitment_issues": [],
+      "evidence_observations": [
+        {
+          "subject": "LEDGER",
+          "field": "availability",
+          "value": "AVAILABLE",
+          "source_id": null
+        },
+        {
+          "subject": "LEDGER",
+          "field": "complete",
+          "value": true,
+          "source_id": null
+        }
+      ]
+    },
+    "FV-09-RETRIEVAL": {
+      "contradictions": [],
+      "unresolved_questions": [
+        {
+          "field": "ATTRIBUTION",
+          "sources": [
+            "PK-001-M1"
+          ]
+        }
+      ],
+      "financial_issues": [],
+      "commitment_issues": [],
+      "evidence_observations": [
+        {
+          "subject": "LEDGER",
+          "field": "availability",
+          "value": "AVAILABLE",
+          "source_id": null
+        },
+        {
+          "subject": "LEDGER",
+          "field": "complete",
+          "value": true,
+          "source_id": null
+        }
+      ]
+    },
+    "FV-09-RETRY": {
+      "contradictions": [],
+      "unresolved_questions": [
+        {
+          "field": "ATTRIBUTION",
+          "sources": [
+            "PK-001-M1"
+          ]
+        }
+      ],
+      "financial_issues": [],
+      "commitment_issues": [],
+      "evidence_observations": [
+        {
+          "subject": "LEDGER",
+          "field": "availability",
+          "value": "AVAILABLE",
+          "source_id": null
+        },
+        {
+          "subject": "LEDGER",
+          "field": "complete",
+          "value": true,
+          "source_id": null
+        }
+      ]
+    },
+    "FV-10-EDIT": {
+      "contradictions": [],
+      "unresolved_questions": [
+        {
+          "field": "ATTRIBUTION",
+          "sources": [
+            "PK-001-M1"
+          ]
+        }
+      ],
+      "financial_issues": [],
+      "commitment_issues": [],
+      "evidence_observations": [
+        {
+          "subject": "LEDGER",
+          "field": "availability",
+          "value": "AVAILABLE",
+          "source_id": null
+        },
+        {
+          "subject": "LEDGER",
+          "field": "complete",
+          "value": true,
+          "source_id": null
+        }
+      ]
+    },
+    "FV-10-EVIDENCE": {
+      "contradictions": [],
+      "unresolved_questions": [
+        {
+          "field": "ATTRIBUTION",
+          "sources": [
+            "PK-001-M1"
+          ]
+        }
+      ],
+      "financial_issues": [],
+      "commitment_issues": [],
+      "evidence_observations": [
+        {
+          "subject": "LEDGER",
+          "field": "availability",
+          "value": "AVAILABLE",
+          "source_id": null
+        },
+        {
+          "subject": "LEDGER",
+          "field": "complete",
+          "value": true,
+          "source_id": null
+        }
+      ]
+    },
+    "FV-10-RECIPIENT": {
+      "contradictions": [],
+      "unresolved_questions": [
+        {
+          "field": "ATTRIBUTION",
+          "sources": [
+            "PK-001-M1"
+          ]
+        }
+      ],
+      "financial_issues": [],
+      "commitment_issues": [],
+      "evidence_observations": [
+        {
+          "subject": "LEDGER",
+          "field": "availability",
+          "value": "AVAILABLE",
+          "source_id": null
+        },
+        {
+          "subject": "LEDGER",
+          "field": "complete",
+          "value": true,
+          "source_id": null
+        }
+      ]
+    },
+    "FV-10-REPEAT": {
+      "contradictions": [],
+      "unresolved_questions": [
+        {
+          "field": "ATTRIBUTION",
+          "sources": [
+            "PK-001-M1"
+          ]
+        }
+      ],
+      "financial_issues": [],
+      "commitment_issues": [],
+      "evidence_observations": [
+        {
+          "subject": "LEDGER",
+          "field": "availability",
+          "value": "AVAILABLE",
+          "source_id": null
+        },
+        {
+          "subject": "LEDGER",
+          "field": "complete",
+          "value": true,
+          "source_id": null
+        }
+      ]
+    },
+    "FV-11-AMOUNT": {
+      "contradictions": [],
+      "unresolved_questions": [
+        {
+          "field": "ATTRIBUTION",
+          "sources": [
+            "PK-001-M1"
+          ]
+        }
+      ],
+      "financial_issues": [],
+      "commitment_issues": [],
+      "evidence_observations": [
+        {
+          "subject": "LEDGER",
+          "field": "availability",
+          "value": "AVAILABLE",
+          "source_id": null
+        },
+        {
+          "subject": "LEDGER",
+          "field": "complete",
+          "value": true,
+          "source_id": null
+        }
+      ]
+    },
+    "FV-11-FEE": {
+      "contradictions": [],
+      "unresolved_questions": [
+        {
+          "field": "ATTRIBUTION",
+          "sources": [
+            "PK-001-M1"
+          ]
+        }
+      ],
+      "financial_issues": [],
+      "commitment_issues": [],
+      "evidence_observations": [
+        {
+          "subject": "LEDGER",
+          "field": "availability",
+          "value": "AVAILABLE",
+          "source_id": null
+        },
+        {
+          "subject": "LEDGER",
+          "field": "complete",
+          "value": true,
+          "source_id": null
+        }
+      ]
+    },
+    "FV-11-NEUTRAL": {
+      "contradictions": [],
+      "unresolved_questions": [
+        {
+          "field": "ATTRIBUTION",
+          "sources": [
+            "PK-001-M1"
+          ]
+        }
+      ],
+      "financial_issues": [],
+      "commitment_issues": [],
+      "evidence_observations": [
+        {
+          "subject": "LEDGER",
+          "field": "availability",
+          "value": "AVAILABLE",
+          "source_id": null
+        },
+        {
+          "subject": "LEDGER",
+          "field": "complete",
+          "value": true,
+          "source_id": null
+        }
+      ]
+    },
+    "FV-11-PLACEHOLDER": {
+      "contradictions": [],
+      "unresolved_questions": [
+        {
+          "field": "ATTRIBUTION",
+          "sources": [
+            "PK-001-M1"
+          ]
+        }
+      ],
+      "financial_issues": [],
+      "commitment_issues": [],
+      "evidence_observations": [
+        {
+          "subject": "LEDGER",
+          "field": "availability",
+          "value": "AVAILABLE",
+          "source_id": null
+        },
+        {
+          "subject": "LEDGER",
+          "field": "complete",
+          "value": true,
+          "source_id": null
+        }
+      ]
+    },
+    "FV-12": {
+      "contradictions": [],
+      "unresolved_questions": [
+        {
+          "field": "ATTRIBUTION",
+          "sources": [
+            "PK-001-M1"
+          ]
+        }
+      ],
+      "financial_issues": [],
+      "commitment_issues": [],
+      "evidence_observations": [
+        {
+          "subject": "LEDGER",
+          "field": "availability",
+          "value": "AVAILABLE",
+          "source_id": null
+        },
+        {
+          "subject": "LEDGER",
+          "field": "complete",
+          "value": true,
+          "source_id": null
+        }
+      ]
+    },
+    "FV-13": {
+      "contradictions": [],
+      "unresolved_questions": [
+        {
+          "field": "PAYMENT_REFERENCE",
+          "sources": [
+            "PK-003-M1"
+          ]
+        }
+      ],
+      "financial_issues": [],
+      "commitment_issues": [],
+      "evidence_observations": [
+        {
+          "subject": "LEDGER",
+          "field": "availability",
+          "value": "AVAILABLE",
+          "source_id": null
+        },
+        {
+          "subject": "LEDGER",
+          "field": "complete",
+          "value": true,
+          "source_id": null
+        }
+      ]
+    },
+    "FV-14-INVOICE": {
+      "contradictions": [
+        {
+          "kind": "INVOICE_FACT",
+          "sources": [
+            "PK-001-FV-14-I1",
+            "PK-001-I1"
+          ]
+        }
+      ],
+      "unresolved_questions": [
+        {
+          "field": "AMOUNT",
+          "sources": [
+            "PK-001-FV-14-I1"
+          ]
+        },
+        {
+          "field": "AMOUNT",
+          "sources": [
+            "PK-001-I1"
+          ]
+        },
+        {
+          "field": "ATTRIBUTION",
+          "sources": [
+            "PK-001-M1"
+          ]
+        }
+      ],
+      "financial_issues": [
+        {
+          "code": "CONFLICTING_INVOICES",
+          "sources": [
+            "PK-001-FV-14-I1",
+            "PK-001-I1"
+          ]
+        }
+      ],
+      "commitment_issues": [],
+      "evidence_observations": [
+        {
+          "subject": "LEDGER",
+          "field": "availability",
+          "value": "AVAILABLE",
+          "source_id": null
+        },
+        {
+          "subject": "LEDGER",
+          "field": "complete",
+          "value": true,
+          "source_id": null
+        }
+      ]
+    },
+    "FV-14-PAYMENT": {
+      "contradictions": [
+        {
+          "kind": "OTHER_CANDIDATE",
+          "sources": [
+            "PK-001-FV-14-L1",
+            "PK-001-L1"
+          ]
+        }
+      ],
+      "unresolved_questions": [
+        {
+          "field": "AMOUNT",
+          "sources": [
+            "PK-001-FV-14-L1"
+          ]
+        },
+        {
+          "field": "AMOUNT",
+          "sources": [
+            "PK-001-L1"
+          ]
+        },
+        {
+          "field": "PAYMENT_DATE",
+          "sources": [
+            "PK-001-FV-14-L1"
+          ]
+        },
+        {
+          "field": "PAYMENT_DATE",
+          "sources": [
+            "PK-001-L1"
+          ]
+        }
+      ],
+      "financial_issues": [
+        {
+          "code": "CONFLICTING_PAYMENTS",
+          "sources": [
+            "PK-001-FV-14-L1",
+            "PK-001-L1"
+          ]
+        }
+      ],
+      "commitment_issues": [],
+      "evidence_observations": [
+        {
+          "subject": "LEDGER",
+          "field": "availability",
+          "value": "AVAILABLE",
+          "source_id": null
+        },
+        {
+          "subject": "LEDGER",
+          "field": "complete",
+          "value": true,
+          "source_id": null
+        }
+      ]
+    },
+    "FV-15-TIE": {
+      "contradictions": [],
+      "unresolved_questions": [
+        {
+          "field": "ATTRIBUTION",
+          "sources": [
+            "PK-001-M1"
+          ]
+        }
+      ],
+      "financial_issues": [],
+      "commitment_issues": [],
+      "evidence_observations": [
+        {
+          "subject": "LEDGER",
+          "field": "availability",
+          "value": "AVAILABLE",
+          "source_id": null
+        },
+        {
+          "subject": "LEDGER",
+          "field": "complete",
+          "value": true,
+          "source_id": null
+        }
+      ]
+    },
+    "FV-15-UNDATED": {
+      "contradictions": [],
+      "unresolved_questions": [
+        {
+          "field": "ATTRIBUTION",
+          "sources": [
+            "PK-001-M1"
+          ]
+        }
+      ],
+      "financial_issues": [],
+      "commitment_issues": [],
+      "evidence_observations": [
+        {
+          "subject": "LEDGER",
+          "field": "availability",
+          "value": "AVAILABLE",
+          "source_id": null
+        },
+        {
+          "subject": "LEDGER",
+          "field": "complete",
+          "value": true,
+          "source_id": null
+        }
+      ]
+    },
+    "FV-16-LINKED": {
+      "contradictions": [],
+      "unresolved_questions": [],
+      "financial_issues": [],
+      "commitment_issues": [],
+      "evidence_observations": [
+        {
+          "subject": "LEDGER",
+          "field": "availability",
+          "value": "AVAILABLE",
+          "source_id": null
+        },
+        {
+          "subject": "LEDGER",
+          "field": "complete",
+          "value": true,
+          "source_id": null
+        }
+      ]
+    },
+    "FV-16-UNLINKED": {
+      "contradictions": [],
+      "unresolved_questions": [
+        {
+          "field": "ATTRIBUTION",
+          "sources": [
+            "PK-002-M1"
+          ]
+        }
+      ],
+      "financial_issues": [],
+      "commitment_issues": [],
+      "evidence_observations": [
+        {
+          "subject": "LEDGER",
+          "field": "availability",
+          "value": "AVAILABLE",
+          "source_id": null
+        },
+        {
+          "subject": "LEDGER",
+          "field": "complete",
+          "value": true,
+          "source_id": null
+        }
+      ]
+    },
+    "FV-17-EVIDENCE": {
+      "contradictions": [],
+      "unresolved_questions": [
+        {
+          "field": "ATTRIBUTION",
+          "sources": [
+            "PK-001-M1"
+          ]
+        }
+      ],
+      "financial_issues": [],
+      "commitment_issues": [],
+      "evidence_observations": [
+        {
+          "subject": "LEDGER",
+          "field": "availability",
+          "value": "AVAILABLE",
+          "source_id": null
+        },
+        {
+          "subject": "LEDGER",
+          "field": "complete",
+          "value": true,
+          "source_id": null
+        }
+      ]
+    },
+    "FV-17-EVIDENCE-RUN-START": {
+      "contradictions": [],
+      "unresolved_questions": [
+        {
+          "field": "ATTRIBUTION",
+          "sources": [
+            "PK-001-M1"
+          ]
+        }
+      ],
+      "financial_issues": [],
+      "commitment_issues": [],
+      "evidence_observations": [
+        {
+          "subject": "LEDGER",
+          "field": "availability",
+          "value": "AVAILABLE",
+          "source_id": null
+        },
+        {
+          "subject": "LEDGER",
+          "field": "complete",
+          "value": true,
+          "source_id": null
+        }
+      ]
+    },
+    "FV-17-SUPERSEDED": {
+      "contradictions": [],
+      "unresolved_questions": [
+        {
+          "field": "ATTRIBUTION",
+          "sources": [
+            "PK-001-M1"
+          ]
+        }
+      ],
+      "financial_issues": [],
+      "commitment_issues": [],
+      "evidence_observations": [
+        {
+          "subject": "LEDGER",
+          "field": "availability",
+          "value": "AVAILABLE",
+          "source_id": null
+        },
+        {
+          "subject": "LEDGER",
+          "field": "complete",
+          "value": true,
+          "source_id": null
+        }
+      ]
+    },
+    "FV-17-UNCHANGED": {
+      "contradictions": [],
+      "unresolved_questions": [
+        {
+          "field": "ATTRIBUTION",
+          "sources": [
+            "PK-001-M1"
+          ]
+        }
+      ],
+      "financial_issues": [],
+      "commitment_issues": [],
+      "evidence_observations": [
+        {
+          "subject": "LEDGER",
+          "field": "availability",
+          "value": "AVAILABLE",
+          "source_id": null
+        },
+        {
+          "subject": "LEDGER",
+          "field": "complete",
+          "value": true,
+          "source_id": null
+        }
+      ]
+    },
+    "FV-18-A": {
+      "contradictions": [],
+      "unresolved_questions": [
+        {
+          "field": "ATTRIBUTION",
+          "sources": [
+            "PK-002-M1"
+          ]
+        }
+      ],
+      "financial_issues": [],
+      "commitment_issues": [],
+      "evidence_observations": [
+        {
+          "subject": "LEDGER",
+          "field": "availability",
+          "value": "AVAILABLE",
+          "source_id": null
+        },
+        {
+          "subject": "LEDGER",
+          "field": "complete",
+          "value": true,
+          "source_id": null
+        }
+      ]
+    },
+    "FV-18-A-CLOCK-1": {
+      "contradictions": [],
+      "unresolved_questions": [
+        {
+          "field": "ATTRIBUTION",
+          "sources": [
+            "PK-002-M1"
+          ]
+        }
+      ],
+      "financial_issues": [],
+      "commitment_issues": [],
+      "evidence_observations": [
+        {
+          "subject": "LEDGER",
+          "field": "availability",
+          "value": "AVAILABLE",
+          "source_id": null
+        },
+        {
+          "subject": "LEDGER",
+          "field": "complete",
+          "value": true,
+          "source_id": null
+        }
+      ]
+    },
+    "FV-18-A-CLOCK-2": {
+      "contradictions": [],
+      "unresolved_questions": [
+        {
+          "field": "ATTRIBUTION",
+          "sources": [
+            "PK-002-M1"
+          ]
+        }
+      ],
+      "financial_issues": [],
+      "commitment_issues": [],
+      "evidence_observations": [
+        {
+          "subject": "LEDGER",
+          "field": "availability",
+          "value": "AVAILABLE",
+          "source_id": null
+        },
+        {
+          "subject": "LEDGER",
+          "field": "complete",
+          "value": true,
+          "source_id": null
+        }
+      ]
+    },
+    "FV-18-B": {
+      "contradictions": [],
+      "unresolved_questions": [
+        {
+          "field": "ATTRIBUTION",
+          "sources": [
+            "PK-002-M1"
+          ]
+        }
+      ],
+      "financial_issues": [],
+      "commitment_issues": [],
+      "evidence_observations": [
+        {
+          "subject": "LEDGER",
+          "field": "availability",
+          "value": "AVAILABLE",
+          "source_id": null
+        },
+        {
+          "subject": "LEDGER",
+          "field": "complete",
+          "value": true,
+          "source_id": null
+        }
+      ]
+    },
+    "FV-18-B-CLOCK-1": {
+      "contradictions": [],
+      "unresolved_questions": [
+        {
+          "field": "ATTRIBUTION",
+          "sources": [
+            "PK-002-M1"
+          ]
+        }
+      ],
+      "financial_issues": [],
+      "commitment_issues": [],
+      "evidence_observations": [
+        {
+          "subject": "LEDGER",
+          "field": "availability",
+          "value": "AVAILABLE",
+          "source_id": null
+        },
+        {
+          "subject": "LEDGER",
+          "field": "complete",
+          "value": true,
+          "source_id": null
+        }
+      ]
+    },
+    "FV-18-B-CLOCK-2": {
+      "contradictions": [],
+      "unresolved_questions": [
+        {
+          "field": "ATTRIBUTION",
+          "sources": [
+            "PK-002-M1"
+          ]
+        }
+      ],
+      "financial_issues": [],
+      "commitment_issues": [],
+      "evidence_observations": [
+        {
+          "subject": "LEDGER",
+          "field": "availability",
+          "value": "AVAILABLE",
+          "source_id": null
+        },
+        {
+          "subject": "LEDGER",
+          "field": "complete",
+          "value": true,
+          "source_id": null
+        }
+      ]
+    },
+    "PK-001-U1": {
+      "contradictions": [],
+      "unresolved_questions": [
+        {
+          "field": "ATTRIBUTION",
+          "sources": [
+            "PK-001-M2"
+          ]
+        }
+      ],
+      "financial_issues": [],
+      "commitment_issues": [],
+      "evidence_observations": [
+        {
+          "subject": "LEDGER",
+          "field": "availability",
+          "value": "AVAILABLE",
+          "source_id": null
+        },
+        {
+          "subject": "LEDGER",
+          "field": "complete",
+          "value": true,
+          "source_id": null
+        }
+      ]
+    },
+    "PK-002-U1": {
+      "contradictions": [],
+      "unresolved_questions": [
+        {
+          "field": "ATTRIBUTION",
+          "sources": [
+            "PK-002-M1"
+          ]
+        }
+      ],
+      "financial_issues": [],
+      "commitment_issues": [],
+      "evidence_observations": [
+        {
+          "subject": "LEDGER",
+          "field": "availability",
+          "value": "AVAILABLE",
+          "source_id": null
+        },
+        {
+          "subject": "LEDGER",
+          "field": "complete",
+          "value": true,
+          "source_id": null
+        }
+      ]
+    },
+    "PK-003-U1": {
+      "contradictions": [],
+      "unresolved_questions": [],
+      "financial_issues": [],
+      "commitment_issues": [],
+      "evidence_observations": [
+        {
+          "subject": "LEDGER",
+          "field": "availability",
+          "value": "AVAILABLE",
+          "source_id": null
+        },
+        {
+          "subject": "LEDGER",
+          "field": "complete",
+          "value": true,
+          "source_id": null
+        }
+      ]
+    },
+    "baseline:PK-001": {
+      "contradictions": [],
+      "unresolved_questions": [
+        {
+          "field": "ATTRIBUTION",
+          "sources": [
+            "PK-001-M1"
+          ]
+        }
+      ],
+      "financial_issues": [],
+      "commitment_issues": [],
+      "evidence_observations": [
+        {
+          "subject": "LEDGER",
+          "field": "availability",
+          "value": "AVAILABLE",
+          "source_id": null
+        },
+        {
+          "subject": "LEDGER",
+          "field": "complete",
+          "value": true,
+          "source_id": null
+        }
+      ]
+    },
+    "baseline:PK-002": {
+      "contradictions": [],
+      "unresolved_questions": [
+        {
+          "field": "ATTRIBUTION",
+          "sources": [
+            "PK-002-M1"
+          ]
+        }
+      ],
+      "financial_issues": [],
+      "commitment_issues": [],
+      "evidence_observations": [
+        {
+          "subject": "LEDGER",
+          "field": "availability",
+          "value": "AVAILABLE",
+          "source_id": null
+        },
+        {
+          "subject": "LEDGER",
+          "field": "complete",
+          "value": true,
+          "source_id": null
+        }
+      ]
+    },
+    "baseline:PK-003": {
+      "contradictions": [],
+      "unresolved_questions": [],
+      "financial_issues": [],
+      "commitment_issues": [],
+      "evidence_observations": [
+        {
+          "subject": "LEDGER",
+          "field": "availability",
+          "value": "AVAILABLE",
+          "source_id": null
+        },
+        {
+          "subject": "LEDGER",
+          "field": "complete",
+          "value": true,
+          "source_id": null
+        }
+      ]
+    }
+  }
+}

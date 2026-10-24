@@ -7,6 +7,7 @@ from uuid import UUID
 from promisekeeper.domain.dates import deadline
 from promisekeeper.domain.evidence import Availability, Issue, Payment, VerificationStatus, require_same_case
 from promisekeeper.domain.money import parse_money
+from promisekeeper.domain.record_lifecycle import project_records
 
 
 @dataclass(frozen=True, slots=True)
@@ -39,50 +40,12 @@ def reconcile_payments(case):
         raise ValueError("Duplicate evidence version")
 
     def active(records, payment=False):
-        by_id = {record.source.id: record for record in records}
-        superseded = set()
-        successors = {}
-        for record in records:
-            target = record.source.supersedes_version_id
-            if target is None:
-                continue
-            valid = (target in by_id and record.source.authoritative
-                     and record.source.availability == Availability.AVAILABLE
-                     and record.invoice_id == by_id[target].invoice_id
-                     and parse_money(record.amount_text, record.currency_text).error is None)
-            if payment:
-                valid = valid and record.verification_status == VerificationStatus.VERIFIED and record.settled
-            if not valid:
-                issue("INVALID_CORRECTION", (record,), "Review the explicit authoritative correction.", unknown=True)
-                continue
-            visited = {record.source.id}
-            cursor = target
-            while cursor in by_id and cursor is not None:
-                if cursor in visited:
-                    issue("CYCLIC_CORRECTION", (record,), "Correction references form a cycle.", unknown=True)
-                    break
-                visited.add(cursor)
-                cursor = by_id[cursor].source.supersedes_version_id
-            else:
-                superseded.add(target)
-                successors.setdefault(target, []).append(record)
-        ambiguous = set()
-        for target, corrections in successors.items():
-            if len(corrections) > 1:
-                issue("CONFLICTING_CORRECTIONS", (by_id[target], *corrections),
-                      "Competing successors do not establish independent settlements.", unknown=True)
-                ambiguous.update(record.source.id for record in corrections)
-        # A descendant cannot silently select one side of an unresolved fork.
-        while True:
-            descendants = {record.source.id for record in records
-                           if record.source.supersedes_version_id in ambiguous}
-            if descendants <= ambiguous:
-                break
-            ambiguous.update(descendants)
-        ambiguous_refs = {record.transaction_ref for record in records
-                          if payment and record.source.id in ambiguous}
-        return tuple(record for record in records if record.source.id not in superseded | ambiguous
-                     and not (payment and record.transaction_ref in ambiguous_refs))
+        nonlocal complete
+        projection = project_records(records, payment=payment)
+        issues.extend(projection.issues)
+        if projection.issues:
+            complete = False
+        return projection.active_records
 
     invoices = active(case.invoices)
     invoice_values = []

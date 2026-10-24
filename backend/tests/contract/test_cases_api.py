@@ -25,13 +25,15 @@ def test_discovery_is_read_only_three_cases_and_exact_raw_sources_survive_restar
         assert client.get("/api/v1/demonstrations").json() == {"schema_version": "1", "demonstrations": []}
         did, cases = new_demo(client)
         assert [c["catalogue_case_id"] for c in cases] == ["PK-001", "PK-002", "PK-003"]
+        assert cases[0]['due_text']=='10 October 2026'
+        assert cases[0]['due_at']=='2026-10-10T18:30:00+00:00'
         view = client.get(f"/api/v1/cases/{cases[0]['id']}", params={"demonstration_id": did}).json()
         assert view["financial_facts"]["balance"]["minor_units"] == "8000000"
         assert view["latest_completed_result"] is None
         assert view["current_result"] is None
         assert view["current_draft_version_id"] is None
         assert view["review_epoch"] == 0
-        assert view["allowed_commands"]["start_investigation"]["allowed"] is False
+        assert view["allowed_commands"]["start_investigation"]["allowed"] is True
         invoice = next(e for e in view["evidence"] if e["kind"] == "INVOICE")
         assert invoice["original_content"] == "Fictional invoice NS-104; client Northstar Analytics; INR 120,000.00; due 10 October 2026."
         assert invoice["event_at"] is None

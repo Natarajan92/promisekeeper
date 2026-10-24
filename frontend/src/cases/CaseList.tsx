@@ -1,0 +1,5 @@
+import type { CaseSummary } from '../api/types';
+import { instant } from '../components/format';
+export function CaseList({cases,selected,onSelect}:{cases:CaseSummary[];selected:string|null;onSelect:(id:string)=>void}) {
+  return <nav aria-label="Fictional cases" className="case-list"><h2>Case ledger <span>{cases.length}</span></h2>{cases.length!==3 && <p role="alert">Expected three fictional cases. Refresh the saved copy.</p>}{cases.map(item=><button key={item.id} className={`case-select ${selected===item.id?'selected':''}`} aria-current={selected===item.id?'page':undefined} onClick={()=>onSelect(item.id)}><span className="case-code">{item.catalogue_case_id} <span>{item.lifecycle}</span></span><strong>{item.client}</strong><span>{item.invoice_id} · {item.currency ?? 'Unknown currency'}</span><span>Due date: {item.due_text ?? 'Unknown due date'}</span><span>Overdue from {instant(item.due_at)}</span><span>{item.has_previous_investigation?'Previous investigation saved':'Not investigated'}</span>{item.review_required&&<span className="review-label">Review required</span>}</button>)}</nav>;
+}

@@ -6,6 +6,7 @@ import re
 from zoneinfo import ZoneInfo
 
 IST = ZoneInfo("Asia/Kolkata")
+TEMPORAL_POLICY_VERSION = 'deadline-by-1'
 _MONTHS = {name: index for index, name in enumerate(
     ("january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december"), 1)}
 
@@ -53,10 +54,13 @@ def deadline(raw, *, original_at=None):
     if raw is None:
         return DateValue(raw, None, "UNKNOWN_DATE")
     try:
-        if re.match(r"^[0-9]{4}-[0-9]{2}-[0-9]{2}[Tt]", raw):
-            instant = parse_instant(raw)
+        # A deadline connector is not evidence of an actual payment day.
+        # Keep the original raw value and leave shared calendar parsing strict.
+        expression = re.sub(r"^by ", "", raw, count=1, flags=re.IGNORECASE)
+        if re.match(r"^[0-9]{4}-[0-9]{2}-[0-9]{2}[Tt]", expression):
+            instant = parse_instant(expression)
         else:
-            day = _calendar_day(raw, original_at) + timedelta(days=1)
+            day = _calendar_day(expression, original_at) + timedelta(days=1)
             instant = datetime.combine(day, time.min, IST).astimezone(timezone.utc)
         return DateValue(raw, instant, None)
     except (ValueError, TypeError, OverflowError):

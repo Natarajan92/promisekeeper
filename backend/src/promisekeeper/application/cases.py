@@ -6,6 +6,7 @@ from datetime import datetime
 from promisekeeper.application.operations import CommandError, canonical, instant, replay, save_receipt, utcnow
 from promisekeeper.fixtures.catalogue import fresh_copy
 from promisekeeper.domain.payments import reconcile_payments
+from promisekeeper.domain.dates import deadline
 from promisekeeper.persistence.repositories import (
     append_event, append_evidence, case, demonstration, evaluation_at, load_fixture, source_view,
 )
@@ -102,6 +103,8 @@ def _case_view(con, did, cid, fixture, demo):
     allowed = {name: dict(allowed=False, blocking_reasons=["GATE_NOT_IMPLEMENTED"]) for name in
                ("start_investigation", "edit_draft", "approve_draft", "reject_draft", "close", "reopen")}
     allowed["confirm_scenario_event"] = dict(allowed=True, blocking_reasons=[])
+    start_blocks = (["CASE_CLOSED"] if row["lifecycle"] != "OPEN" else []) + (["INVESTIGATION_RUNNING"] if running else [])
+    allowed["start_investigation"] = dict(allowed=not start_blocks, blocking_reasons=start_blocks)
     return dict(schema_version="1", **{k: row[k] for k in (
         "id", "demonstration_id", "catalogue_case_id", "client", "invoice_id", "lifecycle", "case_revision",
         "evidence_revision", "review_epoch", "current_draft_version_id", "ledger_availability")},
@@ -131,9 +134,14 @@ def list_cases(db, did):
         summaries = []
         for row in con.execute("SELECT * FROM cases WHERE demonstration_id=? ORDER BY catalogue_case_id", (did,)).fetchall():
             view = _case_view(con, did, row["id"], fixture, demo)
+            invoices=fixture.cases[row['catalogue_case_id']].evidence.invoices
+            superseded={i.source.supersedes_version_id for i in invoices if i.source.supersedes_version_id}
+            due_texts={i.due_text for i in invoices if i.source.authoritative and i.source.availability=='AVAILABLE' and i.source.id not in superseded
+                       and view['financial_facts']['due_at'] and deadline(i.due_text,original_at=i.source.event_at).expires_at==datetime.fromisoformat(view['financial_facts']['due_at'])}
             summaries.append({k: view[k] for k in ("id", "catalogue_case_id", "client", "invoice_id", "lifecycle", "case_revision", "review_required")}
                              | dict(currency="INR" if view["financial_facts"]["invoice"] else None,
                                     due_at=view["financial_facts"]["due_at"],
+                                    due_text=next(iter(due_texts)) if len(due_texts)==1 else None,
                                     has_previous_investigation=bool(con.execute("SELECT 1 FROM investigations WHERE case_id=?", (row["id"],)).fetchone())))
         return dict(schema_version="1", demonstration_id=did, clock_mode=demo["clock_mode"], evaluation_at=instant(evaluation_at(demo)), cases=summaries)
 

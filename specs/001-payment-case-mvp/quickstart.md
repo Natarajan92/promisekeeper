@@ -1,6 +1,6 @@
 # Implementation and Validation Guide
 
-**Status**: Gates I–II are implemented under the owner's authorization. See [Gate I](../../reports/phase-i.md) and [Gate II](../../reports/phase-ii.md) for executed checks. `init-demo`, `serve`, discovery, case/evidence/history reads and fixture preview/confirmation are available. Case UI, Investigator integration, review/closure workflows and release evaluations remain planned for their later gates.
+**Status**: Gates I–II are implemented and owner-approved. Gate III adds the case UI, bounded Investigator pipeline and live evaluation command; the owner approved implementation and moving to Gate IV on 24 October 2026, while T060 LIVE qualification remains outstanding. See [Gate I](../../reports/phase-i.md), [Gate II](../../reports/phase-ii.md) and [Gate III](../../reports/phase-iii.md) for executed checks and limits. Draft review, closure and release acceptance remain later-gate work.
 
 ## Prerequisites and phase authorization
 
@@ -23,14 +23,13 @@ $env:PK_DB_PATH = Join-Path $repoPath '.runtime\promisekeeper.sqlite'
 uv python install 3.12
 uv sync --project backend --frozen
 npm.cmd --prefix frontend ci
-npm.cmd --prefix frontend exec -- playwright install chromium
 ```
 
 Initial lockfile generation belongs to authorized Phase I; `--frozen`/`ci` intentionally fail if manifests/locks are missing or inconsistent. Record Python, SQLite, Node, dependency and catalogue versions in the validation report. Add tzdata for Windows and verify Asia/Kolkata resolves. Do not present planned compatibility as a successful install.
 
 ## Start an explicitly fictional demonstration
 
-`python -m promisekeeper.cli` provides `init-demo` and `serve`. The `evaluate`, `measure` and `report` commands remain planned for later gates. Optional `init-demo --variant <registered-id>` creates a fresh approved variant copy; it never modifies another copy.
+`python -m promisekeeper.cli` provides `init-demo`, `serve` and `evaluate --suite live`. The `measure` and `report` commands remain planned for later gates. Optional `init-demo --variant <registered-id>` creates a fresh approved variant copy; it never modifies another copy.
 
 ```powershell
 $env:PK_AGENT_MODE = 'STUB'
@@ -39,13 +38,13 @@ npm.cmd --prefix frontend run build
 uv run --project backend python -m promisekeeper.cli serve --host 127.0.0.1 --port 8000 --workers 1
 ```
 
-Gate II serves the built placeholder at `http://127.0.0.1:8000`; use `/docs` or `/api/v1/demonstrations` to inspect the API. Each copy contains exactly PK-001, PK-002 and PK-003; a baseline REFERENCE copy starts at 23 October 2026 10:00 IST. Restart `serve` without `init-demo` to preserve copies/history. The server acquires its process lock and records old running attempts incomplete before readiness. A second process fails without changing the owning process's state. Case/evidence/history/scenario routes require `?demonstration_id=<selected-copy-id>`. Mutations require JSON, `X-PromiseKeeper-Request: 1`, and a strict version-1 operation envelope. The Gate III root-page discovery/selection UI described below remains future work.
+The built case workspace is served at `http://127.0.0.1:8000`; use `/docs` or `/api/v1/demonstrations` to inspect the API. Each copy contains exactly PK-001, PK-002 and PK-003; a baseline REFERENCE copy starts at 23 October 2026 10:00 IST. Restart `serve` without `init-demo` to preserve copies/history. The server acquires its process lock and records old running attempts incomplete before readiness. A second process fails without changing the owning process's state. Case/evidence/history/scenario/investigation routes require `?demonstration_id=<selected-copy-id>`. Mutations require JSON, `X-PromiseKeeper-Request: 1`, and a strict version-1 operation envelope.
 
-The planned root page will list retained copies, restore a valid browser selection, select a sole copy, show a chooser for multiple copies, or require explicit creation for an empty list. Listing errors must preserve the saved preference and show recovery instead of creating/resetting data. Browser selection and reload usability acceptance are unexecuted.
+The root page lists retained copies, restores a valid browser selection, selects a sole copy, shows a chooser for multiple copies, or requires explicit creation for an empty list. Listing errors preserve the saved preference and show recovery. Automated Chrome/API journeys exercised these states, reload and backend restart; representative-owner usability acceptance remains unexecuted.
 
 For frontend development, use `npm.cmd --prefix frontend run dev -- --host 127.0.0.1` in another terminal; proxy `/api` to port 8000 and allow only that explicit loopback development origin. Avoid backend auto-reload/multiple workers while testing ownership/recovery.
 
-For LIVE acceptance, set PK_AGENT_MODE=LIVE, PK_OPENAI_MODEL=gpt-5.6-terra and OPENAI_API_KEY through local environment/secret configuration without printing or committing it. Restart the backend; verify the LIVE label. Missing credentials, unavailable account/model or refusal must produce truthful capability/incomplete behavior, not silently switch to STUB. Record requested/returned model and prompt/schema versions. No live provider call was performed during planning.
+For LIVE acceptance, copy the repository's `.env.example` to the Git-ignored `.env`, fill in `NEBIUS_API_KEY`, set `PK_NEBIUS_MODEL` to the explicitly selected Nebius model, and choose `PK_AGENT_MODE=LIVE` for live application runs. The backend loads this file; existing process environment variables take precedence. Keep credentials out of frontend/VITE variables. Nebius replaced the original OpenAI provider at the owner's direction; see ADR-006. Restart the backend and verify the LIVE label. Missing credentials, unavailable account/model or refusal must produce truthful capability/incomplete behavior, without switching providers, models or STUB silently. Record requested/returned model, response identity and prompt/schema/adapter versions. An explicit `evaluate --suite live` command performs real provider calls independently of the application's STUB setting and reports actual acceptance results.
 
 ## Baseline and update walkthrough
 
@@ -75,7 +74,7 @@ Gate II implements GET /api/v1/cases/{id}/scenario-events/{event_id}/preview and
 - Kill the backend after start commit; after approval commit before response; during result save; and during draft work. Restart without reseeding. Reconcile operation IDs, preserve last committed state, never duplicate an approval/closure or accept a late callback.
 - Race evidence update/start/approve/close commands with real temporary SQLite connections. Assert serialized eligibility and source snapshots; repeated same ID replays, changed payload with same ID conflicts. Race starts on different cases: only the one that reserves the global slot may persist RUNNING/invalidate approval. Save a newer draft edit and verify approval of the older exact version remains blocked.
 
-## Planned automated commands
+## Available automated commands
 
 ```powershell
 uv run --project backend pytest backend/tests/domain backend/tests/contract backend/tests/integration
@@ -83,15 +82,19 @@ npm.cmd --prefix frontend run typecheck
 npm.cmd --prefix frontend run test:unit -- --run
 npm.cmd --prefix frontend run build
 npm.cmd --prefix frontend run test:e2e
-uv run --project backend python -m promisekeeper.cli evaluate --suite fixtures --report reports/fixture-evaluation.json
 ```
 
-The e2e script must launch the real local API and a separate temporary database with a scripted Investigator, block external networking, and cover complete UI/API/data flows. Unit fake time does not prove actual 60-second UI behavior; include real-time forced-failure e2e measurements. Add JSON schema and strict extra-field/source-span cases for [the Investigator contract](contracts/investigator-output.schema.json). Do not use a production or existing demonstration database in automated tests.
+The e2e script uses installed Chrome, the real local API and a separate temporary database with a scripted Investigator. Its Python child is restricted to loopback networking. It covers complete UI/API/data flows. Unit fake time does not prove actual 60-second UI behavior; real-time forced-failure measurements remain a release requirement. Contract tests cover strict extra-field/source-span cases for [the Investigator contract](contracts/investigator-output.schema.json). Do not use a retained demonstration database in automated tests.
 
-With live access configured during Phase III/V:
+With live access configured during Phase III:
 
 ```powershell
-uv run --project backend python -m promisekeeper.cli evaluate --suite live --catalogue release-0.1 --repeats 3 --report reports/live-evaluation.json
+uv run --project backend python -m promisekeeper.cli evaluate --suite live --catalogue release-0.1 --repeats 3 --output reports/live-evaluation.json
+```
+
+The following measurement commands remain planned for Gate V and are not currently available:
+
+```powershell
 uv run --project backend python -m promisekeeper.cli measure --suite responsiveness --trials-per-case 10 --report reports/responsiveness.json
 uv run --project backend python -m promisekeeper.cli measure --suite preservation --cycles 10 --report reports/preservation.json
 ```

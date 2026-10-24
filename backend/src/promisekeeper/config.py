@@ -13,6 +13,7 @@ class Settings:
     model: str
     db_path: Path
     api_key: str | None = field(repr=False)
+    provider: str = 'NEBIUS'
 
     @property
     def capability_available(self) -> bool:
@@ -24,22 +25,35 @@ class Settings:
 
 
 def load_settings(env: Mapping[str, str] | None = None, *, workspace: Path | None = None) -> Settings:
-    env = os.environ if env is None else env
     root = (workspace or Path(__file__).resolve().parents[3]).resolve()
-    allowed = {"PK_AGENT_MODE", "PK_OPENAI_MODEL", "PK_DB_PATH", "PK_ALLOW_LIVE_TESTS"}
+    process = os.environ if env is None else env
+    file_env = {}
+    path = root / '.env'
+    if path.is_file():
+        for line in path.read_text(encoding='utf-8-sig').splitlines():
+            line=line.strip()
+            if not line or line.startswith('#'): continue
+            name,separator,value=line.partition('=')
+            if not separator or not re.fullmatch(r'[A-Za-z_][A-Za-z0-9_]*',name.strip()):
+                raise ValueError('Invalid environment file entry')
+            value=value.strip()
+            if len(value)>=2 and value[0]==value[-1] and value[0] in {'"',"'"}: value=value[1:-1]
+            file_env[name.strip()]=value
+    env = file_env | dict(process)
+    allowed = {"PK_AGENT_MODE", "PK_OPENAI_MODEL", "PK_NEBIUS_MODEL", "PK_DB_PATH", "PK_ALLOW_LIVE_TESTS"}
     if any(name.startswith("PK_") and name not in allowed for name in env):
         raise ValueError("Unknown PK configuration field")
     mode = env.get("PK_AGENT_MODE", "STUB")
     if mode not in {"STUB", "LIVE"}:
         raise ValueError("PK_AGENT_MODE must be STUB or LIVE")
-    model = env.get("PK_OPENAI_MODEL", "gpt-5.6-terra")
-    if not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_.:\-]{0,199}", model):
-        raise ValueError("PK_OPENAI_MODEL is invalid")
+    model = env.get("PK_NEBIUS_MODEL", env.get('PK_OPENAI_MODEL', 'Qwen/Qwen3-235B-A22B-Instruct-2507'))
+    if not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_./:\-]{0,199}", model):
+        raise ValueError("Model configuration is invalid")
     db_path = Path(env.get("PK_DB_PATH", str(root / ".runtime" / "promisekeeper.sqlite")))
     if not db_path.is_absolute():
         raise ValueError("PK_DB_PATH must be absolute")
     db_path = db_path.resolve()
     if not db_path.is_relative_to(root):
         raise ValueError("PK_DB_PATH must stay inside the workspace")
-    secret = env.get("OPENAI_API_KEY", "").strip() or None
+    secret = env.get("NEBIUS_API_KEY", "").strip() or None
     return Settings(mode, model, db_path, secret)

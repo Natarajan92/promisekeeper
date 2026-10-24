@@ -31,7 +31,7 @@ def test_runtime_database_cannot_escape_workspace(tmp_path):
 
 
 def test_secrets_are_not_in_configuration_representation(tmp_path):
-    settings = load_settings({"PK_AGENT_MODE": "LIVE", "OPENAI_API_KEY": "secret-example-value"}, workspace=tmp_path)
+    settings = load_settings({"PK_AGENT_MODE": "LIVE", "NEBIUS_API_KEY": "secret-example-value"}, workspace=tmp_path)
     assert settings.capability_available
     assert "secret-example-value" not in repr(settings)
     assert "secret-example-value" not in str(settings.safe_summary())

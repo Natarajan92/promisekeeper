@@ -101,10 +101,16 @@ class MoneyView(StrictInput):
     minor_units: Annotated[str, Field(pattern=r"^-?(0|[1-9][0-9]*)$")]
 
 
+class SourceVersionRef(StrictInput):
+    source_id: str
+    evidence_version_id: Id
+
+
 class FinancialIssue(StrictInput):
     code: str
     sources: list[str]
     detail: str
+    source_versions: list[SourceVersionRef] = Field(default_factory=list)
 
 
 class FinancialView(StrictInput):
@@ -128,6 +134,7 @@ class CaseSummary(StrictInput):
     invoice_id: str
     currency: str | None
     due_at: Instant | None
+    due_text: str | None
     lifecycle: Literal["OPEN", "CLOSED"]
     case_revision: Revision
     has_previous_investigation: bool

@@ -1,0 +1,8 @@
+import { useEffect, useRef } from 'react';
+import type { Evidence } from '../api/types';
+import { instant, words } from '../components/format';
+export function SourceViewer({source,onClose}:{source:Evidence;onClose:()=>void}) {
+  const ref=useRef<HTMLDialogElement>(null);
+  useEffect(()=>{const dialog=ref.current;const previous=document.activeElement as HTMLElement|null;dialog?.showModal?.();return ()=>{previous?.focus();};},[]);
+  return <dialog ref={ref} open={!HTMLDialogElement.prototype.showModal} aria-labelledby="source-title" onCancel={onClose} className="source-dialog"><header><div><p>{words(source.kind)} · {source.availability}</p><h2 id="source-title">{source.stable_source_id} / version {source.version}</h2></div><button onClick={onClose} aria-label="Close source viewer">Close</button></header><dl className="source-details"><div><dt>Exact version</dt><dd>{source.id}</dd></div><div><dt>Event time</dt><dd>{instant(source.event_at)}</dd></div><div><dt>Arrival time</dt><dd>{instant(source.arrived_at)}</dd></div><div><dt>Authority</dt><dd>{source.authoritative?'Designated source':'Non-authoritative'}</dd></div>{source.data.verification_status&&<div><dt>Payment verification</dt><dd>{String(source.data.verification_status)}</dd></div>}</dl><h3>Original wording</h3><pre>{source.original_content || 'No readable original content.'}</pre>{source.commitment_anchors.map(anchor=><div className="anchor" key={anchor.id}><h3>Commitment clause: {anchor.commitment_key}</h3><blockquote>{Array.from(source.original_content).slice(anchor.clause_start,anchor.clause_end).join('')}</blockquote><p className="subtle">Preserved source anchor {anchor.id}</p></div>)}</dialog>;
+}

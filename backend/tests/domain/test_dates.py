@@ -3,7 +3,40 @@ from types import SimpleNamespace
 
 import pytest
 
-from promisekeeper.domain.dates import advance_reference, deadline, evaluation_time, ordered_timeline, parse_instant, review_boundary
+from promisekeeper.domain.dates import advance_reference, deadline, evaluation_time, ordered_timeline, parse_instant, review_boundary, source_day
+
+
+@pytest.mark.parametrize('raw,original,want', [
+    ('by 20 October 2026', None, '2026-10-20T18:30:00+00:00'),
+    ('by 2026-10-20', None, '2026-10-20T18:30:00+00:00'),
+    ('By 2026-10-20T17:00:00+02:00', None, '2026-10-20T15:00:00+00:00'),
+    ('by tomorrow', '2026-10-21T23:30:00-04:00', '2026-10-22T18:30:00+00:00'),
+    ('by today', '2026-10-21T23:30:00-04:00', '2026-10-21T18:30:00+00:00'),
+])
+def test_single_by_connector_preserves_raw_deadline_but_never_proves_payment_day(raw,original,want):
+    original = datetime.fromisoformat(original) if original else None
+    result = deadline(raw, original_at=original)
+    assert result.raw == raw
+    assert result.error is None
+    assert result.expires_at == datetime.fromisoformat(want)
+    assert source_day(raw, original_at=original) is None
+
+
+@pytest.mark.parametrize('raw', [
+    'not by 20 October 2026', 'by about 20 October 2026', 'by 20 October 2026 approximately',
+    'by by 20 October 2026', 'before 20 October 2026', 'by soon', 'by 31 February 2026',
+    'by 20 October', 'by tomorrow', 'by today', 'by 2026-10-20T17:00:00',
+    'by20 October 2026', 'by ', 'by 9999-12-31',
+])
+def test_by_connector_does_not_resolve_unknown_unsupported_or_unanchored_deadlines(raw):
+    result = deadline(raw)
+    assert result.raw == raw and result.error == 'UNRESOLVED_DATE'
+    assert result.expires_at is None
+
+
+def test_by_relative_requires_aware_original_source_clock():
+    assert deadline('by tomorrow', original_at=datetime(2026,10,21)).expires_at is None
+    assert source_day('20 October 2026').isoformat() == '2026-10-20'
 
 
 @pytest.mark.parametrize("raw,want", [

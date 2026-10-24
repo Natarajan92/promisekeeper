@@ -1,0 +1,679 @@
+{
+  "schema_version": "1",
+  "suite": "live",
+  "agent_mode": "LIVE",
+  "provider": "NEBIUS",
+  "catalogue_version": "release-0.1",
+  "requested_model": "zai-org/GLM-5.3-Flash",
+  "prompt_version": "candidate-extraction-3",
+  "extraction_schema_version": "1",
+  "adapter_version": "nebius-chat-json-schema-3",
+  "repeats": 3,
+  "started_at": "2026-10-24T05:17:25.277654+00:00",
+  "status": "INTERRUPTED",
+  "blocking_reason": "HTTP_529_RETRY_POLICY_FIX_AND_LIVE_LATENCY_FAILURES",
+  "runs": [
+    {
+      "case": "baseline:PK-001",
+      "repeat": 1,
+      "status": "PASS",
+      "attempt_status": "COMPLETE",
+      "failure_code": null,
+      "returned_models": [
+        "zai-org/GLM-5.3-Flash"
+      ],
+      "response_ids": [
+        "648672ae28164b23b5a4deba45c1e05a"
+      ],
+      "extraction_correct": true,
+      "source_validation_correct": true,
+      "uncertainty_correct": true,
+      "deterministic_outcome_correct": true,
+      "latency_seconds": 12.157,
+      "action": "FOLLOW_UP"
+    },
+    {
+      "case": "baseline:PK-002",
+      "repeat": 1,
+      "status": "FAIL",
+      "attempt_status": "INCOMPLETE",
+      "failure_code": "PROVIDER_REJECTED_REQUEST",
+      "returned_models": [],
+      "response_ids": [],
+      "extraction_correct": null,
+      "source_validation_correct": null,
+      "uncertainty_correct": null,
+      "deterministic_outcome_correct": false,
+      "latency_seconds": 4.5,
+      "action": null
+    },
+    {
+      "case": "baseline:PK-003",
+      "repeat": 1,
+      "status": "PASS",
+      "attempt_status": "COMPLETE",
+      "failure_code": null,
+      "returned_models": [
+        "zai-org/GLM-5.3-Flash"
+      ],
+      "response_ids": [
+        "1499eed596b444b383dab0137f7460b5"
+      ],
+      "extraction_correct": true,
+      "source_validation_correct": true,
+      "uncertainty_correct": true,
+      "deterministic_outcome_correct": true,
+      "latency_seconds": 14.812,
+      "action": "VERIFY_PAYMENT"
+    },
+    {
+      "case": "PK-001-U1",
+      "repeat": 1,
+      "status": "PASS",
+      "attempt_status": "COMPLETE",
+      "failure_code": null,
+      "returned_models": [
+        "zai-org/GLM-5.3-Flash"
+      ],
+      "response_ids": [
+        "a34437ca5a864087bc05ceee199508e0"
+      ],
+      "extraction_correct": true,
+      "source_validation_correct": true,
+      "uncertainty_correct": true,
+      "deterministic_outcome_correct": true,
+      "latency_seconds": 13.547,
+      "action": "WAIT"
+    },
+    {
+      "case": "PK-002-U1",
+      "repeat": 1,
+      "status": "PASS",
+      "attempt_status": "COMPLETE",
+      "failure_code": null,
+      "returned_models": [
+        "zai-org/GLM-5.3-Flash"
+      ],
+      "response_ids": [
+        "3c51ae701b1e4d55b82bf8df21100cd7"
+      ],
+      "extraction_correct": true,
+      "source_validation_correct": true,
+      "uncertainty_correct": true,
+      "deterministic_outcome_correct": true,
+      "latency_seconds": 11.391,
+      "action": "FOLLOW_UP"
+    },
+    {
+      "case": "PK-003-U1",
+      "repeat": 1,
+      "status": "PASS",
+      "attempt_status": "COMPLETE",
+      "failure_code": null,
+      "returned_models": [
+        "zai-org/GLM-5.3-Flash"
+      ],
+      "response_ids": [
+        "7eb150d079a343feb7723aaef6c593a6"
+      ],
+      "extraction_correct": true,
+      "source_validation_correct": true,
+      "uncertainty_correct": true,
+      "deterministic_outcome_correct": true,
+      "latency_seconds": 15.765,
+      "action": "CLOSE"
+    },
+    {
+      "case": "FV-01",
+      "repeat": 1,
+      "status": "PASS",
+      "attempt_status": "LIMITED",
+      "failure_code": null,
+      "returned_models": [
+        "zai-org/GLM-5.3-Flash"
+      ],
+      "response_ids": [
+        "8002c50919e04c13bd9a6193c902d3ca"
+      ],
+      "extraction_correct": true,
+      "source_validation_correct": true,
+      "uncertainty_correct": true,
+      "deterministic_outcome_correct": true,
+      "latency_seconds": 16.704,
+      "action": "VERIFY_PAYMENT"
+    },
+    {
+      "case": "FV-02-INVOICE",
+      "repeat": 1,
+      "status": "PASS",
+      "attempt_status": "LIMITED",
+      "failure_code": null,
+      "returned_models": [
+        "zai-org/GLM-5.3-Flash"
+      ],
+      "response_ids": [
+        "872bb1794e6f49ca9de3be4b668268ee"
+      ],
+      "extraction_correct": true,
+      "source_validation_correct": true,
+      "uncertainty_correct": true,
+      "deterministic_outcome_correct": true,
+      "latency_seconds": 10.843,
+      "action": "VERIFY_PAYMENT"
+    },
+    {
+      "case": "FV-02-PROMISE",
+      "repeat": 1,
+      "status": "PASS",
+      "attempt_status": "COMPLETE",
+      "failure_code": null,
+      "returned_models": [
+        "zai-org/GLM-5.3-Flash"
+      ],
+      "response_ids": [
+        "5a9e556bf0c7493f8265f9999b44e3db"
+      ],
+      "extraction_correct": true,
+      "source_validation_correct": true,
+      "uncertainty_correct": true,
+      "deterministic_outcome_correct": true,
+      "latency_seconds": 14.0,
+      "action": "FOLLOW_UP"
+    },
+    {
+      "case": "FV-03",
+      "repeat": 1,
+      "status": "PASS",
+      "attempt_status": "COMPLETE",
+      "failure_code": null,
+      "returned_models": [
+        "zai-org/GLM-5.3-Flash"
+      ],
+      "response_ids": [
+        "1432191dbc7644f1b889e82a78c6e580"
+      ],
+      "extraction_correct": true,
+      "source_validation_correct": true,
+      "uncertainty_correct": true,
+      "deterministic_outcome_correct": true,
+      "latency_seconds": 16.296,
+      "action": "VERIFY_PAYMENT"
+    },
+    {
+      "case": "FV-04",
+      "repeat": 1,
+      "status": "FAIL",
+      "attempt_status": "INCOMPLETE",
+      "failure_code": "INVESTIGATOR_TIMEOUT",
+      "returned_models": [],
+      "response_ids": [],
+      "extraction_correct": null,
+      "source_validation_correct": null,
+      "uncertainty_correct": null,
+      "deterministic_outcome_correct": false,
+      "latency_seconds": 40.406,
+      "action": null
+    },
+    {
+      "case": "FV-05",
+      "repeat": 1,
+      "status": "PASS",
+      "attempt_status": "LIMITED",
+      "failure_code": null,
+      "returned_models": [
+        "zai-org/GLM-5.3-Flash"
+      ],
+      "response_ids": [
+        "603f73abc6fd42b69db91263ca366d50"
+      ],
+      "extraction_correct": true,
+      "source_validation_correct": true,
+      "uncertainty_correct": true,
+      "deterministic_outcome_correct": true,
+      "latency_seconds": 19.594,
+      "action": "VERIFY_PAYMENT"
+    },
+    {
+      "case": "FV-06-DUPLICATE",
+      "repeat": 1,
+      "status": "PASS",
+      "attempt_status": "COMPLETE",
+      "failure_code": null,
+      "returned_models": [
+        "zai-org/GLM-5.3-Flash"
+      ],
+      "response_ids": [
+        "5c951e3f2bcb49a78c7c706d041f807b"
+      ],
+      "extraction_correct": true,
+      "source_validation_correct": true,
+      "uncertainty_correct": true,
+      "deterministic_outcome_correct": true,
+      "latency_seconds": 18.015,
+      "action": "CLOSE"
+    },
+    {
+      "case": "FV-06-REVERSAL",
+      "repeat": 1,
+      "status": "PASS",
+      "attempt_status": "COMPLETE",
+      "failure_code": null,
+      "returned_models": [
+        "zai-org/GLM-5.3-Flash"
+      ],
+      "response_ids": [
+        "7573cbd6d90a4b4a885cb5102e02f688"
+      ],
+      "extraction_correct": true,
+      "source_validation_correct": true,
+      "uncertainty_correct": true,
+      "deterministic_outcome_correct": true,
+      "latency_seconds": 36.422,
+      "action": "VERIFY_PAYMENT"
+    },
+    {
+      "case": "FV-07-CURRENCY",
+      "repeat": 1,
+      "status": "FAIL",
+      "attempt_status": "INCOMPLETE",
+      "failure_code": "INVESTIGATOR_TIMEOUT",
+      "returned_models": [],
+      "response_ids": [],
+      "extraction_correct": null,
+      "source_validation_correct": null,
+      "uncertainty_correct": null,
+      "deterministic_outcome_correct": false,
+      "latency_seconds": 40.359,
+      "action": null
+    },
+    {
+      "case": "FV-07-MISSING",
+      "repeat": 1,
+      "status": "PASS",
+      "attempt_status": "LIMITED",
+      "failure_code": null,
+      "returned_models": [
+        "zai-org/GLM-5.3-Flash"
+      ],
+      "response_ids": [
+        "b0db1fad73194c9b8a6fecf153adb76e"
+      ],
+      "extraction_correct": true,
+      "source_validation_correct": true,
+      "uncertainty_correct": true,
+      "deterministic_outcome_correct": true,
+      "latency_seconds": 16.641,
+      "action": "VERIFY_PAYMENT"
+    },
+    {
+      "case": "FV-07-NEGATIVE",
+      "repeat": 1,
+      "status": "PASS",
+      "attempt_status": "LIMITED",
+      "failure_code": null,
+      "returned_models": [
+        "zai-org/GLM-5.3-Flash"
+      ],
+      "response_ids": [
+        "10c8f1cd87204a6cac574d7c76d23835"
+      ],
+      "extraction_correct": true,
+      "source_validation_correct": true,
+      "uncertainty_correct": true,
+      "deterministic_outcome_correct": true,
+      "latency_seconds": 8.985,
+      "action": "VERIFY_PAYMENT"
+    },
+    {
+      "case": "FV-07-OVERPAYMENT",
+      "repeat": 1,
+      "status": "FAIL",
+      "attempt_status": "INCOMPLETE",
+      "failure_code": "INVESTIGATOR_TIMEOUT",
+      "returned_models": [],
+      "response_ids": [],
+      "extraction_correct": null,
+      "source_validation_correct": null,
+      "uncertainty_correct": null,
+      "deterministic_outcome_correct": false,
+      "latency_seconds": 40.313,
+      "action": null
+    },
+    {
+      "case": "FV-07-PRECISION",
+      "repeat": 1,
+      "status": "FAIL",
+      "attempt_status": "INCOMPLETE",
+      "failure_code": "INVESTIGATOR_TIMEOUT",
+      "returned_models": [],
+      "response_ids": [],
+      "extraction_correct": null,
+      "source_validation_correct": null,
+      "uncertainty_correct": null,
+      "deterministic_outcome_correct": false,
+      "latency_seconds": 40.407,
+      "action": null
+    },
+    {
+      "case": "FV-08-SOON",
+      "repeat": 1,
+      "status": "PASS",
+      "attempt_status": "COMPLETE",
+      "failure_code": null,
+      "returned_models": [
+        "zai-org/GLM-5.3-Flash"
+      ],
+      "response_ids": [
+        "74f2d9529a7e4176b2488ca1a585b480"
+      ],
+      "extraction_correct": true,
+      "source_validation_correct": true,
+      "uncertainty_correct": true,
+      "deterministic_outcome_correct": true,
+      "latency_seconds": 11.813,
+      "action": "VERIFY_PAYMENT"
+    },
+    {
+      "case": "FV-08-TOMORROW",
+      "repeat": 1,
+      "status": "PASS",
+      "attempt_status": "COMPLETE",
+      "failure_code": null,
+      "returned_models": [
+        "zai-org/GLM-5.3-Flash"
+      ],
+      "response_ids": [
+        "a1fc161574a7443cacd9eb24e37f61d1"
+      ],
+      "extraction_correct": true,
+      "source_validation_correct": true,
+      "uncertainty_correct": true,
+      "deterministic_outcome_correct": true,
+      "latency_seconds": 15.672,
+      "action": "VERIFY_PAYMENT"
+    },
+    {
+      "case": "FV-09-EXTRACTION",
+      "repeat": 1,
+      "status": "PASS",
+      "attempt_status": "COMPLETE",
+      "failure_code": null,
+      "returned_models": [
+        "zai-org/GLM-5.3-Flash"
+      ],
+      "response_ids": [
+        "ca17a49ed60f4c12847297db2e786e5a"
+      ],
+      "extraction_correct": true,
+      "source_validation_correct": true,
+      "uncertainty_correct": true,
+      "deterministic_outcome_correct": true,
+      "latency_seconds": 31.515,
+      "action": "FOLLOW_UP"
+    },
+    {
+      "case": "FV-09-INTERRUPTION",
+      "repeat": 1,
+      "status": "PASS",
+      "attempt_status": "COMPLETE",
+      "failure_code": null,
+      "returned_models": [
+        "zai-org/GLM-5.3-Flash"
+      ],
+      "response_ids": [
+        "40ae0db291bc4d678075a48ebdd588a8"
+      ],
+      "extraction_correct": true,
+      "source_validation_correct": true,
+      "uncertainty_correct": true,
+      "deterministic_outcome_correct": true,
+      "latency_seconds": 10.516,
+      "action": "FOLLOW_UP"
+    },
+    {
+      "case": "FV-09-RETRIEVAL",
+      "repeat": 1,
+      "status": "PASS",
+      "attempt_status": "COMPLETE",
+      "failure_code": null,
+      "returned_models": [
+        "zai-org/GLM-5.3-Flash"
+      ],
+      "response_ids": [
+        "41d0831b869e4418a259c6282259f7d6"
+      ],
+      "extraction_correct": true,
+      "source_validation_correct": true,
+      "uncertainty_correct": true,
+      "deterministic_outcome_correct": true,
+      "latency_seconds": 8.25,
+      "action": "FOLLOW_UP"
+    },
+    {
+      "case": "FV-09-RETRY",
+      "repeat": 1,
+      "status": "PASS",
+      "attempt_status": "COMPLETE",
+      "failure_code": null,
+      "returned_models": [
+        "zai-org/GLM-5.3-Flash"
+      ],
+      "response_ids": [
+        "b0f19e1c54f34a47a896a756ea83cd84"
+      ],
+      "extraction_correct": true,
+      "source_validation_correct": true,
+      "uncertainty_correct": true,
+      "deterministic_outcome_correct": true,
+      "latency_seconds": 13.61,
+      "action": "FOLLOW_UP"
+    },
+    {
+      "case": "FV-10-EDIT",
+      "repeat": 1,
+      "status": "PASS",
+      "attempt_status": "COMPLETE",
+      "failure_code": null,
+      "returned_models": [
+        "zai-org/GLM-5.3-Flash"
+      ],
+      "response_ids": [
+        "e47f4a840a594a6981ceab3656723456"
+      ],
+      "extraction_correct": true,
+      "source_validation_correct": true,
+      "uncertainty_correct": true,
+      "deterministic_outcome_correct": true,
+      "latency_seconds": 8.922,
+      "action": "FOLLOW_UP"
+    },
+    {
+      "case": "FV-10-EVIDENCE",
+      "repeat": 1,
+      "status": "FAIL",
+      "attempt_status": "INCOMPLETE",
+      "failure_code": "PROVIDER_REJECTED_REQUEST",
+      "returned_models": [],
+      "response_ids": [],
+      "extraction_correct": null,
+      "source_validation_correct": null,
+      "uncertainty_correct": null,
+      "deterministic_outcome_correct": false,
+      "latency_seconds": 24.907,
+      "action": null
+    },
+    {
+      "case": "FV-10-RECIPIENT",
+      "repeat": 1,
+      "status": "PASS",
+      "attempt_status": "COMPLETE",
+      "failure_code": null,
+      "returned_models": [
+        "zai-org/GLM-5.3-Flash"
+      ],
+      "response_ids": [
+        "15b7dfeac9ba4a819c58595cc909b2b1"
+      ],
+      "extraction_correct": true,
+      "source_validation_correct": true,
+      "uncertainty_correct": true,
+      "deterministic_outcome_correct": true,
+      "latency_seconds": 12.25,
+      "action": "FOLLOW_UP"
+    },
+    {
+      "case": "FV-10-REPEAT",
+      "repeat": 1,
+      "status": "PASS",
+      "attempt_status": "COMPLETE",
+      "failure_code": null,
+      "returned_models": [
+        "zai-org/GLM-5.3-Flash"
+      ],
+      "response_ids": [
+        "0e6d91784deb468995f5798c765680cd"
+      ],
+      "extraction_correct": true,
+      "source_validation_correct": true,
+      "uncertainty_correct": true,
+      "deterministic_outcome_correct": true,
+      "latency_seconds": 9.891,
+      "action": "FOLLOW_UP"
+    },
+    {
+      "case": "FV-11-AMOUNT",
+      "repeat": 1,
+      "status": "PASS",
+      "attempt_status": "COMPLETE",
+      "failure_code": null,
+      "returned_models": [
+        "zai-org/GLM-5.3-Flash"
+      ],
+      "response_ids": [
+        "fd136df30c2f42fd8327193b43ddc651"
+      ],
+      "extraction_correct": true,
+      "source_validation_correct": true,
+      "uncertainty_correct": true,
+      "deterministic_outcome_correct": true,
+      "latency_seconds": 11.406,
+      "action": "FOLLOW_UP"
+    },
+    {
+      "case": "FV-11-FEE",
+      "repeat": 1,
+      "status": "PASS",
+      "attempt_status": "COMPLETE",
+      "failure_code": null,
+      "returned_models": [
+        "zai-org/GLM-5.3-Flash"
+      ],
+      "response_ids": [
+        "593a4efb50fd4815a3327061f3cf641e"
+      ],
+      "extraction_correct": true,
+      "source_validation_correct": true,
+      "uncertainty_correct": true,
+      "deterministic_outcome_correct": true,
+      "latency_seconds": 10.891,
+      "action": "FOLLOW_UP"
+    },
+    {
+      "case": "FV-11-NEUTRAL",
+      "repeat": 1,
+      "status": "PASS",
+      "attempt_status": "COMPLETE",
+      "failure_code": null,
+      "returned_models": [
+        "zai-org/GLM-5.3-Flash"
+      ],
+      "response_ids": [
+        "ad8ab4b61ff444c596766f9c654f03af"
+      ],
+      "extraction_correct": true,
+      "source_validation_correct": true,
+      "uncertainty_correct": true,
+      "deterministic_outcome_correct": true,
+      "latency_seconds": 10.843,
+      "action": "FOLLOW_UP"
+    },
+    {
+      "case": "FV-11-PLACEHOLDER",
+      "repeat": 1,
+      "status": "PASS",
+      "attempt_status": "COMPLETE",
+      "failure_code": null,
+      "returned_models": [
+        "zai-org/GLM-5.3-Flash"
+      ],
+      "response_ids": [
+        "2b1de1e3c45f4c4a88361f499b55f387"
+      ],
+      "extraction_correct": true,
+      "source_validation_correct": true,
+      "uncertainty_correct": true,
+      "deterministic_outcome_correct": true,
+      "latency_seconds": 19.75,
+      "action": "FOLLOW_UP"
+    },
+    {
+      "case": "FV-12",
+      "repeat": 1,
+      "status": "PASS",
+      "attempt_status": "COMPLETE",
+      "failure_code": null,
+      "returned_models": [
+        "zai-org/GLM-5.3-Flash"
+      ],
+      "response_ids": [
+        "e44f328eba66467a9d186e1b3c705ac4"
+      ],
+      "extraction_correct": true,
+      "source_validation_correct": true,
+      "uncertainty_correct": true,
+      "deterministic_outcome_correct": true,
+      "latency_seconds": 14.937,
+      "action": "FOLLOW_UP"
+    },
+    {
+      "case": "FV-13",
+      "repeat": 1,
+      "status": "PASS",
+      "attempt_status": "COMPLETE",
+      "failure_code": null,
+      "returned_models": [
+        "zai-org/GLM-5.3-Flash"
+      ],
+      "response_ids": [
+        "1cdbca401a0b47e68a41871d1a1a9458"
+      ],
+      "extraction_correct": true,
+      "source_validation_correct": true,
+      "uncertainty_correct": true,
+      "deterministic_outcome_correct": true,
+      "latency_seconds": 16.172,
+      "action": "VERIFY_PAYMENT"
+    }
+  ],
+  "interrupted_at": "2026-10-24T05:30:14.311037+00:00",
+  "unexecuted_runs": 118,
+  "interruptions": [
+    {
+      "at": "2026-10-24T05:19:58.597858+00:00",
+      "reason": "PROVIDER_REJECTION_DIAGNOSIS",
+      "completed_runs": 10
+    },
+    {
+      "at": "2026-10-24T05:30:14.311037+00:00",
+      "reason": "HTTP_529_RETRY_POLICY_FIX_AND_LIVE_LATENCY_FAILURES",
+      "completed_runs": 35
+    }
+  ],
+  "resumptions": [
+    {
+      "at": "2026-10-24T05:21:47.113789+00:00",
+      "completed_runs_retained": 10,
+      "basis": "Continue remaining planned identities only; original failed acceptance result is retained. Each independent evaluate invocation uses one case; merged repeat records its original planned repetition. Production/model/prompt/schema/adapter unchanged after original-offset correction."
+    }
+  ]
+}

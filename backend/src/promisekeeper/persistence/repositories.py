@@ -112,9 +112,10 @@ def source_view(con, row):
 
 
 def capture_snapshot(con, row):
-    sources = [source_view(con, r) for r in con.execute(
+    records = list(con.execute(
         "SELECT * FROM evidence_versions WHERE demonstration_id=? AND case_id=? ORDER BY stable_source_id,version,id",
-        (row["demonstration_id"], row["id"]))]
+        (row["demonstration_id"], row["id"])))
+    sources = [source_view(con, r) | dict(original_event_at=json.loads(r['record_json'])['event_at']) for r in records]
     packet = dict(schema_version="1", demonstration_id=row["demonstration_id"], case_id=row["id"],
                   evidence_revision=row["evidence_revision"], evidence=sources,
                   ledger_availability=row["ledger_availability"], ledger_complete=bool(row["ledger_complete"]))

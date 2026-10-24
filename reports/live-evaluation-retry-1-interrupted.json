@@ -1,0 +1,3341 @@
+{
+  "schema_version": "1",
+  "suite": "live",
+  "agent_mode": "LIVE",
+  "provider": "NEBIUS",
+  "catalogue_version": "release-0.1",
+  "requested_model": "zai-org/GLM-5.3-Flash",
+  "prompt_version": "candidate-extraction-7",
+  "extraction_schema_version": "1",
+  "adapter_version": "nebius-chat-json-schema-9",
+  "request_parameters": {
+    "temperature": 0,
+    "max_tokens": 8000,
+    "reasoning_effort": "low"
+  },
+  "extraction_policy_version": "candidate-only-1",
+  "temporal_policy_version": "deadline-by-1",
+  "findings_version": "deterministic-1",
+  "inventory_version": "gate-iii-findings-1",
+  "inventory_hash": "78867b575bc69b0f1ee8ce4783ecd9264d1678deb8d6fb6a0c0469e97bad3632",
+  "repeats": 3,
+  "started_at": "2026-10-24T13:17:29.054470+00:00",
+  "status": "INTERRUPTED",
+  "qualified": false,
+  "qualification_scope": "RELEASE",
+  "blocking_reason": "THREE_CONSECUTIVE_NO_RESPONSE_CASES",
+  "evaluator_version": "5",
+  "criteria_version": "gate-iii-live-4",
+  "criteria_uri": "reports/live-evaluation-criteria.md",
+  "manifest_entries": [
+    "baseline:PK-001",
+    "baseline:PK-002",
+    "baseline:PK-003",
+    "PK-001-U1",
+    "PK-002-U1",
+    "PK-003-U1",
+    "FV-01",
+    "FV-02-INVOICE",
+    "FV-02-PROMISE",
+    "FV-03",
+    "FV-04",
+    "FV-05",
+    "FV-06-DUPLICATE",
+    "FV-06-REVERSAL",
+    "FV-07-CURRENCY",
+    "FV-07-MISSING",
+    "FV-07-NEGATIVE",
+    "FV-07-OVERPAYMENT",
+    "FV-07-PRECISION",
+    "FV-08-SOON",
+    "FV-08-TOMORROW",
+    "FV-09-EXTRACTION",
+    "FV-09-INTERRUPTION",
+    "FV-09-RETRIEVAL",
+    "FV-09-RETRY",
+    "FV-10-EDIT",
+    "FV-10-EVIDENCE",
+    "FV-10-RECIPIENT",
+    "FV-10-REPEAT",
+    "FV-11-AMOUNT",
+    "FV-11-FEE",
+    "FV-11-NEUTRAL",
+    "FV-11-PLACEHOLDER",
+    "FV-12",
+    "FV-13",
+    "FV-14-INVOICE",
+    "FV-14-PAYMENT",
+    "FV-15-TIE",
+    "FV-15-UNDATED",
+    "FV-16-LINKED",
+    "FV-16-UNLINKED",
+    "FV-17-EVIDENCE",
+    "FV-17-EVIDENCE-RUN-START",
+    "FV-17-SUPERSEDED",
+    "FV-17-UNCHANGED",
+    "FV-18-A",
+    "FV-18-A-CLOCK-1",
+    "FV-18-A-CLOCK-2",
+    "FV-18-B",
+    "FV-18-B-CLOCK-1",
+    "FV-18-B-CLOCK-2"
+  ],
+  "manifest_definitions": [
+    {
+      "id": "baseline:PK-001",
+      "variant": null,
+      "case_id": "PK-001",
+      "events": []
+    },
+    {
+      "id": "baseline:PK-002",
+      "variant": null,
+      "case_id": "PK-002",
+      "events": []
+    },
+    {
+      "id": "baseline:PK-003",
+      "variant": null,
+      "case_id": "PK-003",
+      "events": []
+    },
+    {
+      "id": "PK-001-U1",
+      "variant": null,
+      "case_id": "PK-001",
+      "events": [
+        "PK-001-U1"
+      ]
+    },
+    {
+      "id": "PK-002-U1",
+      "variant": null,
+      "case_id": "PK-002",
+      "events": [
+        "PK-002-U1"
+      ]
+    },
+    {
+      "id": "PK-003-U1",
+      "variant": null,
+      "case_id": "PK-003",
+      "events": [
+        "PK-003-U1"
+      ]
+    },
+    {
+      "id": "FV-01",
+      "variant": "FV-01",
+      "case_id": "PK-001",
+      "events": []
+    },
+    {
+      "id": "FV-02-INVOICE",
+      "variant": "FV-02-INVOICE",
+      "case_id": "PK-001",
+      "events": []
+    },
+    {
+      "id": "FV-02-PROMISE",
+      "variant": "FV-02-PROMISE",
+      "case_id": "PK-001",
+      "events": []
+    },
+    {
+      "id": "FV-03",
+      "variant": "FV-03",
+      "case_id": "PK-003",
+      "events": []
+    },
+    {
+      "id": "FV-04",
+      "variant": "FV-04",
+      "case_id": "PK-002",
+      "events": []
+    },
+    {
+      "id": "FV-05",
+      "variant": "FV-05",
+      "case_id": "PK-003",
+      "events": []
+    },
+    {
+      "id": "FV-06-DUPLICATE",
+      "variant": "FV-06-DUPLICATE",
+      "case_id": "PK-003",
+      "events": []
+    },
+    {
+      "id": "FV-06-REVERSAL",
+      "variant": "FV-06-REVERSAL",
+      "case_id": "PK-003",
+      "events": []
+    },
+    {
+      "id": "FV-07-CURRENCY",
+      "variant": "FV-07-CURRENCY",
+      "case_id": "PK-003",
+      "events": []
+    },
+    {
+      "id": "FV-07-MISSING",
+      "variant": "FV-07-MISSING",
+      "case_id": "PK-003",
+      "events": []
+    },
+    {
+      "id": "FV-07-NEGATIVE",
+      "variant": "FV-07-NEGATIVE",
+      "case_id": "PK-003",
+      "events": []
+    },
+    {
+      "id": "FV-07-OVERPAYMENT",
+      "variant": "FV-07-OVERPAYMENT",
+      "case_id": "PK-003",
+      "events": []
+    },
+    {
+      "id": "FV-07-PRECISION",
+      "variant": "FV-07-PRECISION",
+      "case_id": "PK-003",
+      "events": []
+    },
+    {
+      "id": "FV-08-SOON",
+      "variant": "FV-08-SOON",
+      "case_id": "PK-002",
+      "events": []
+    },
+    {
+      "id": "FV-08-TOMORROW",
+      "variant": "FV-08-TOMORROW",
+      "case_id": "PK-002",
+      "events": []
+    },
+    {
+      "id": "FV-09-EXTRACTION",
+      "variant": "FV-09-EXTRACTION",
+      "case_id": "PK-001",
+      "events": []
+    },
+    {
+      "id": "FV-09-INTERRUPTION",
+      "variant": "FV-09-INTERRUPTION",
+      "case_id": "PK-001",
+      "events": []
+    },
+    {
+      "id": "FV-09-RETRIEVAL",
+      "variant": "FV-09-RETRIEVAL",
+      "case_id": "PK-001",
+      "events": []
+    },
+    {
+      "id": "FV-09-RETRY",
+      "variant": "FV-09-RETRY",
+      "case_id": "PK-001",
+      "events": []
+    },
+    {
+      "id": "FV-10-EDIT",
+      "variant": "FV-10-EDIT",
+      "case_id": "PK-001",
+      "events": []
+    },
+    {
+      "id": "FV-10-EVIDENCE",
+      "variant": "FV-10-EVIDENCE",
+      "case_id": "PK-001",
+      "events": []
+    },
+    {
+      "id": "FV-10-RECIPIENT",
+      "variant": "FV-10-RECIPIENT",
+      "case_id": "PK-001",
+      "events": []
+    },
+    {
+      "id": "FV-10-REPEAT",
+      "variant": "FV-10-REPEAT",
+      "case_id": "PK-001",
+      "events": []
+    },
+    {
+      "id": "FV-11-AMOUNT",
+      "variant": "FV-11-AMOUNT",
+      "case_id": "PK-001",
+      "events": []
+    },
+    {
+      "id": "FV-11-FEE",
+      "variant": "FV-11-FEE",
+      "case_id": "PK-001",
+      "events": []
+    },
+    {
+      "id": "FV-11-NEUTRAL",
+      "variant": "FV-11-NEUTRAL",
+      "case_id": "PK-001",
+      "events": []
+    },
+    {
+      "id": "FV-11-PLACEHOLDER",
+      "variant": "FV-11-PLACEHOLDER",
+      "case_id": "PK-001",
+      "events": []
+    },
+    {
+      "id": "FV-12",
+      "variant": "FV-12",
+      "case_id": "PK-001",
+      "events": []
+    },
+    {
+      "id": "FV-13",
+      "variant": "FV-13",
+      "case_id": "PK-003",
+      "events": []
+    },
+    {
+      "id": "FV-14-INVOICE",
+      "variant": "FV-14-INVOICE",
+      "case_id": "PK-001",
+      "events": []
+    },
+    {
+      "id": "FV-14-PAYMENT",
+      "variant": "FV-14-PAYMENT",
+      "case_id": "PK-001",
+      "events": []
+    },
+    {
+      "id": "FV-15-TIE",
+      "variant": "FV-15-TIE",
+      "case_id": "PK-001",
+      "events": []
+    },
+    {
+      "id": "FV-15-UNDATED",
+      "variant": "FV-15-UNDATED",
+      "case_id": "PK-001",
+      "events": []
+    },
+    {
+      "id": "FV-16-LINKED",
+      "variant": "FV-16-LINKED",
+      "case_id": "PK-002",
+      "events": []
+    },
+    {
+      "id": "FV-16-UNLINKED",
+      "variant": "FV-16-UNLINKED",
+      "case_id": "PK-002",
+      "events": []
+    },
+    {
+      "id": "FV-17-EVIDENCE",
+      "variant": "FV-17-EVIDENCE",
+      "case_id": "PK-001",
+      "events": []
+    },
+    {
+      "id": "FV-17-EVIDENCE-RUN-START",
+      "variant": "FV-17-EVIDENCE",
+      "case_id": "PK-001",
+      "events": [
+        "FV-17-EVIDENCE-RUN-START"
+      ]
+    },
+    {
+      "id": "FV-17-SUPERSEDED",
+      "variant": "FV-17-SUPERSEDED",
+      "case_id": "PK-001",
+      "events": []
+    },
+    {
+      "id": "FV-17-UNCHANGED",
+      "variant": "FV-17-UNCHANGED",
+      "case_id": "PK-001",
+      "events": []
+    },
+    {
+      "id": "FV-18-A",
+      "variant": "FV-18-A",
+      "case_id": "PK-002",
+      "events": []
+    },
+    {
+      "id": "FV-18-A-CLOCK-1",
+      "variant": "FV-18-A",
+      "case_id": "PK-002",
+      "events": [
+        "FV-18-A-CLOCK-1"
+      ]
+    },
+    {
+      "id": "FV-18-A-CLOCK-2",
+      "variant": "FV-18-A",
+      "case_id": "PK-002",
+      "events": [
+        "FV-18-A-CLOCK-1",
+        "FV-18-A-CLOCK-2"
+      ]
+    },
+    {
+      "id": "FV-18-B",
+      "variant": "FV-18-B",
+      "case_id": "PK-002",
+      "events": []
+    },
+    {
+      "id": "FV-18-B-CLOCK-1",
+      "variant": "FV-18-B",
+      "case_id": "PK-002",
+      "events": [
+        "FV-18-B-CLOCK-1"
+      ]
+    },
+    {
+      "id": "FV-18-B-CLOCK-2",
+      "variant": "FV-18-B",
+      "case_id": "PK-002",
+      "events": [
+        "FV-18-B-CLOCK-1",
+        "FV-18-B-CLOCK-2"
+      ]
+    }
+  ],
+  "manifest_hash": "17bcb26aa33ae4bab8fd37abf7e2260cda1089d47eaedc9bc67e7b89f38e1f81",
+  "runs": [
+    {
+      "case": "baseline:PK-001",
+      "repeat": 1,
+      "attempt_status": "COMPLETE",
+      "failure_code": null,
+      "returned_models": [
+        "zai-org/GLM-5.3-Flash"
+      ],
+      "response_ids": [
+        "b51fab3bd64540c2b19c6aee1089dbec"
+      ],
+      "extraction_correct": true,
+      "source_validation_correct": true,
+      "extraction_policy_correct": true,
+      "validated_uncertainty": {
+        "contradictions": [],
+        "unresolved": []
+      },
+      "actual_candidate_facts": {
+        "commitments": [
+          {
+            "source_id": "PK-001-M1",
+            "commitment_key": "PK-001-M1-C1",
+            "speaker": "Fictional client",
+            "amount_text": "80,000",
+            "currency_text": "INR",
+            "date_text": "20 October 2026",
+            "explicitly_replaces_source_id": null
+          }
+        ],
+        "payment_claims": []
+      },
+      "model_policy_evidence": {
+        "contradictions": [],
+        "unresolved": []
+      },
+      "returned_outputs": [
+        {
+          "candidate_facts": {
+            "commitments": [
+              {
+                "source_id": "PK-001-M1",
+                "commitment_key": "PK-001-M1-C1",
+                "speaker": "Fictional client",
+                "amount_text": "80,000",
+                "currency_text": "INR",
+                "date_text": "20 October 2026",
+                "explicitly_replaces_source_id": null
+              }
+            ],
+            "payment_claims": []
+          },
+          "model_policy_evidence": {
+            "contradictions": [],
+            "unresolved": []
+          },
+          "extraction_correct": true,
+          "source_validation_correct": true,
+          "extraction_policy_correct": true,
+          "response_id": "b51fab3bd64540c2b19c6aee1089dbec",
+          "returned_model": "zai-org/GLM-5.3-Flash",
+          "adapter_version": "nebius-chat-json-schema-9"
+        }
+      ],
+      "actual_findings": {
+        "contradictions": [],
+        "unresolved_questions": [
+          {
+            "field": "ATTRIBUTION",
+            "sources": [
+              {
+                "end": 42,
+                "evidence_version_id": "a60537e8-5477-5b2d-bf4c-da34b7e7ba86",
+                "quote": "We will pay INR 80,000 by 20 October 2026.",
+                "source_id": "PK-001-M1",
+                "start": 0
+              }
+            ]
+          }
+        ],
+        "financial_issues": [],
+        "commitment_issues": [],
+        "evidence_observations": [
+          {
+            "field": "availability",
+            "snapshot_hash": "fd849ee3faac5f77879387cab67f98704ba8fc7388bbb7de08b9f9d0139e47db",
+            "snapshot_id": "572bb835-9b01-42fc-9850-0f0497c8a7e2",
+            "source": null,
+            "subject": "LEDGER",
+            "value": "AVAILABLE"
+          },
+          {
+            "field": "complete",
+            "snapshot_hash": "fd849ee3faac5f77879387cab67f98704ba8fc7388bbb7de08b9f9d0139e47db",
+            "snapshot_id": "572bb835-9b01-42fc-9850-0f0497c8a7e2",
+            "source": null,
+            "subject": "LEDGER",
+            "value": true
+          }
+        ]
+      },
+      "expected_findings": {
+        "contradictions": [],
+        "unresolved_questions": [
+          {
+            "field": "ATTRIBUTION",
+            "sources": [
+              "PK-001-M1"
+            ]
+          }
+        ],
+        "financial_issues": [],
+        "commitment_issues": [],
+        "evidence_observations": [
+          {
+            "subject": "LEDGER",
+            "field": "availability",
+            "value": "AVAILABLE",
+            "source_id": null
+          },
+          {
+            "subject": "LEDGER",
+            "field": "complete",
+            "value": true,
+            "source_id": null
+          }
+        ]
+      },
+      "findings_source_validation_correct": true,
+      "findings_soundness_correct": true,
+      "findings_completeness_correct": true,
+      "findings_duplicates_correct": true,
+      "expected_candidate_facts": {
+        "commitments": [
+          {
+            "source_id": "PK-001-M1",
+            "commitment_key": "PK-001-M1-C1",
+            "speaker": "Fictional client",
+            "amount_text": "80,000",
+            "currency_text": "INR",
+            "date_text": "20 October 2026",
+            "explicitly_replaces_source_id": null
+          }
+        ],
+        "payment_claims": []
+      },
+      "deterministic_outcome_correct": true,
+      "latency_seconds": 3.407,
+      "action": "FOLLOW_UP",
+      "result_present": true,
+      "progress": [
+        {
+          "step_name": "EVIDENCE_LOOKUP",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T13:17:30.090033+00:00",
+          "ended_at": "2026-10-24T13:17:30.105621+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "EXTRACTION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T13:17:30.126506+00:00",
+          "ended_at": "2026-10-24T13:17:32.593560+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "VALIDATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T13:17:32.642947+00:00",
+          "ended_at": "2026-10-24T13:17:32.666007+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "RECONCILIATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T13:17:32.679114+00:00",
+          "ended_at": "2026-10-24T13:17:32.705267+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        }
+      ],
+      "attempt_timing": {
+        "started_at": "2026-10-24T13:17:29.776056+00:00",
+        "terminal_at": "2026-10-24T13:17:32.730317+00:00",
+        "deadline_at": "2026-10-24T13:18:24.776056+00:00"
+      },
+      "status": "PASS"
+    },
+    {
+      "case": "baseline:PK-002",
+      "repeat": 1,
+      "attempt_status": "COMPLETE",
+      "failure_code": null,
+      "returned_models": [
+        "zai-org/GLM-5.3-Flash"
+      ],
+      "response_ids": [
+        "07f2f5917c7c4134b54ef72d09b7a5dc"
+      ],
+      "extraction_correct": true,
+      "source_validation_correct": true,
+      "extraction_policy_correct": true,
+      "validated_uncertainty": {
+        "contradictions": [],
+        "unresolved": []
+      },
+      "actual_candidate_facts": {
+        "commitments": [
+          {
+            "source_id": "PK-002-M1",
+            "commitment_key": "PK-002-M1-C1",
+            "speaker": "Fictional client",
+            "amount_text": "50,000",
+            "currency_text": "INR",
+            "date_text": "25 October 2026",
+            "explicitly_replaces_source_id": null
+          }
+        ],
+        "payment_claims": []
+      },
+      "model_policy_evidence": {
+        "contradictions": [],
+        "unresolved": []
+      },
+      "returned_outputs": [
+        {
+          "candidate_facts": {
+            "commitments": [
+              {
+                "source_id": "PK-002-M1",
+                "commitment_key": "PK-002-M1-C1",
+                "speaker": "Fictional client",
+                "amount_text": "50,000",
+                "currency_text": "INR",
+                "date_text": "25 October 2026",
+                "explicitly_replaces_source_id": null
+              }
+            ],
+            "payment_claims": []
+          },
+          "model_policy_evidence": {
+            "contradictions": [],
+            "unresolved": []
+          },
+          "extraction_correct": true,
+          "source_validation_correct": true,
+          "extraction_policy_correct": true,
+          "response_id": "07f2f5917c7c4134b54ef72d09b7a5dc",
+          "returned_model": "zai-org/GLM-5.3-Flash",
+          "adapter_version": "nebius-chat-json-schema-9"
+        }
+      ],
+      "actual_findings": {
+        "contradictions": [],
+        "unresolved_questions": [
+          {
+            "field": "ATTRIBUTION",
+            "sources": [
+              {
+                "end": 42,
+                "evidence_version_id": "4b6271dd-09ec-56ae-988a-ce0fd0caef3c",
+                "quote": "We will pay INR 50,000 by 25 October 2026.",
+                "source_id": "PK-002-M1",
+                "start": 0
+              }
+            ]
+          }
+        ],
+        "financial_issues": [],
+        "commitment_issues": [],
+        "evidence_observations": [
+          {
+            "field": "availability",
+            "snapshot_hash": "7f055e138cd918daa51e4e7e2d253de1f7133e4e13142e70973ad29f2516f6aa",
+            "snapshot_id": "f6418695-daec-47aa-8674-6bac92a7fbce",
+            "source": null,
+            "subject": "LEDGER",
+            "value": "AVAILABLE"
+          },
+          {
+            "field": "complete",
+            "snapshot_hash": "7f055e138cd918daa51e4e7e2d253de1f7133e4e13142e70973ad29f2516f6aa",
+            "snapshot_id": "f6418695-daec-47aa-8674-6bac92a7fbce",
+            "source": null,
+            "subject": "LEDGER",
+            "value": true
+          }
+        ]
+      },
+      "expected_findings": {
+        "contradictions": [],
+        "unresolved_questions": [
+          {
+            "field": "ATTRIBUTION",
+            "sources": [
+              "PK-002-M1"
+            ]
+          }
+        ],
+        "financial_issues": [],
+        "commitment_issues": [],
+        "evidence_observations": [
+          {
+            "subject": "LEDGER",
+            "field": "availability",
+            "value": "AVAILABLE",
+            "source_id": null
+          },
+          {
+            "subject": "LEDGER",
+            "field": "complete",
+            "value": true,
+            "source_id": null
+          }
+        ]
+      },
+      "findings_source_validation_correct": true,
+      "findings_soundness_correct": true,
+      "findings_completeness_correct": true,
+      "findings_duplicates_correct": true,
+      "expected_candidate_facts": {
+        "commitments": [
+          {
+            "source_id": "PK-002-M1",
+            "commitment_key": "PK-002-M1-C1",
+            "speaker": "Fictional client",
+            "amount_text": "50,000",
+            "currency_text": "INR",
+            "date_text": "25 October 2026",
+            "explicitly_replaces_source_id": null
+          }
+        ],
+        "payment_claims": []
+      },
+      "deterministic_outcome_correct": true,
+      "latency_seconds": 2.687,
+      "action": "WAIT",
+      "result_present": true,
+      "progress": [
+        {
+          "step_name": "EVIDENCE_LOOKUP",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T13:17:33.564171+00:00",
+          "ended_at": "2026-10-24T13:17:33.597207+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "EXTRACTION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T13:17:33.609372+00:00",
+          "ended_at": "2026-10-24T13:17:35.490932+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "VALIDATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T13:17:35.553813+00:00",
+          "ended_at": "2026-10-24T13:17:35.567174+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "RECONCILIATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T13:17:35.593028+00:00",
+          "ended_at": "2026-10-24T13:17:35.612149+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        }
+      ],
+      "attempt_timing": {
+        "started_at": "2026-10-24T13:17:33.501690+00:00",
+        "terminal_at": "2026-10-24T13:17:35.646992+00:00",
+        "deadline_at": "2026-10-24T13:18:28.501690+00:00"
+      },
+      "status": "PASS"
+    },
+    {
+      "case": "baseline:PK-003",
+      "repeat": 1,
+      "attempt_status": "COMPLETE",
+      "failure_code": null,
+      "returned_models": [
+        "zai-org/GLM-5.3-Flash"
+      ],
+      "response_ids": [
+        "a403f67375754250b7d67e80a2ef1d50"
+      ],
+      "extraction_correct": true,
+      "source_validation_correct": true,
+      "extraction_policy_correct": true,
+      "validated_uncertainty": {
+        "contradictions": [],
+        "unresolved": []
+      },
+      "actual_candidate_facts": {
+        "commitments": [],
+        "payment_claims": [
+          {
+            "source_id": "PK-003-M1",
+            "speaker": "Fictional client",
+            "amount_text": "60,000",
+            "currency_text": "INR",
+            "payment_date_text": "today",
+            "transaction_reference_text": "CR-T2"
+          }
+        ]
+      },
+      "model_policy_evidence": {
+        "contradictions": [],
+        "unresolved": []
+      },
+      "returned_outputs": [
+        {
+          "candidate_facts": {
+            "commitments": [],
+            "payment_claims": [
+              {
+                "source_id": "PK-003-M1",
+                "speaker": "Fictional client",
+                "amount_text": "60,000",
+                "currency_text": "INR",
+                "payment_date_text": "today",
+                "transaction_reference_text": "CR-T2"
+              }
+            ]
+          },
+          "model_policy_evidence": {
+            "contradictions": [],
+            "unresolved": []
+          },
+          "extraction_correct": true,
+          "source_validation_correct": true,
+          "extraction_policy_correct": true,
+          "response_id": "a403f67375754250b7d67e80a2ef1d50",
+          "returned_model": "zai-org/GLM-5.3-Flash",
+          "adapter_version": "nebius-chat-json-schema-9"
+        }
+      ],
+      "actual_findings": {
+        "contradictions": [],
+        "unresolved_questions": [],
+        "financial_issues": [],
+        "commitment_issues": [],
+        "evidence_observations": [
+          {
+            "field": "availability",
+            "snapshot_hash": "cad5230d3ca50c676a41a03ee8d20c51bf0bb23b822a598d7fbb4c54d04f75bc",
+            "snapshot_id": "610cb249-71fe-4f79-9305-2689af106f3a",
+            "source": null,
+            "subject": "LEDGER",
+            "value": "AVAILABLE"
+          },
+          {
+            "field": "complete",
+            "snapshot_hash": "cad5230d3ca50c676a41a03ee8d20c51bf0bb23b822a598d7fbb4c54d04f75bc",
+            "snapshot_id": "610cb249-71fe-4f79-9305-2689af106f3a",
+            "source": null,
+            "subject": "LEDGER",
+            "value": true
+          }
+        ]
+      },
+      "expected_findings": {
+        "contradictions": [],
+        "unresolved_questions": [],
+        "financial_issues": [],
+        "commitment_issues": [],
+        "evidence_observations": [
+          {
+            "subject": "LEDGER",
+            "field": "availability",
+            "value": "AVAILABLE",
+            "source_id": null
+          },
+          {
+            "subject": "LEDGER",
+            "field": "complete",
+            "value": true,
+            "source_id": null
+          }
+        ]
+      },
+      "findings_source_validation_correct": true,
+      "findings_soundness_correct": true,
+      "findings_completeness_correct": true,
+      "findings_duplicates_correct": true,
+      "expected_candidate_facts": {
+        "commitments": [],
+        "payment_claims": [
+          {
+            "source_id": "PK-003-M1",
+            "speaker": "Fictional client",
+            "amount_text": "60,000",
+            "currency_text": "INR",
+            "payment_date_text": "today",
+            "transaction_reference_text": "CR-T2"
+          }
+        ]
+      },
+      "deterministic_outcome_correct": true,
+      "latency_seconds": 3.406,
+      "action": "VERIFY_PAYMENT",
+      "result_present": true,
+      "progress": [
+        {
+          "step_name": "EVIDENCE_LOOKUP",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T13:17:37.038690+00:00",
+          "ended_at": "2026-10-24T13:17:37.082924+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "EXTRACTION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T13:17:37.109246+00:00",
+          "ended_at": "2026-10-24T13:17:39.190991+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "VALIDATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T13:17:39.231616+00:00",
+          "ended_at": "2026-10-24T13:17:39.247098+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "RECONCILIATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T13:17:39.275952+00:00",
+          "ended_at": "2026-10-24T13:17:39.299362+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        }
+      ],
+      "attempt_timing": {
+        "started_at": "2026-10-24T13:17:36.502138+00:00",
+        "terminal_at": "2026-10-24T13:17:39.326891+00:00",
+        "deadline_at": "2026-10-24T13:18:31.502138+00:00"
+      },
+      "status": "PASS"
+    },
+    {
+      "case": "PK-001-U1",
+      "repeat": 1,
+      "attempt_status": "COMPLETE",
+      "failure_code": null,
+      "returned_models": [
+        "zai-org/GLM-5.3-Flash"
+      ],
+      "response_ids": [
+        "279265d84c8d4d9c9d407fe98176a51f"
+      ],
+      "extraction_correct": true,
+      "source_validation_correct": true,
+      "extraction_policy_correct": true,
+      "validated_uncertainty": {
+        "contradictions": [],
+        "unresolved": []
+      },
+      "actual_candidate_facts": {
+        "commitments": [
+          {
+            "source_id": "PK-001-M1",
+            "commitment_key": "PK-001-M1-C1",
+            "speaker": "Fictional client",
+            "amount_text": "80,000",
+            "currency_text": "INR",
+            "date_text": "20 October 2026",
+            "explicitly_replaces_source_id": null
+          },
+          {
+            "source_id": "PK-001-M2",
+            "commitment_key": "PK-001-M2-C1",
+            "speaker": "Fictional client",
+            "amount_text": "80,000",
+            "currency_text": "INR",
+            "date_text": "25 October 2026",
+            "explicitly_replaces_source_id": "PK-001-M1"
+          }
+        ],
+        "payment_claims": []
+      },
+      "model_policy_evidence": {
+        "contradictions": [],
+        "unresolved": []
+      },
+      "returned_outputs": [
+        {
+          "candidate_facts": {
+            "commitments": [
+              {
+                "source_id": "PK-001-M1",
+                "commitment_key": "PK-001-M1-C1",
+                "speaker": "Fictional client",
+                "amount_text": "80,000",
+                "currency_text": "INR",
+                "date_text": "20 October 2026",
+                "explicitly_replaces_source_id": null
+              },
+              {
+                "source_id": "PK-001-M2",
+                "commitment_key": "PK-001-M2-C1",
+                "speaker": "Fictional client",
+                "amount_text": "80,000",
+                "currency_text": "INR",
+                "date_text": "25 October 2026",
+                "explicitly_replaces_source_id": "PK-001-M1"
+              }
+            ],
+            "payment_claims": []
+          },
+          "model_policy_evidence": {
+            "contradictions": [],
+            "unresolved": []
+          },
+          "extraction_correct": true,
+          "source_validation_correct": true,
+          "extraction_policy_correct": true,
+          "response_id": "279265d84c8d4d9c9d407fe98176a51f",
+          "returned_model": "zai-org/GLM-5.3-Flash",
+          "adapter_version": "nebius-chat-json-schema-9"
+        }
+      ],
+      "actual_findings": {
+        "contradictions": [],
+        "unresolved_questions": [
+          {
+            "field": "ATTRIBUTION",
+            "sources": [
+              {
+                "end": 76,
+                "evidence_version_id": "c1db8622-5c8f-59db-bc13-6fc4cc678ad4",
+                "quote": "We explicitly replace our 20 October promise: INR 80,000 by 25 October 2026.",
+                "source_id": "PK-001-M2",
+                "start": 0
+              }
+            ]
+          }
+        ],
+        "financial_issues": [],
+        "commitment_issues": [],
+        "evidence_observations": [
+          {
+            "field": "availability",
+            "snapshot_hash": "e5e5fa0cc5c3348d2eb0cbc5fa456509c3b1b0b63bb30ede3ac73b456d942ec7",
+            "snapshot_id": "2a9a16f6-fbe3-4360-b27d-bacc5e806bcc",
+            "source": null,
+            "subject": "LEDGER",
+            "value": "AVAILABLE"
+          },
+          {
+            "field": "complete",
+            "snapshot_hash": "e5e5fa0cc5c3348d2eb0cbc5fa456509c3b1b0b63bb30ede3ac73b456d942ec7",
+            "snapshot_id": "2a9a16f6-fbe3-4360-b27d-bacc5e806bcc",
+            "source": null,
+            "subject": "LEDGER",
+            "value": true
+          }
+        ]
+      },
+      "expected_findings": {
+        "contradictions": [],
+        "unresolved_questions": [
+          {
+            "field": "ATTRIBUTION",
+            "sources": [
+              "PK-001-M2"
+            ]
+          }
+        ],
+        "financial_issues": [],
+        "commitment_issues": [],
+        "evidence_observations": [
+          {
+            "subject": "LEDGER",
+            "field": "availability",
+            "value": "AVAILABLE",
+            "source_id": null
+          },
+          {
+            "subject": "LEDGER",
+            "field": "complete",
+            "value": true,
+            "source_id": null
+          }
+        ]
+      },
+      "findings_source_validation_correct": true,
+      "findings_soundness_correct": true,
+      "findings_completeness_correct": true,
+      "findings_duplicates_correct": true,
+      "expected_candidate_facts": {
+        "commitments": [
+          {
+            "source_id": "PK-001-M1",
+            "commitment_key": "PK-001-M1-C1",
+            "speaker": "Fictional client",
+            "amount_text": "80,000",
+            "currency_text": "INR",
+            "date_text": "20 October 2026",
+            "explicitly_replaces_source_id": null
+          },
+          {
+            "source_id": "PK-001-M2",
+            "commitment_key": "PK-001-M2-C1",
+            "speaker": "Fictional client",
+            "amount_text": "80,000",
+            "currency_text": "INR",
+            "date_text": "25 October 2026",
+            "explicitly_replaces_source_id": "PK-001-M1"
+          }
+        ],
+        "payment_claims": []
+      },
+      "deterministic_outcome_correct": true,
+      "latency_seconds": 3.453,
+      "action": "WAIT",
+      "result_present": true,
+      "progress": [
+        {
+          "step_name": "EVIDENCE_LOOKUP",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T13:17:40.302886+00:00",
+          "ended_at": "2026-10-24T13:17:40.319711+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "EXTRACTION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T13:17:40.347582+00:00",
+          "ended_at": "2026-10-24T13:17:42.965521+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "VALIDATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T13:17:43.015231+00:00",
+          "ended_at": "2026-10-24T13:17:43.042657+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "RECONCILIATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T13:17:43.054154+00:00",
+          "ended_at": "2026-10-24T13:17:43.066855+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        }
+      ],
+      "attempt_timing": {
+        "started_at": "2026-10-24T13:17:40.223679+00:00",
+        "terminal_at": "2026-10-24T13:17:43.093854+00:00",
+        "deadline_at": "2026-10-24T13:18:35.223679+00:00"
+      },
+      "status": "PASS"
+    },
+    {
+      "case": "PK-002-U1",
+      "repeat": 1,
+      "attempt_status": "COMPLETE",
+      "failure_code": null,
+      "returned_models": [
+        "zai-org/GLM-5.3-Flash"
+      ],
+      "response_ids": [
+        "1f4be83a71cf4da188cc6aa8d903d092"
+      ],
+      "extraction_correct": true,
+      "source_validation_correct": true,
+      "extraction_policy_correct": true,
+      "validated_uncertainty": {
+        "contradictions": [],
+        "unresolved": []
+      },
+      "actual_candidate_facts": {
+        "commitments": [
+          {
+            "source_id": "PK-002-M1",
+            "commitment_key": "PK-002-M1-C1",
+            "speaker": "Fictional client",
+            "amount_text": "50,000",
+            "currency_text": "INR",
+            "date_text": "25 October 2026",
+            "explicitly_replaces_source_id": null
+          }
+        ],
+        "payment_claims": []
+      },
+      "model_policy_evidence": {
+        "contradictions": [],
+        "unresolved": []
+      },
+      "returned_outputs": [
+        {
+          "candidate_facts": {
+            "commitments": [
+              {
+                "source_id": "PK-002-M1",
+                "commitment_key": "PK-002-M1-C1",
+                "speaker": "Fictional client",
+                "amount_text": "50,000",
+                "currency_text": "INR",
+                "date_text": "25 October 2026",
+                "explicitly_replaces_source_id": null
+              }
+            ],
+            "payment_claims": []
+          },
+          "model_policy_evidence": {
+            "contradictions": [],
+            "unresolved": []
+          },
+          "extraction_correct": true,
+          "source_validation_correct": true,
+          "extraction_policy_correct": true,
+          "response_id": "1f4be83a71cf4da188cc6aa8d903d092",
+          "returned_model": "zai-org/GLM-5.3-Flash",
+          "adapter_version": "nebius-chat-json-schema-9"
+        }
+      ],
+      "actual_findings": {
+        "contradictions": [],
+        "unresolved_questions": [
+          {
+            "field": "ATTRIBUTION",
+            "sources": [
+              {
+                "end": 42,
+                "evidence_version_id": "d12f6731-2709-5316-b028-ef535b863c5b",
+                "quote": "We will pay INR 50,000 by 25 October 2026.",
+                "source_id": "PK-002-M1",
+                "start": 0
+              }
+            ]
+          }
+        ],
+        "financial_issues": [],
+        "commitment_issues": [],
+        "evidence_observations": [
+          {
+            "field": "availability",
+            "snapshot_hash": "97c6ced71143491b084a9b4f0d74a7dcb6aaf9df000de58f7771be6cbbd8cb92",
+            "snapshot_id": "46e41bcd-e6e4-4277-a417-25c036833df3",
+            "source": null,
+            "subject": "LEDGER",
+            "value": "AVAILABLE"
+          },
+          {
+            "field": "complete",
+            "snapshot_hash": "97c6ced71143491b084a9b4f0d74a7dcb6aaf9df000de58f7771be6cbbd8cb92",
+            "snapshot_id": "46e41bcd-e6e4-4277-a417-25c036833df3",
+            "source": null,
+            "subject": "LEDGER",
+            "value": true
+          }
+        ]
+      },
+      "expected_findings": {
+        "contradictions": [],
+        "unresolved_questions": [
+          {
+            "field": "ATTRIBUTION",
+            "sources": [
+              "PK-002-M1"
+            ]
+          }
+        ],
+        "financial_issues": [],
+        "commitment_issues": [],
+        "evidence_observations": [
+          {
+            "subject": "LEDGER",
+            "field": "availability",
+            "value": "AVAILABLE",
+            "source_id": null
+          },
+          {
+            "subject": "LEDGER",
+            "field": "complete",
+            "value": true,
+            "source_id": null
+          }
+        ]
+      },
+      "findings_source_validation_correct": true,
+      "findings_soundness_correct": true,
+      "findings_completeness_correct": true,
+      "findings_duplicates_correct": true,
+      "expected_candidate_facts": {
+        "commitments": [
+          {
+            "source_id": "PK-002-M1",
+            "commitment_key": "PK-002-M1-C1",
+            "speaker": "Fictional client",
+            "amount_text": "50,000",
+            "currency_text": "INR",
+            "date_text": "25 October 2026",
+            "explicitly_replaces_source_id": null
+          }
+        ],
+        "payment_claims": []
+      },
+      "deterministic_outcome_correct": true,
+      "latency_seconds": 16.5,
+      "action": "FOLLOW_UP",
+      "result_present": true,
+      "progress": [
+        {
+          "step_name": "EVIDENCE_LOOKUP",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T13:17:43.957303+00:00",
+          "ended_at": "2026-10-24T13:17:43.986437+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "EXTRACTION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T13:17:44.007390+00:00",
+          "ended_at": "2026-10-24T13:17:59.729730+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "VALIDATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T13:17:59.777487+00:00",
+          "ended_at": "2026-10-24T13:17:59.802491+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "RECONCILIATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T13:17:59.815756+00:00",
+          "ended_at": "2026-10-24T13:17:59.836105+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        }
+      ],
+      "attempt_timing": {
+        "started_at": "2026-10-24T13:17:43.896879+00:00",
+        "terminal_at": "2026-10-24T13:17:59.862313+00:00",
+        "deadline_at": "2026-10-24T13:18:38.896879+00:00"
+      },
+      "status": "PASS"
+    },
+    {
+      "case": "PK-003-U1",
+      "repeat": 1,
+      "attempt_status": "COMPLETE",
+      "failure_code": null,
+      "returned_models": [
+        "zai-org/GLM-5.3-Flash"
+      ],
+      "response_ids": [
+        "faf050a75b9e410c8cac5b54e9e5d35e"
+      ],
+      "extraction_correct": true,
+      "source_validation_correct": true,
+      "extraction_policy_correct": true,
+      "validated_uncertainty": {
+        "contradictions": [],
+        "unresolved": []
+      },
+      "actual_candidate_facts": {
+        "commitments": [],
+        "payment_claims": [
+          {
+            "source_id": "PK-003-M1",
+            "speaker": "Fictional client",
+            "amount_text": "60,000",
+            "currency_text": "INR",
+            "payment_date_text": "today",
+            "transaction_reference_text": "CR-T2"
+          }
+        ]
+      },
+      "model_policy_evidence": {
+        "contradictions": [],
+        "unresolved": []
+      },
+      "returned_outputs": [
+        {
+          "candidate_facts": {
+            "commitments": [],
+            "payment_claims": [
+              {
+                "source_id": "PK-003-M1",
+                "speaker": "Fictional client",
+                "amount_text": "60,000",
+                "currency_text": "INR",
+                "payment_date_text": "today",
+                "transaction_reference_text": "CR-T2"
+              }
+            ]
+          },
+          "model_policy_evidence": {
+            "contradictions": [],
+            "unresolved": []
+          },
+          "extraction_correct": true,
+          "source_validation_correct": true,
+          "extraction_policy_correct": true,
+          "response_id": "faf050a75b9e410c8cac5b54e9e5d35e",
+          "returned_model": "zai-org/GLM-5.3-Flash",
+          "adapter_version": "nebius-chat-json-schema-9"
+        }
+      ],
+      "actual_findings": {
+        "contradictions": [],
+        "unresolved_questions": [],
+        "financial_issues": [],
+        "commitment_issues": [],
+        "evidence_observations": [
+          {
+            "field": "availability",
+            "snapshot_hash": "43911d7685975689349e98f9b548bf1ce2b471f68ce5254efd78824ae1ff23bb",
+            "snapshot_id": "323ea7d8-dcb7-4473-aaf2-dad8528cd9e5",
+            "source": null,
+            "subject": "LEDGER",
+            "value": "AVAILABLE"
+          },
+          {
+            "field": "complete",
+            "snapshot_hash": "43911d7685975689349e98f9b548bf1ce2b471f68ce5254efd78824ae1ff23bb",
+            "snapshot_id": "323ea7d8-dcb7-4473-aaf2-dad8528cd9e5",
+            "source": null,
+            "subject": "LEDGER",
+            "value": true
+          }
+        ]
+      },
+      "expected_findings": {
+        "contradictions": [],
+        "unresolved_questions": [],
+        "financial_issues": [],
+        "commitment_issues": [],
+        "evidence_observations": [
+          {
+            "subject": "LEDGER",
+            "field": "availability",
+            "value": "AVAILABLE",
+            "source_id": null
+          },
+          {
+            "subject": "LEDGER",
+            "field": "complete",
+            "value": true,
+            "source_id": null
+          }
+        ]
+      },
+      "findings_source_validation_correct": true,
+      "findings_soundness_correct": true,
+      "findings_completeness_correct": true,
+      "findings_duplicates_correct": true,
+      "expected_candidate_facts": {
+        "commitments": [],
+        "payment_claims": [
+          {
+            "source_id": "PK-003-M1",
+            "speaker": "Fictional client",
+            "amount_text": "60,000",
+            "currency_text": "INR",
+            "payment_date_text": "today",
+            "transaction_reference_text": "CR-T2"
+          }
+        ]
+      },
+      "deterministic_outcome_correct": true,
+      "latency_seconds": 17.344,
+      "action": "CLOSE",
+      "result_present": true,
+      "progress": [
+        {
+          "step_name": "EVIDENCE_LOOKUP",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T13:18:00.803483+00:00",
+          "ended_at": "2026-10-24T13:18:00.833856+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "EXTRACTION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T13:18:00.844162+00:00",
+          "ended_at": "2026-10-24T13:18:17.275127+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "VALIDATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T13:18:17.410171+00:00",
+          "ended_at": "2026-10-24T13:18:17.426228+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "RECONCILIATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T13:18:17.438880+00:00",
+          "ended_at": "2026-10-24T13:18:17.453260+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        }
+      ],
+      "attempt_timing": {
+        "started_at": "2026-10-24T13:18:00.737963+00:00",
+        "terminal_at": "2026-10-24T13:18:17.467018+00:00",
+        "deadline_at": "2026-10-24T13:18:55.737963+00:00"
+      },
+      "status": "PASS"
+    },
+    {
+      "case": "FV-01",
+      "repeat": 1,
+      "attempt_status": "LIMITED",
+      "failure_code": null,
+      "returned_models": [
+        "zai-org/GLM-5.3-Flash"
+      ],
+      "response_ids": [
+        "331f9c8f09aa4cfd95fc6c52af38a5ba"
+      ],
+      "extraction_correct": true,
+      "source_validation_correct": true,
+      "extraction_policy_correct": true,
+      "validated_uncertainty": {
+        "contradictions": [],
+        "unresolved": []
+      },
+      "actual_candidate_facts": {
+        "commitments": [
+          {
+            "source_id": "PK-001-M1",
+            "commitment_key": "PK-001-M1-C1",
+            "speaker": "Fictional client",
+            "amount_text": "80,000",
+            "currency_text": "INR",
+            "date_text": "20 October 2026",
+            "explicitly_replaces_source_id": null
+          }
+        ],
+        "payment_claims": []
+      },
+      "model_policy_evidence": {
+        "contradictions": [],
+        "unresolved": []
+      },
+      "returned_outputs": [
+        {
+          "candidate_facts": {
+            "commitments": [
+              {
+                "source_id": "PK-001-M1",
+                "commitment_key": "PK-001-M1-C1",
+                "speaker": "Fictional client",
+                "amount_text": "80,000",
+                "currency_text": "INR",
+                "date_text": "20 October 2026",
+                "explicitly_replaces_source_id": null
+              }
+            ],
+            "payment_claims": []
+          },
+          "model_policy_evidence": {
+            "contradictions": [],
+            "unresolved": []
+          },
+          "extraction_correct": true,
+          "source_validation_correct": true,
+          "extraction_policy_correct": true,
+          "response_id": "331f9c8f09aa4cfd95fc6c52af38a5ba",
+          "returned_model": "zai-org/GLM-5.3-Flash",
+          "adapter_version": "nebius-chat-json-schema-9"
+        }
+      ],
+      "actual_findings": {
+        "contradictions": [],
+        "unresolved_questions": [
+          {
+            "field": "ATTRIBUTION",
+            "sources": [
+              {
+                "end": 42,
+                "evidence_version_id": "d885f596-cbcc-5c9e-8776-51ad507fb64f",
+                "quote": "We will pay INR 80,000 by 20 October 2026.",
+                "source_id": "PK-001-M1",
+                "start": 0
+              }
+            ]
+          }
+        ],
+        "financial_issues": [
+          {
+            "code": "INVOICE_UNAVAILABLE",
+            "detail": "The invoice source is unavailable.",
+            "source_versions": [
+              {
+                "evidence_version_id": "e3482940-10d6-5e26-8893-3587943c1ef7",
+                "source_id": "PK-001-I1"
+              }
+            ],
+            "sources": [
+              "PK-001-I1"
+            ]
+          },
+          {
+            "code": "MISSING_INVOICE_AUTHORITY",
+            "detail": "An authoritative invoice is required.",
+            "source_versions": [
+              {
+                "evidence_version_id": "e3482940-10d6-5e26-8893-3587943c1ef7",
+                "source_id": "PK-001-I1"
+              }
+            ],
+            "sources": [
+              "PK-001-I1"
+            ]
+          }
+        ],
+        "commitment_issues": [],
+        "evidence_observations": [
+          {
+            "field": "availability",
+            "snapshot_hash": "02165955bc95320cb32c311ca19e6c48891a0ea9665bf13028cbcdaa0df946e6",
+            "snapshot_id": "002cf3de-72bc-433f-bc79-9544b26c2d77",
+            "source": null,
+            "subject": "LEDGER",
+            "value": "AVAILABLE"
+          },
+          {
+            "field": "complete",
+            "snapshot_hash": "02165955bc95320cb32c311ca19e6c48891a0ea9665bf13028cbcdaa0df946e6",
+            "snapshot_id": "002cf3de-72bc-433f-bc79-9544b26c2d77",
+            "source": null,
+            "subject": "LEDGER",
+            "value": true
+          },
+          {
+            "field": "availability",
+            "snapshot_hash": "02165955bc95320cb32c311ca19e6c48891a0ea9665bf13028cbcdaa0df946e6",
+            "snapshot_id": "002cf3de-72bc-433f-bc79-9544b26c2d77",
+            "source": {
+              "evidence_version_id": "e3482940-10d6-5e26-8893-3587943c1ef7",
+              "source_id": "PK-001-I1"
+            },
+            "subject": "SOURCE",
+            "value": "UNAVAILABLE"
+          }
+        ]
+      },
+      "expected_findings": {
+        "contradictions": [],
+        "unresolved_questions": [
+          {
+            "field": "ATTRIBUTION",
+            "sources": [
+              "PK-001-M1"
+            ]
+          }
+        ],
+        "financial_issues": [
+          {
+            "code": "INVOICE_UNAVAILABLE",
+            "sources": [
+              "PK-001-I1"
+            ]
+          },
+          {
+            "code": "MISSING_INVOICE_AUTHORITY",
+            "sources": [
+              "PK-001-I1"
+            ]
+          }
+        ],
+        "commitment_issues": [],
+        "evidence_observations": [
+          {
+            "subject": "LEDGER",
+            "field": "availability",
+            "value": "AVAILABLE",
+            "source_id": null
+          },
+          {
+            "subject": "LEDGER",
+            "field": "complete",
+            "value": true,
+            "source_id": null
+          },
+          {
+            "subject": "SOURCE",
+            "field": "availability",
+            "value": "UNAVAILABLE",
+            "source_id": "PK-001-I1"
+          }
+        ]
+      },
+      "findings_source_validation_correct": true,
+      "findings_soundness_correct": true,
+      "findings_completeness_correct": true,
+      "findings_duplicates_correct": true,
+      "expected_candidate_facts": {
+        "commitments": [
+          {
+            "source_id": "PK-001-M1",
+            "commitment_key": "PK-001-M1-C1",
+            "speaker": "Fictional client",
+            "amount_text": "80,000",
+            "currency_text": "INR",
+            "date_text": "20 October 2026",
+            "explicitly_replaces_source_id": null
+          }
+        ],
+        "payment_claims": []
+      },
+      "deterministic_outcome_correct": true,
+      "latency_seconds": 3.875,
+      "action": "VERIFY_PAYMENT",
+      "result_present": true,
+      "progress": [
+        {
+          "step_name": "EVIDENCE_LOOKUP",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T13:18:18.070918+00:00",
+          "ended_at": "2026-10-24T13:18:18.084760+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "EXTRACTION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T13:18:18.095227+00:00",
+          "ended_at": "2026-10-24T13:18:21.576240+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "VALIDATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T13:18:21.610393+00:00",
+          "ended_at": "2026-10-24T13:18:21.622920+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "RECONCILIATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T13:18:21.633660+00:00",
+          "ended_at": "2026-10-24T13:18:21.645971+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        }
+      ],
+      "attempt_timing": {
+        "started_at": "2026-10-24T13:18:18.015807+00:00",
+        "terminal_at": "2026-10-24T13:18:21.661502+00:00",
+        "deadline_at": "2026-10-24T13:19:13.015807+00:00"
+      },
+      "status": "PASS"
+    },
+    {
+      "case": "FV-02-INVOICE",
+      "repeat": 1,
+      "attempt_status": "LIMITED",
+      "failure_code": null,
+      "returned_models": [
+        "zai-org/GLM-5.3-Flash"
+      ],
+      "response_ids": [
+        "90e24250c1c6493885c4d61a72508889"
+      ],
+      "extraction_correct": true,
+      "source_validation_correct": true,
+      "extraction_policy_correct": true,
+      "validated_uncertainty": {
+        "contradictions": [],
+        "unresolved": []
+      },
+      "actual_candidate_facts": {
+        "commitments": [
+          {
+            "source_id": "PK-001-M1",
+            "commitment_key": "PK-001-M1-C1",
+            "speaker": "Fictional client",
+            "amount_text": "80,000",
+            "currency_text": "INR",
+            "date_text": "20 October 2026",
+            "explicitly_replaces_source_id": null
+          }
+        ],
+        "payment_claims": []
+      },
+      "model_policy_evidence": {
+        "contradictions": [],
+        "unresolved": []
+      },
+      "returned_outputs": [
+        {
+          "candidate_facts": {
+            "commitments": [
+              {
+                "source_id": "PK-001-M1",
+                "commitment_key": "PK-001-M1-C1",
+                "speaker": "Fictional client",
+                "amount_text": "80,000",
+                "currency_text": "INR",
+                "date_text": "20 October 2026",
+                "explicitly_replaces_source_id": null
+              }
+            ],
+            "payment_claims": []
+          },
+          "model_policy_evidence": {
+            "contradictions": [],
+            "unresolved": []
+          },
+          "extraction_correct": true,
+          "source_validation_correct": true,
+          "extraction_policy_correct": true,
+          "response_id": "90e24250c1c6493885c4d61a72508889",
+          "returned_model": "zai-org/GLM-5.3-Flash",
+          "adapter_version": "nebius-chat-json-schema-9"
+        }
+      ],
+      "actual_findings": {
+        "contradictions": [],
+        "unresolved_questions": [
+          {
+            "field": "AMOUNT",
+            "sources": [
+              {
+                "end": 67,
+                "evidence_version_id": "bf6acf56-4cba-50cc-b88d-3507502645d9",
+                "quote": "Fictional invoice NS-104; amount missing; INR; due 10 October 2026.",
+                "source_id": "PK-001-I1",
+                "start": 0
+              }
+            ]
+          },
+          {
+            "field": "ATTRIBUTION",
+            "sources": [
+              {
+                "end": 42,
+                "evidence_version_id": "45f12b22-e6c8-5df4-b391-5df52cf0dd0b",
+                "quote": "We will pay INR 80,000 by 20 October 2026.",
+                "source_id": "PK-001-M1",
+                "start": 0
+              }
+            ]
+          }
+        ],
+        "financial_issues": [
+          {
+            "code": "UNKNOWN_AMOUNT",
+            "detail": "Review the invoice amount/currency.",
+            "source_versions": [
+              {
+                "evidence_version_id": "bf6acf56-4cba-50cc-b88d-3507502645d9",
+                "source_id": "PK-001-I1"
+              }
+            ],
+            "sources": [
+              "PK-001-I1"
+            ]
+          }
+        ],
+        "commitment_issues": [],
+        "evidence_observations": [
+          {
+            "field": "availability",
+            "snapshot_hash": "d9c6e932cc66fbee93f54a6a18e55e5e8e7457bb0ead69a2fbd56fffeca425be",
+            "snapshot_id": "43a18cba-4da5-42a4-97c9-918bdcf58b13",
+            "source": null,
+            "subject": "LEDGER",
+            "value": "AVAILABLE"
+          },
+          {
+            "field": "complete",
+            "snapshot_hash": "d9c6e932cc66fbee93f54a6a18e55e5e8e7457bb0ead69a2fbd56fffeca425be",
+            "snapshot_id": "43a18cba-4da5-42a4-97c9-918bdcf58b13",
+            "source": null,
+            "subject": "LEDGER",
+            "value": true
+          }
+        ]
+      },
+      "expected_findings": {
+        "contradictions": [],
+        "unresolved_questions": [
+          {
+            "field": "AMOUNT",
+            "sources": [
+              "PK-001-I1"
+            ]
+          },
+          {
+            "field": "ATTRIBUTION",
+            "sources": [
+              "PK-001-M1"
+            ]
+          }
+        ],
+        "financial_issues": [
+          {
+            "code": "UNKNOWN_AMOUNT",
+            "sources": [
+              "PK-001-I1"
+            ]
+          }
+        ],
+        "commitment_issues": [],
+        "evidence_observations": [
+          {
+            "subject": "LEDGER",
+            "field": "availability",
+            "value": "AVAILABLE",
+            "source_id": null
+          },
+          {
+            "subject": "LEDGER",
+            "field": "complete",
+            "value": true,
+            "source_id": null
+          }
+        ]
+      },
+      "findings_source_validation_correct": true,
+      "findings_soundness_correct": true,
+      "findings_completeness_correct": true,
+      "findings_duplicates_correct": true,
+      "expected_candidate_facts": {
+        "commitments": [
+          {
+            "source_id": "PK-001-M1",
+            "commitment_key": "PK-001-M1-C1",
+            "speaker": "Fictional client",
+            "amount_text": "80,000",
+            "currency_text": "INR",
+            "date_text": "20 October 2026",
+            "explicitly_replaces_source_id": null
+          }
+        ],
+        "payment_claims": []
+      },
+      "deterministic_outcome_correct": true,
+      "latency_seconds": 3.219,
+      "action": "VERIFY_PAYMENT",
+      "result_present": true,
+      "progress": [
+        {
+          "step_name": "EVIDENCE_LOOKUP",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T13:18:22.209392+00:00",
+          "ended_at": "2026-10-24T13:18:22.223495+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "EXTRACTION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T13:18:22.234136+00:00",
+          "ended_at": "2026-10-24T13:18:25.056771+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "VALIDATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T13:18:25.080432+00:00",
+          "ended_at": "2026-10-24T13:18:25.092394+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "RECONCILIATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T13:18:25.104180+00:00",
+          "ended_at": "2026-10-24T13:18:25.118383+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        }
+      ],
+      "attempt_timing": {
+        "started_at": "2026-10-24T13:18:22.158563+00:00",
+        "terminal_at": "2026-10-24T13:18:25.135333+00:00",
+        "deadline_at": "2026-10-24T13:19:17.158563+00:00"
+      },
+      "status": "PASS"
+    },
+    {
+      "case": "FV-02-PROMISE",
+      "repeat": 1,
+      "attempt_status": "COMPLETE",
+      "failure_code": null,
+      "returned_models": [
+        "zai-org/GLM-5.3-Flash"
+      ],
+      "response_ids": [
+        "5ac2798f806447be9520039c1c180d10"
+      ],
+      "extraction_correct": true,
+      "source_validation_correct": true,
+      "extraction_policy_correct": true,
+      "validated_uncertainty": {
+        "contradictions": [],
+        "unresolved": []
+      },
+      "actual_candidate_facts": {
+        "commitments": [
+          {
+            "source_id": "PK-001-M1",
+            "commitment_key": "PK-001-M1-C1",
+            "speaker": "Fictional client",
+            "amount_text": null,
+            "currency_text": null,
+            "date_text": "20 October 2026",
+            "explicitly_replaces_source_id": null
+          }
+        ],
+        "payment_claims": []
+      },
+      "model_policy_evidence": {
+        "contradictions": [],
+        "unresolved": []
+      },
+      "returned_outputs": [
+        {
+          "candidate_facts": {
+            "commitments": [
+              {
+                "source_id": "PK-001-M1",
+                "commitment_key": "PK-001-M1-C1",
+                "speaker": "Fictional client",
+                "amount_text": null,
+                "currency_text": null,
+                "date_text": "20 October 2026",
+                "explicitly_replaces_source_id": null
+              }
+            ],
+            "payment_claims": []
+          },
+          "model_policy_evidence": {
+            "contradictions": [],
+            "unresolved": []
+          },
+          "extraction_correct": true,
+          "source_validation_correct": true,
+          "extraction_policy_correct": true,
+          "response_id": "5ac2798f806447be9520039c1c180d10",
+          "returned_model": "zai-org/GLM-5.3-Flash",
+          "adapter_version": "nebius-chat-json-schema-9"
+        }
+      ],
+      "actual_findings": {
+        "contradictions": [],
+        "unresolved_questions": [
+          {
+            "field": "AMOUNT",
+            "sources": [
+              {
+                "end": 31,
+                "evidence_version_id": "c84bc9f0-7f3f-5e40-a619-929e6872d3ac",
+                "quote": "We will pay by 20 October 2026.",
+                "source_id": "PK-001-M1",
+                "start": 0
+              }
+            ]
+          },
+          {
+            "field": "ATTRIBUTION",
+            "sources": [
+              {
+                "end": 31,
+                "evidence_version_id": "c84bc9f0-7f3f-5e40-a619-929e6872d3ac",
+                "quote": "We will pay by 20 October 2026.",
+                "source_id": "PK-001-M1",
+                "start": 0
+              }
+            ]
+          },
+          {
+            "field": "CURRENCY",
+            "sources": [
+              {
+                "end": 31,
+                "evidence_version_id": "c84bc9f0-7f3f-5e40-a619-929e6872d3ac",
+                "quote": "We will pay by 20 October 2026.",
+                "source_id": "PK-001-M1",
+                "start": 0
+              }
+            ]
+          }
+        ],
+        "financial_issues": [],
+        "commitment_issues": [],
+        "evidence_observations": [
+          {
+            "field": "availability",
+            "snapshot_hash": "01a64d01385868a4a35b74af9be7389d6b6f398665976ff3fcbed23508960afc",
+            "snapshot_id": "704a8a3b-e53b-43ec-b873-2ef2648a3000",
+            "source": null,
+            "subject": "LEDGER",
+            "value": "AVAILABLE"
+          },
+          {
+            "field": "complete",
+            "snapshot_hash": "01a64d01385868a4a35b74af9be7389d6b6f398665976ff3fcbed23508960afc",
+            "snapshot_id": "704a8a3b-e53b-43ec-b873-2ef2648a3000",
+            "source": null,
+            "subject": "LEDGER",
+            "value": true
+          }
+        ]
+      },
+      "expected_findings": {
+        "contradictions": [],
+        "unresolved_questions": [
+          {
+            "field": "AMOUNT",
+            "sources": [
+              "PK-001-M1"
+            ]
+          },
+          {
+            "field": "ATTRIBUTION",
+            "sources": [
+              "PK-001-M1"
+            ]
+          },
+          {
+            "field": "CURRENCY",
+            "sources": [
+              "PK-001-M1"
+            ]
+          }
+        ],
+        "financial_issues": [],
+        "commitment_issues": [],
+        "evidence_observations": [
+          {
+            "subject": "LEDGER",
+            "field": "availability",
+            "value": "AVAILABLE",
+            "source_id": null
+          },
+          {
+            "subject": "LEDGER",
+            "field": "complete",
+            "value": true,
+            "source_id": null
+          }
+        ]
+      },
+      "findings_source_validation_correct": true,
+      "findings_soundness_correct": true,
+      "findings_completeness_correct": true,
+      "findings_duplicates_correct": true,
+      "expected_candidate_facts": {
+        "commitments": [
+          {
+            "source_id": "PK-001-M1",
+            "commitment_key": "PK-001-M1-C1",
+            "speaker": "Fictional client",
+            "amount_text": null,
+            "currency_text": null,
+            "date_text": "20 October 2026",
+            "explicitly_replaces_source_id": null
+          }
+        ],
+        "payment_claims": []
+      },
+      "deterministic_outcome_correct": true,
+      "latency_seconds": 4.078,
+      "action": "FOLLOW_UP",
+      "result_present": true,
+      "progress": [
+        {
+          "step_name": "EVIDENCE_LOOKUP",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T13:18:25.652858+00:00",
+          "ended_at": "2026-10-24T13:18:25.669253+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "EXTRACTION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T13:18:25.681781+00:00",
+          "ended_at": "2026-10-24T13:18:29.355056+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "VALIDATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T13:18:29.379735+00:00",
+          "ended_at": "2026-10-24T13:18:29.392771+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "RECONCILIATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T13:18:29.406922+00:00",
+          "ended_at": "2026-10-24T13:18:29.421599+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        }
+      ],
+      "attempt_timing": {
+        "started_at": "2026-10-24T13:18:25.600989+00:00",
+        "terminal_at": "2026-10-24T13:18:29.432789+00:00",
+        "deadline_at": "2026-10-24T13:19:20.600989+00:00"
+      },
+      "status": "PASS"
+    },
+    {
+      "case": "FV-03",
+      "repeat": 1,
+      "attempt_status": "COMPLETE",
+      "failure_code": null,
+      "returned_models": [
+        "zai-org/GLM-5.3-Flash"
+      ],
+      "response_ids": [
+        "818051d7c6424d6ca8c23606271520ca"
+      ],
+      "extraction_correct": true,
+      "source_validation_correct": true,
+      "extraction_policy_correct": true,
+      "validated_uncertainty": {
+        "contradictions": [],
+        "unresolved": []
+      },
+      "actual_candidate_facts": {
+        "commitments": [],
+        "payment_claims": [
+          {
+            "source_id": "PK-003-M1",
+            "speaker": "Fictional client",
+            "amount_text": "60,000",
+            "currency_text": "INR",
+            "payment_date_text": "today",
+            "transaction_reference_text": "CR-T2"
+          }
+        ]
+      },
+      "model_policy_evidence": {
+        "contradictions": [],
+        "unresolved": []
+      },
+      "returned_outputs": [
+        {
+          "candidate_facts": {
+            "commitments": [],
+            "payment_claims": [
+              {
+                "source_id": "PK-003-M1",
+                "speaker": "Fictional client",
+                "amount_text": "60,000",
+                "currency_text": "INR",
+                "payment_date_text": "today",
+                "transaction_reference_text": "CR-T2"
+              }
+            ]
+          },
+          "model_policy_evidence": {
+            "contradictions": [],
+            "unresolved": []
+          },
+          "extraction_correct": true,
+          "source_validation_correct": true,
+          "extraction_policy_correct": true,
+          "response_id": "818051d7c6424d6ca8c23606271520ca",
+          "returned_model": "zai-org/GLM-5.3-Flash",
+          "adapter_version": "nebius-chat-json-schema-9"
+        }
+      ],
+      "actual_findings": {
+        "contradictions": [],
+        "unresolved_questions": [],
+        "financial_issues": [
+          {
+            "code": "UNALLOCATED_PAYMENT",
+            "detail": "An explicit allocation to this invoice is required.",
+            "source_versions": [
+              {
+                "evidence_version_id": "b08f2f98-a108-5113-a526-821512d44c2f",
+                "source_id": "PK-003-L2"
+              }
+            ],
+            "sources": [
+              "PK-003-L2"
+            ]
+          }
+        ],
+        "commitment_issues": [],
+        "evidence_observations": [
+          {
+            "field": "availability",
+            "snapshot_hash": "87a3a3d362f9132662e981ad4277bd9da14340fbb400538afd82442f1181a25c",
+            "snapshot_id": "16d894ff-887d-4bfa-a8bf-7ec8c53c5760",
+            "source": null,
+            "subject": "LEDGER",
+            "value": "AVAILABLE"
+          },
+          {
+            "field": "complete",
+            "snapshot_hash": "87a3a3d362f9132662e981ad4277bd9da14340fbb400538afd82442f1181a25c",
+            "snapshot_id": "16d894ff-887d-4bfa-a8bf-7ec8c53c5760",
+            "source": null,
+            "subject": "LEDGER",
+            "value": true
+          }
+        ]
+      },
+      "expected_findings": {
+        "contradictions": [],
+        "unresolved_questions": [],
+        "financial_issues": [
+          {
+            "code": "UNALLOCATED_PAYMENT",
+            "sources": [
+              "PK-003-L2"
+            ]
+          }
+        ],
+        "commitment_issues": [],
+        "evidence_observations": [
+          {
+            "subject": "LEDGER",
+            "field": "availability",
+            "value": "AVAILABLE",
+            "source_id": null
+          },
+          {
+            "subject": "LEDGER",
+            "field": "complete",
+            "value": true,
+            "source_id": null
+          }
+        ]
+      },
+      "findings_source_validation_correct": true,
+      "findings_soundness_correct": true,
+      "findings_completeness_correct": true,
+      "findings_duplicates_correct": true,
+      "expected_candidate_facts": {
+        "commitments": [],
+        "payment_claims": [
+          {
+            "source_id": "PK-003-M1",
+            "speaker": "Fictional client",
+            "amount_text": "60,000",
+            "currency_text": "INR",
+            "payment_date_text": "today",
+            "transaction_reference_text": "CR-T2"
+          }
+        ]
+      },
+      "deterministic_outcome_correct": true,
+      "latency_seconds": 3.032,
+      "action": "VERIFY_PAYMENT",
+      "result_present": true,
+      "progress": [
+        {
+          "step_name": "EVIDENCE_LOOKUP",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T13:18:29.961361+00:00",
+          "ended_at": "2026-10-24T13:18:29.975855+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "EXTRACTION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T13:18:29.987581+00:00",
+          "ended_at": "2026-10-24T13:18:32.639174+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "VALIDATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T13:18:32.672780+00:00",
+          "ended_at": "2026-10-24T13:18:32.684323+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "RECONCILIATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T13:18:32.696725+00:00",
+          "ended_at": "2026-10-24T13:18:32.709676+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        }
+      ],
+      "attempt_timing": {
+        "started_at": "2026-10-24T13:18:29.913566+00:00",
+        "terminal_at": "2026-10-24T13:18:32.721967+00:00",
+        "deadline_at": "2026-10-24T13:19:24.913566+00:00"
+      },
+      "status": "PASS"
+    },
+    {
+      "case": "FV-04",
+      "repeat": 1,
+      "attempt_status": "COMPLETE",
+      "failure_code": null,
+      "returned_models": [
+        "zai-org/GLM-5.3-Flash"
+      ],
+      "response_ids": [
+        "7a01bdbab58f47288cd2d37685fcac56"
+      ],
+      "extraction_correct": true,
+      "source_validation_correct": true,
+      "extraction_policy_correct": true,
+      "validated_uncertainty": {
+        "contradictions": [],
+        "unresolved": []
+      },
+      "actual_candidate_facts": {
+        "commitments": [
+          {
+            "source_id": "PK-002-FV-04-M1",
+            "commitment_key": "PK-002-FV-04-M1-C1",
+            "speaker": "Fictional client",
+            "amount_text": "50,000",
+            "currency_text": "INR",
+            "date_text": "24 October 2026",
+            "explicitly_replaces_source_id": null
+          },
+          {
+            "source_id": "PK-002-M1",
+            "commitment_key": "PK-002-M1-C1",
+            "speaker": "Fictional client",
+            "amount_text": "50,000",
+            "currency_text": "INR",
+            "date_text": "25 October 2026",
+            "explicitly_replaces_source_id": null
+          }
+        ],
+        "payment_claims": []
+      },
+      "model_policy_evidence": {
+        "contradictions": [],
+        "unresolved": []
+      },
+      "returned_outputs": [
+        {
+          "candidate_facts": {
+            "commitments": [
+              {
+                "source_id": "PK-002-FV-04-M1",
+                "commitment_key": "PK-002-FV-04-M1-C1",
+                "speaker": "Fictional client",
+                "amount_text": "50,000",
+                "currency_text": "INR",
+                "date_text": "24 October 2026",
+                "explicitly_replaces_source_id": null
+              },
+              {
+                "source_id": "PK-002-M1",
+                "commitment_key": "PK-002-M1-C1",
+                "speaker": "Fictional client",
+                "amount_text": "50,000",
+                "currency_text": "INR",
+                "date_text": "25 October 2026",
+                "explicitly_replaces_source_id": null
+              }
+            ],
+            "payment_claims": []
+          },
+          "model_policy_evidence": {
+            "contradictions": [],
+            "unresolved": []
+          },
+          "extraction_correct": true,
+          "source_validation_correct": true,
+          "extraction_policy_correct": true,
+          "response_id": "7a01bdbab58f47288cd2d37685fcac56",
+          "returned_model": "zai-org/GLM-5.3-Flash",
+          "adapter_version": "nebius-chat-json-schema-9"
+        }
+      ],
+      "actual_findings": {
+        "contradictions": [
+          {
+            "kind": "PROMISE_TIMING",
+            "sources": [
+              {
+                "end": 42,
+                "evidence_version_id": "d44dd8e9-b516-5a9e-a80a-eb0b9a957cd6",
+                "quote": "We will pay INR 50,000 by 24 October 2026.",
+                "source_id": "PK-002-FV-04-M1",
+                "start": 0
+              },
+              {
+                "end": 42,
+                "evidence_version_id": "19ec665e-3a43-5ee2-b0b0-ff6cc88426be",
+                "quote": "We will pay INR 50,000 by 25 October 2026.",
+                "source_id": "PK-002-M1",
+                "start": 0
+              }
+            ]
+          }
+        ],
+        "unresolved_questions": [
+          {
+            "field": "ATTRIBUTION",
+            "sources": [
+              {
+                "end": 42,
+                "evidence_version_id": "d44dd8e9-b516-5a9e-a80a-eb0b9a957cd6",
+                "quote": "We will pay INR 50,000 by 24 October 2026.",
+                "source_id": "PK-002-FV-04-M1",
+                "start": 0
+              }
+            ]
+          },
+          {
+            "field": "ATTRIBUTION",
+            "sources": [
+              {
+                "end": 42,
+                "evidence_version_id": "19ec665e-3a43-5ee2-b0b0-ff6cc88426be",
+                "quote": "We will pay INR 50,000 by 25 October 2026.",
+                "source_id": "PK-002-M1",
+                "start": 0
+              }
+            ]
+          },
+          {
+            "field": "PROMISE_DATE",
+            "sources": [
+              {
+                "end": 42,
+                "evidence_version_id": "d44dd8e9-b516-5a9e-a80a-eb0b9a957cd6",
+                "quote": "We will pay INR 50,000 by 24 October 2026.",
+                "source_id": "PK-002-FV-04-M1",
+                "start": 0
+              }
+            ]
+          },
+          {
+            "field": "PROMISE_DATE",
+            "sources": [
+              {
+                "end": 42,
+                "evidence_version_id": "19ec665e-3a43-5ee2-b0b0-ff6cc88426be",
+                "quote": "We will pay INR 50,000 by 25 October 2026.",
+                "source_id": "PK-002-M1",
+                "start": 0
+              }
+            ]
+          }
+        ],
+        "financial_issues": [],
+        "commitment_issues": [],
+        "evidence_observations": [
+          {
+            "field": "availability",
+            "snapshot_hash": "b08706ad97b33e21dc870d0d1bbdf288565dbc57ca2788aa60163c82aee46430",
+            "snapshot_id": "ffdc3712-a07c-48d7-839c-18b71a55df4e",
+            "source": null,
+            "subject": "LEDGER",
+            "value": "AVAILABLE"
+          },
+          {
+            "field": "complete",
+            "snapshot_hash": "b08706ad97b33e21dc870d0d1bbdf288565dbc57ca2788aa60163c82aee46430",
+            "snapshot_id": "ffdc3712-a07c-48d7-839c-18b71a55df4e",
+            "source": null,
+            "subject": "LEDGER",
+            "value": true
+          }
+        ]
+      },
+      "expected_findings": {
+        "contradictions": [
+          {
+            "kind": "PROMISE_TIMING",
+            "sources": [
+              "PK-002-FV-04-M1",
+              "PK-002-M1"
+            ]
+          }
+        ],
+        "unresolved_questions": [
+          {
+            "field": "ATTRIBUTION",
+            "sources": [
+              "PK-002-FV-04-M1"
+            ]
+          },
+          {
+            "field": "ATTRIBUTION",
+            "sources": [
+              "PK-002-M1"
+            ]
+          },
+          {
+            "field": "PROMISE_DATE",
+            "sources": [
+              "PK-002-FV-04-M1"
+            ]
+          },
+          {
+            "field": "PROMISE_DATE",
+            "sources": [
+              "PK-002-M1"
+            ]
+          }
+        ],
+        "financial_issues": [],
+        "commitment_issues": [],
+        "evidence_observations": [
+          {
+            "subject": "LEDGER",
+            "field": "availability",
+            "value": "AVAILABLE",
+            "source_id": null
+          },
+          {
+            "subject": "LEDGER",
+            "field": "complete",
+            "value": true,
+            "source_id": null
+          }
+        ]
+      },
+      "findings_source_validation_correct": true,
+      "findings_soundness_correct": true,
+      "findings_completeness_correct": true,
+      "findings_duplicates_correct": true,
+      "expected_candidate_facts": {
+        "commitments": [
+          {
+            "source_id": "PK-002-FV-04-M1",
+            "commitment_key": "PK-002-FV-04-M1-C1",
+            "speaker": "Fictional client",
+            "amount_text": "50,000",
+            "currency_text": "INR",
+            "date_text": "24 October 2026",
+            "explicitly_replaces_source_id": null
+          },
+          {
+            "source_id": "PK-002-M1",
+            "commitment_key": "PK-002-M1-C1",
+            "speaker": "Fictional client",
+            "amount_text": "50,000",
+            "currency_text": "INR",
+            "date_text": "25 October 2026",
+            "explicitly_replaces_source_id": null
+          }
+        ],
+        "payment_claims": []
+      },
+      "deterministic_outcome_correct": true,
+      "latency_seconds": 5.75,
+      "action": "VERIFY_PAYMENT",
+      "result_present": true,
+      "progress": [
+        {
+          "step_name": "EVIDENCE_LOOKUP",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T13:18:33.268341+00:00",
+          "ended_at": "2026-10-24T13:18:33.283793+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "EXTRACTION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T13:18:33.295181+00:00",
+          "ended_at": "2026-10-24T13:18:38.674087+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "VALIDATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T13:18:38.703207+00:00",
+          "ended_at": "2026-10-24T13:18:38.714702+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "RECONCILIATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T13:18:38.726438+00:00",
+          "ended_at": "2026-10-24T13:18:38.740094+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        }
+      ],
+      "attempt_timing": {
+        "started_at": "2026-10-24T13:18:33.220097+00:00",
+        "terminal_at": "2026-10-24T13:18:38.758153+00:00",
+        "deadline_at": "2026-10-24T13:19:28.220097+00:00"
+      },
+      "status": "PASS"
+    },
+    {
+      "case": "FV-05",
+      "repeat": 1,
+      "attempt_status": "LIMITED",
+      "failure_code": null,
+      "returned_models": [
+        "zai-org/GLM-5.3-Flash"
+      ],
+      "response_ids": [
+        "2f53bc934f9348238de7efe833f60082"
+      ],
+      "extraction_correct": true,
+      "source_validation_correct": true,
+      "extraction_policy_correct": true,
+      "validated_uncertainty": {
+        "contradictions": [],
+        "unresolved": []
+      },
+      "actual_candidate_facts": {
+        "commitments": [],
+        "payment_claims": [
+          {
+            "source_id": "PK-003-M1",
+            "speaker": "Fictional client",
+            "amount_text": "60,000",
+            "currency_text": "INR",
+            "payment_date_text": "today",
+            "transaction_reference_text": "CR-T2"
+          }
+        ]
+      },
+      "model_policy_evidence": {
+        "contradictions": [],
+        "unresolved": []
+      },
+      "returned_outputs": [
+        {
+          "candidate_facts": {
+            "commitments": [],
+            "payment_claims": [
+              {
+                "source_id": "PK-003-M1",
+                "speaker": "Fictional client",
+                "amount_text": "60,000",
+                "currency_text": "INR",
+                "payment_date_text": "today",
+                "transaction_reference_text": "CR-T2"
+              }
+            ]
+          },
+          "model_policy_evidence": {
+            "contradictions": [],
+            "unresolved": []
+          },
+          "extraction_correct": true,
+          "source_validation_correct": true,
+          "extraction_policy_correct": true,
+          "response_id": "2f53bc934f9348238de7efe833f60082",
+          "returned_model": "zai-org/GLM-5.3-Flash",
+          "adapter_version": "nebius-chat-json-schema-9"
+        }
+      ],
+      "actual_findings": {
+        "contradictions": [],
+        "unresolved_questions": [],
+        "financial_issues": [
+          {
+            "code": "LEDGER_UNAVAILABLE",
+            "detail": "Ledger retrieval is unavailable, not empty.",
+            "source_versions": [
+              {
+                "evidence_version_id": "24ea0a0e-9e52-5ec2-bef6-f5d7f549a490",
+                "source_id": "PK-003-L1"
+              }
+            ],
+            "sources": [
+              "PK-003-L1"
+            ]
+          }
+        ],
+        "commitment_issues": [],
+        "evidence_observations": [
+          {
+            "field": "availability",
+            "snapshot_hash": "3d4798b7de4147bf78cb97add5dc17864b5d16d89784ceab3c55cdbb7a1545a5",
+            "snapshot_id": "b9f51367-1e8a-476a-b415-6f20257a0a99",
+            "source": null,
+            "subject": "LEDGER",
+            "value": "UNAVAILABLE"
+          },
+          {
+            "field": "complete",
+            "snapshot_hash": "3d4798b7de4147bf78cb97add5dc17864b5d16d89784ceab3c55cdbb7a1545a5",
+            "snapshot_id": "b9f51367-1e8a-476a-b415-6f20257a0a99",
+            "source": null,
+            "subject": "LEDGER",
+            "value": true
+          }
+        ]
+      },
+      "expected_findings": {
+        "contradictions": [],
+        "unresolved_questions": [],
+        "financial_issues": [
+          {
+            "code": "LEDGER_UNAVAILABLE",
+            "sources": [
+              "PK-003-L1"
+            ]
+          }
+        ],
+        "commitment_issues": [],
+        "evidence_observations": [
+          {
+            "subject": "LEDGER",
+            "field": "availability",
+            "value": "UNAVAILABLE",
+            "source_id": null
+          },
+          {
+            "subject": "LEDGER",
+            "field": "complete",
+            "value": true,
+            "source_id": null
+          }
+        ]
+      },
+      "findings_source_validation_correct": true,
+      "findings_soundness_correct": true,
+      "findings_completeness_correct": true,
+      "findings_duplicates_correct": true,
+      "expected_candidate_facts": {
+        "commitments": [],
+        "payment_claims": [
+          {
+            "source_id": "PK-003-M1",
+            "speaker": "Fictional client",
+            "amount_text": "60,000",
+            "currency_text": "INR",
+            "payment_date_text": "today",
+            "transaction_reference_text": "CR-T2"
+          }
+        ]
+      },
+      "deterministic_outcome_correct": true,
+      "latency_seconds": 5.157,
+      "action": "VERIFY_PAYMENT",
+      "result_present": true,
+      "progress": [
+        {
+          "step_name": "EVIDENCE_LOOKUP",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T13:18:39.272573+00:00",
+          "ended_at": "2026-10-24T13:18:39.290215+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "EXTRACTION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T13:18:39.302312+00:00",
+          "ended_at": "2026-10-24T13:18:44.096270+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "VALIDATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T13:18:44.120386+00:00",
+          "ended_at": "2026-10-24T13:18:44.130952+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "RECONCILIATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T13:18:44.141392+00:00",
+          "ended_at": "2026-10-24T13:18:44.151138+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        }
+      ],
+      "attempt_timing": {
+        "started_at": "2026-10-24T13:18:39.225135+00:00",
+        "terminal_at": "2026-10-24T13:18:44.158482+00:00",
+        "deadline_at": "2026-10-24T13:19:34.225135+00:00"
+      },
+      "status": "PASS"
+    },
+    {
+      "case": "FV-06-DUPLICATE",
+      "repeat": 1,
+      "attempt_status": "INCOMPLETE",
+      "failure_code": "PROVIDER_REJECTED_REQUEST",
+      "returned_models": [],
+      "response_ids": [],
+      "extraction_correct": null,
+      "source_validation_correct": null,
+      "extraction_policy_correct": null,
+      "validated_uncertainty": null,
+      "actual_candidate_facts": null,
+      "model_policy_evidence": null,
+      "returned_outputs": [],
+      "actual_findings": null,
+      "expected_findings": {
+        "contradictions": [],
+        "unresolved_questions": [],
+        "financial_issues": [],
+        "commitment_issues": [],
+        "evidence_observations": [
+          {
+            "subject": "LEDGER",
+            "field": "availability",
+            "value": "AVAILABLE",
+            "source_id": null
+          },
+          {
+            "subject": "LEDGER",
+            "field": "complete",
+            "value": true,
+            "source_id": null
+          }
+        ]
+      },
+      "findings_source_validation_correct": null,
+      "findings_soundness_correct": null,
+      "findings_completeness_correct": null,
+      "findings_duplicates_correct": null,
+      "expected_candidate_facts": {
+        "commitments": [],
+        "payment_claims": [
+          {
+            "source_id": "PK-003-M1",
+            "speaker": "Fictional client",
+            "amount_text": "60,000",
+            "currency_text": "INR",
+            "payment_date_text": "today",
+            "transaction_reference_text": "CR-T2"
+          }
+        ]
+      },
+      "deterministic_outcome_correct": null,
+      "latency_seconds": 1.109,
+      "action": null,
+      "result_present": false,
+      "progress": [
+        {
+          "step_name": "EVIDENCE_LOOKUP",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T13:18:44.686002+00:00",
+          "ended_at": "2026-10-24T13:18:44.700603+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "EXTRACTION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T13:18:44.714520+00:00",
+          "ended_at": "2026-10-24T13:18:45.337828+00:00",
+          "outcome": "TRANSIENT_FAILURE",
+          "failure_code": "PROVIDER_REJECTED_REQUEST"
+        },
+        {
+          "step_name": "EXTRACTION",
+          "invocation_number": 2,
+          "invocation_kind": "AUTO_RETRY",
+          "started_at": "2026-10-24T13:18:45.349540+00:00",
+          "ended_at": "2026-10-24T13:18:45.536233+00:00",
+          "outcome": "TRANSIENT_FAILURE",
+          "failure_code": "PROVIDER_REJECTED_REQUEST"
+        }
+      ],
+      "attempt_timing": {
+        "started_at": "2026-10-24T13:18:44.638694+00:00",
+        "terminal_at": "2026-10-24T13:18:45.548491+00:00",
+        "deadline_at": "2026-10-24T13:19:39.638694+00:00"
+      },
+      "status": "INCOMPLETE_PROVIDER"
+    },
+    {
+      "case": "FV-06-REVERSAL",
+      "repeat": 1,
+      "attempt_status": "INCOMPLETE",
+      "failure_code": "PROVIDER_REJECTED_REQUEST",
+      "returned_models": [],
+      "response_ids": [],
+      "extraction_correct": null,
+      "source_validation_correct": null,
+      "extraction_policy_correct": null,
+      "validated_uncertainty": null,
+      "actual_candidate_facts": null,
+      "model_policy_evidence": null,
+      "returned_outputs": [],
+      "actual_findings": null,
+      "expected_findings": {
+        "contradictions": [],
+        "unresolved_questions": [],
+        "financial_issues": [],
+        "commitment_issues": [],
+        "evidence_observations": [
+          {
+            "subject": "LEDGER",
+            "field": "availability",
+            "value": "AVAILABLE",
+            "source_id": null
+          },
+          {
+            "subject": "LEDGER",
+            "field": "complete",
+            "value": true,
+            "source_id": null
+          }
+        ]
+      },
+      "findings_source_validation_correct": null,
+      "findings_soundness_correct": null,
+      "findings_completeness_correct": null,
+      "findings_duplicates_correct": null,
+      "expected_candidate_facts": {
+        "commitments": [],
+        "payment_claims": [
+          {
+            "source_id": "PK-003-M1",
+            "speaker": "Fictional client",
+            "amount_text": "60,000",
+            "currency_text": "INR",
+            "payment_date_text": "today",
+            "transaction_reference_text": "CR-T2"
+          }
+        ]
+      },
+      "deterministic_outcome_correct": null,
+      "latency_seconds": 1.296,
+      "action": null,
+      "result_present": false,
+      "progress": [
+        {
+          "step_name": "EVIDENCE_LOOKUP",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T13:18:46.040987+00:00",
+          "ended_at": "2026-10-24T13:18:46.053410+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "EXTRACTION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T13:18:46.064276+00:00",
+          "ended_at": "2026-10-24T13:18:46.762142+00:00",
+          "outcome": "TRANSIENT_FAILURE",
+          "failure_code": "PROVIDER_REJECTED_REQUEST"
+        },
+        {
+          "step_name": "EXTRACTION",
+          "invocation_number": 2,
+          "invocation_kind": "AUTO_RETRY",
+          "started_at": "2026-10-24T13:18:46.776165+00:00",
+          "ended_at": "2026-10-24T13:18:47.067226+00:00",
+          "outcome": "TRANSIENT_FAILURE",
+          "failure_code": "PROVIDER_REJECTED_REQUEST"
+        }
+      ],
+      "attempt_timing": {
+        "started_at": "2026-10-24T13:18:45.996333+00:00",
+        "terminal_at": "2026-10-24T13:18:47.076915+00:00",
+        "deadline_at": "2026-10-24T13:19:40.996333+00:00"
+      },
+      "status": "INCOMPLETE_PROVIDER"
+    },
+    {
+      "case": "FV-07-CURRENCY",
+      "repeat": 1,
+      "attempt_status": "INCOMPLETE",
+      "failure_code": "PROVIDER_REJECTED_REQUEST",
+      "returned_models": [],
+      "response_ids": [],
+      "extraction_correct": null,
+      "source_validation_correct": null,
+      "extraction_policy_correct": null,
+      "validated_uncertainty": null,
+      "actual_candidate_facts": null,
+      "model_policy_evidence": null,
+      "returned_outputs": [],
+      "actual_findings": null,
+      "expected_findings": {
+        "contradictions": [
+          {
+            "kind": "PAYMENT_CLAIM",
+            "sources": [
+              "PK-003-L2",
+              "PK-003-M1"
+            ]
+          }
+        ],
+        "unresolved_questions": [
+          {
+            "field": "CURRENCY",
+            "sources": [
+              "PK-003-L2"
+            ]
+          },
+          {
+            "field": "CURRENCY",
+            "sources": [
+              "PK-003-M1"
+            ]
+          }
+        ],
+        "financial_issues": [
+          {
+            "code": "UNSUPPORTED_CURRENCY",
+            "sources": [
+              "PK-003-L2"
+            ]
+          }
+        ],
+        "commitment_issues": [],
+        "evidence_observations": [
+          {
+            "subject": "LEDGER",
+            "field": "availability",
+            "value": "AVAILABLE",
+            "source_id": null
+          },
+          {
+            "subject": "LEDGER",
+            "field": "complete",
+            "value": true,
+            "source_id": null
+          }
+        ]
+      },
+      "findings_source_validation_correct": null,
+      "findings_soundness_correct": null,
+      "findings_completeness_correct": null,
+      "findings_duplicates_correct": null,
+      "expected_candidate_facts": {
+        "commitments": [],
+        "payment_claims": [
+          {
+            "source_id": "PK-003-M1",
+            "speaker": "Fictional client",
+            "amount_text": "60,000",
+            "currency_text": "INR",
+            "payment_date_text": "today",
+            "transaction_reference_text": "CR-T2"
+          }
+        ]
+      },
+      "deterministic_outcome_correct": null,
+      "latency_seconds": 1.219,
+      "action": null,
+      "result_present": false,
+      "progress": [
+        {
+          "step_name": "EVIDENCE_LOOKUP",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T13:18:47.522175+00:00",
+          "ended_at": "2026-10-24T13:18:47.534217+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "EXTRACTION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T13:18:47.543507+00:00",
+          "ended_at": "2026-10-24T13:18:48.198342+00:00",
+          "outcome": "TRANSIENT_FAILURE",
+          "failure_code": "PROVIDER_REJECTED_REQUEST"
+        },
+        {
+          "step_name": "EXTRACTION",
+          "invocation_number": 2,
+          "invocation_kind": "AUTO_RETRY",
+          "started_at": "2026-10-24T13:18:48.210732+00:00",
+          "ended_at": "2026-10-24T13:18:48.501455+00:00",
+          "outcome": "TRANSIENT_FAILURE",
+          "failure_code": "PROVIDER_REJECTED_REQUEST"
+        }
+      ],
+      "attempt_timing": {
+        "started_at": "2026-10-24T13:18:47.478750+00:00",
+        "terminal_at": "2026-10-24T13:18:48.514677+00:00",
+        "deadline_at": "2026-10-24T13:19:42.478750+00:00"
+      },
+      "status": "INCOMPLETE_PROVIDER"
+    }
+  ],
+  "requested_runs": 153,
+  "unexecuted_runs": 138,
+  "instrumented_transport": true,
+  "execution_basis": "Independent fresh-copy case invocations; repeat is the predetermined repetition index. Every earlier failed report remains preserved unchanged, including the byte-identical interrupted prompt-7 archive. Fresh full qualification explicitly requested by the owner at 2026-10-24T13:13:16.405Z after provider diagnosis/recovery. Preserves every earlier report, including the exhausted deadline-by-1 batch. Same frozen reviewed configuration and independent inventory; no prior failure regraded or replaced. This is a new153 run, not a continuation of the old run.",
+  "coverage": {
+    "planned_entries": 51,
+    "covered_entries": 12,
+    "missing_entries": [
+      "FV-06-DUPLICATE",
+      "FV-06-REVERSAL",
+      "FV-07-CURRENCY",
+      "FV-07-MISSING",
+      "FV-07-NEGATIVE",
+      "FV-07-OVERPAYMENT",
+      "FV-07-PRECISION",
+      "FV-08-SOON",
+      "FV-08-TOMORROW",
+      "FV-09-EXTRACTION",
+      "FV-09-INTERRUPTION",
+      "FV-09-RETRIEVAL",
+      "FV-09-RETRY",
+      "FV-10-EDIT",
+      "FV-10-EVIDENCE",
+      "FV-10-RECIPIENT",
+      "FV-10-REPEAT",
+      "FV-11-AMOUNT",
+      "FV-11-FEE",
+      "FV-11-NEUTRAL",
+      "FV-11-PLACEHOLDER",
+      "FV-12",
+      "FV-13",
+      "FV-14-INVOICE",
+      "FV-14-PAYMENT",
+      "FV-15-TIE",
+      "FV-15-UNDATED",
+      "FV-16-LINKED",
+      "FV-16-UNLINKED",
+      "FV-17-EVIDENCE",
+      "FV-17-EVIDENCE-RUN-START",
+      "FV-17-SUPERSEDED",
+      "FV-17-UNCHANGED",
+      "FV-18-A",
+      "FV-18-A-CLOCK-1",
+      "FV-18-A-CLOCK-2",
+      "FV-18-B",
+      "FV-18-B-CLOCK-1",
+      "FV-18-B-CLOCK-2"
+    ],
+    "planned_runs": 153,
+    "completed_runs": 15,
+    "unexecuted_runs": 138
+  },
+  "quality": {
+    "returned_runs": 12,
+    "correct_runs": 12,
+    "incorrect_runs": 0
+  },
+  "availability": {
+    "incomplete_provider_runs": 3
+  },
+  "safety": {
+    "unsafe_runs": 0,
+    "blocking_runs": 0,
+    "invalid_run_identities": false,
+    "qualification_identity_correct": true
+  },
+  "interrupted_at": "2026-10-24T13:18:48.694801+00:00"
+}
