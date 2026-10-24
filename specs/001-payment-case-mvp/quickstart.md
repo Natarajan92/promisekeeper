@@ -1,6 +1,6 @@
 # Implementation and Validation Guide
 
-**Status**: Gate I tooling, lockfiles, approved fixtures and pure domain rules are implemented under the owner's authorization. See [the Gate I report](../../reports/phase-i.md) for executed checks. Database/server commands, case UI, Investigator integration, review/closure workflows and release evaluations below remain planned for their later gates; they are not working application commands yet.
+**Status**: Gates I–II are implemented under the owner's authorization. See [Gate I](../../reports/phase-i.md) and [Gate II](../../reports/phase-ii.md) for executed checks. `init-demo`, `serve`, discovery, case/evidence/history reads and fixture preview/confirmation are available. Case UI, Investigator integration, review/closure workflows and release evaluations remain planned for their later gates.
 
 ## Prerequisites and phase authorization
 
@@ -8,7 +8,7 @@ Follow the separate human gates in [plan.md](plan.md). Generate tasks before imp
 
 Phase I created backend/frontend manifests, test configuration and ignore rules for `.runtime/`, virtual environments, credentials and generated build output, with resolved uv.lock/package-lock.json. Subsequent setup uses frozen lockfiles. Repository setup was separately owner-authorized after planning: private Natarajan92/promisekeeper, feature branch 001-payment-case-mvp.
 
-## Future setup (PowerShell, repository root)
+## Setup (PowerShell, repository root)
 
 These variables direct tool data into the workspace. They do not repurpose system HOME variables or change PowerShell execution policy.
 
@@ -30,7 +30,7 @@ Initial lockfile generation belongs to authorized Phase I; `--frozen`/`ci` inten
 
 ## Start an explicitly fictional demonstration
 
-Planned CLI surface: `python -m promisekeeper.cli` provides `init-demo`, `serve`, `evaluate`, `measure`, and `report` commands. These names/flags are part of the implementation plan, not existing executables.
+`python -m promisekeeper.cli` provides `init-demo` and `serve`. The `evaluate`, `measure` and `report` commands remain planned for later gates. Optional `init-demo --variant <registered-id>` creates a fresh approved variant copy; it never modifies another copy.
 
 ```powershell
 $env:PK_AGENT_MODE = 'STUB'
@@ -39,7 +39,9 @@ npm.cmd --prefix frontend run build
 uv run --project backend python -m promisekeeper.cli serve --host 127.0.0.1 --port 8000 --workers 1
 ```
 
-Open `http://127.0.0.1:8000`. The root page lists retained copies through GET /api/v1/demonstrations and restores the browser's selected_demonstration_id when it still exists. Otherwise it opens the sole copy, shows a chooser for multiple copies, or offers explicit creation if none exist. Select the copy returned by init-demo when several exist; creation never resets another copy. Expect fictional/STUB/REFERENCE labels and exactly PK-001, PK-002, PK-003 at 23 October 2026 10:00 IST in a baseline copy. Reload and restart serve without init-demo to verify the selected copy and history are preserved. A failed listing shows a recoverable error rather than silently creating a workspace. The server acquires its process lock and records old running attempts incomplete before readiness. A second process must fail safely without changing the first process's state.
+Gate II serves the built placeholder at `http://127.0.0.1:8000`; use `/docs` or `/api/v1/demonstrations` to inspect the API. Each copy contains exactly PK-001, PK-002 and PK-003; a baseline REFERENCE copy starts at 23 October 2026 10:00 IST. Restart `serve` without `init-demo` to preserve copies/history. The server acquires its process lock and records old running attempts incomplete before readiness. A second process fails without changing the owning process's state. Case/evidence/history/scenario routes require `?demonstration_id=<selected-copy-id>`. Mutations require JSON, `X-PromiseKeeper-Request: 1`, and a strict version-1 operation envelope. The Gate III root-page discovery/selection UI described below remains future work.
+
+The planned root page will list retained copies, restore a valid browser selection, select a sole copy, show a chooser for multiple copies, or require explicit creation for an empty list. Listing errors must preserve the saved preference and show recovery instead of creating/resetting data. Browser selection and reload usability acceptance are unexecuted.
 
 For frontend development, use `npm.cmd --prefix frontend run dev -- --host 127.0.0.1` in another terminal; proxy `/api` to port 8000 and allow only that explicit loopback development origin. Avoid backend auto-reload/multiple workers while testing ownership/recovery.
 

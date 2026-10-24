@@ -1,6 +1,6 @@
 # API, Tool, and Command Contracts v1
 
-This is the normative interface design for the future implementation, not an existing service. Entity fields/invariants are in [data-model.md](../data-model.md). Implement strict Pydantic boundary models and generate OpenAPI from them; check generated behavior against this contract. Reject unknown request fields/coercion. Public prefix: `/api/v1`; same-origin loopback only.
+This is the normative interface design. Gate II implements health/catalogue, discovery/creation/deletion, operation lookup, case/evidence/history reads and fixture preview/confirmation; investigation and review/lifecycle routes remain future work. Entity fields/invariants are in [data-model.md](../data-model.md). Strict Pydantic boundary models generate OpenAPI. Reject unknown request fields/coercion. Public prefix: `/api/v1`; same-origin loopback only.
 
 ## Common types and requests
 
@@ -10,6 +10,8 @@ This is the normative interface design for the future implementation, not an exi
 - A mutation receives `schema_version:"1"`, `operation_id:Id`, and its exact typed payload. Case mutations also receive `expected_case_revision:Revision`. Approval includes expected review_epoch and exact draft hash. A UI retry after lost response retains the same ID/payload.
 - Mutations require `Content-Type: application/json` and `X-PromiseKeeper-Request: 1`. Check loopback Host and allowlisted Origin when present; no wildcard CORS. These controls do not claim authentication. Error responses never echo secrets or raw provider responses.
 - Hash canonical JSON with sorted keys and UTF-8, preserving exact text values. Do not normalize text/recipient after approval. Hash format/version is recorded. Idempotency lookup precedes revision/eligibility checks.
+- Case, evidence-version, history and scenario-event routes require `demonstration_id:Id` as a query parameter to bind the selected-copy scope. Foreign-copy IDs return 404. Case IDs alone never select another copy implicitly.
+- Mutation responses use `{schema_version:"1", receipt:Receipt, ...typed result fields}`. Operation lookup returns that same envelope. Deletion retains content-free identities for prior operation IDs: their subsequent replay/lookup returns a `DELETED` receipt, never recreates a copy or re-executes a command, and changed payloads still conflict. Only copy/operation identity, operation type, request hash and commit time survive in those tombstones.
 
 ## Operations
 
