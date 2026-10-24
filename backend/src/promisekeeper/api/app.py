@@ -42,6 +42,10 @@ def create_app(settings=None, *, static_dir=None):
     app = FastAPI(title="PromiseKeeper", version="1", lifespan=lifespan)
     app.state.db = None
     app.state.settings = settings
+    from promisekeeper.agents.roster import build_agents
+    from promisekeeper.application.provider_usage import usage_recorder
+    app.state.agents = build_agents(settings, usage_sink=usage_recorder(
+        Path(__file__).resolve().parents[4] / '.runtime' / 'application-provider-usage.jsonl'))
 
     @app.middleware("http")
     async def local_request(request: Request, call_next):

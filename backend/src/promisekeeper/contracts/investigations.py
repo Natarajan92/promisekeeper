@@ -213,6 +213,26 @@ class Result(LegacyResult):
             raise ValueError('Both captured ledger observations are required')
         return self
 
+class AgentActivityView(StrictInput):
+    agent: Literal['INTAKE','EXTRACTOR','RULES_ENGINE','MEMORY','COMMUNICATOR','SAFETY_CHECK','TONE_REVIEWER','OWNER','SUPERVISOR','BRIEFING']
+    event: str
+    outcome: Literal['STARTED','SUCCEEDED','REVISE','FALLBACK','FAILED','WAITING','SKIPPED']
+    note: str | None
+    model: str | None
+    input_tokens: int | None
+    output_tokens: int | None
+    latency_ms: int | None
+    at: Instant
+    case_id: Id | None
+    investigation_id: Id | None
+    morning_review_id: str | None
+
+class AgentTotals(StrictInput):
+    input_tokens: int
+    output_tokens: int
+    latency_ms: int
+    cost_usd: float | None
+
 class InvestigationView(StrictInput):
     schema_version: Literal['1']
     id: Id
@@ -230,6 +250,8 @@ class InvestigationView(StrictInput):
     action: Action | None
     draft_status: Literal['NONE','RUNNING','READY','FAILED']
     progress: list[dict]
+    agent_activity: list[AgentActivityView] = []
+    agent_totals: AgentTotals | None = None
 
     @model_validator(mode='after')
     def terminal_result(self):

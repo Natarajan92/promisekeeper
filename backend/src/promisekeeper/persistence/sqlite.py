@@ -36,6 +36,10 @@ class Database:
         for owner in tuple(self.reservations):
             self.capacity.release(owner)
         self.reservations.clear()
+        saver = getattr(self, "graph_checkpointer", None)
+        if saver is not None:
+            self.graph_checkpointer = None
+            saver.conn.close()
         self.ownership.release()
 
     @contextmanager
