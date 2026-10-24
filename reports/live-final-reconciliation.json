@@ -1,0 +1,46 @@
+{
+  "schema_version": "1",
+  "suite": "final-live-reconciliation",
+  "current_configuration": {
+    "requested_model": "zai-org/GLM-5.3-Flash",
+    "adapter_version": "nebius-chat-json-schema-9",
+    "prompt_version": "candidate-extraction-7",
+    "extraction_policy_version": "candidate-only-1",
+    "temporal_policy_version": "deadline-by-1",
+    "evaluator_version": "5",
+    "criteria_version": "gate-iii-live-4",
+    "manifest_hash": "17bcb26aa33ae4bab8fd37abf7e2260cda1089d47eaedc9bc67e7b89f38e1f81",
+    "inventory_hash": "78867b575bc69b0f1ee8ce4783ecd9264d1678deb8d6fb6a0c0469e97bad3632",
+    "request_parameters": {
+      "temperature": 0,
+      "max_tokens": 8000,
+      "reasoning_effort": "low"
+    }
+  },
+  "previous_report": "live-evaluation-retry-1.json",
+  "configuration_unchanged": true,
+  "comparisons": {
+    "requested_model": true,
+    "adapter_version": true,
+    "prompt_version": true,
+    "extraction_policy_version": true,
+    "temporal_policy_version": true,
+    "evaluator_version": true,
+    "criteria_version": true,
+    "manifest_hash": true,
+    "inventory_hash": true,
+    "request_parameters": true
+  },
+  "affected_manifest_entries": [],
+  "qualified": true,
+  "previous_attempts": 15,
+  "unexecuted_runs": 138,
+  "status": "PASS_WITH_AVAILABILITY_GAPS",
+  "reason": "Frozen configuration unchanged. A separate fresh full Gate V batch met existing qualification criteria with one availability gap; every previous stopped/failed report remains preserved. Complete independent numeric financial oracle is separate STUB evidence; LIVE checks raw extraction/provenance plus action/balance/review-time.",
+  "latest_qualification_report": "live-evaluation-gate-v.json",
+  "latest_attempted": 153,
+  "latest_returned_correct": 152,
+  "latest_provider_gaps": 1,
+  "latest_unexecuted": 0,
+  "qualification_finished_at": "2026-10-24T15:02:29.525571+00:00"
+}

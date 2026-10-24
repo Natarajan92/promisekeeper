@@ -23,21 +23,40 @@ def main(argv=None):
     serve.add_argument("--port", type=int, default=8000)
     serve.add_argument("--workers", type=int, default=1, choices=[1])
     evaluate = sub.add_parser('evaluate')
-    evaluate.add_argument('--suite', required=True, choices=['live'])
+    evaluate.add_argument('--suite', required=True, choices=['live', 'fixtures'])
     evaluate.add_argument('--catalogue', required=True, choices=['release-0.1'])
     evaluate.add_argument('--repeats', type=int, default=3)
-    evaluate.add_argument('--output', default='reports/live-evaluation.json')
+    evaluate.add_argument('--output', default=None)
+    measure = sub.add_parser('measure')
+    measure.add_argument('--suite', required=True, choices=['responsiveness', 'preservation'])
+    measure.add_argument('--trials-per-case', type=int, default=10, choices=[10])
+    measure.add_argument('--cycles', type=int, default=10, choices=[10])
+    measure.add_argument('--report', required=True)
     args = parser.parse_args(argv)
     try:
+        if args.command == 'evaluate' and args.suite == 'fixtures':
+            from promisekeeper.application.fixture_evaluation import evaluate_fixtures
+            report = evaluate_fixtures(catalogue=args.catalogue, output=args.output or 'reports/fixture-evaluation.json')
+            print(json.dumps(dict(status=report['status'], passed=report['passed'], runs=len(report['runs']), live_qualified=False)))
+            if not report['passed']:
+                parser.exit(1, 'Scripted catalogue evaluation did not pass. See the report.\n')
+            return
         settings = load_settings()
         if args.command == "init-demo":
             with Database(settings.db_path) as db:
                 response = create_demonstration(db, dict(schema_version="1", operation_id=str(uuid4()),
                     catalogue_version=args.catalogue, variant_id=args.variant, clock_mode=args.clock))
                 print(json.dumps(response))
+        elif args.command == 'measure':
+            from promisekeeper.application.measurements import measure as run_measurement
+            report = run_measurement(settings, suite=args.suite, report=args.report,
+                trials_per_case=args.trials_per_case, cycles=args.cycles)
+            print(json.dumps(dict(status=report['status'], passed=report['passed'], runs=len(report['runs']))))
+            if not report['passed']:
+                parser.exit(1, 'Release measurements did not pass. See the report.\n')
         elif args.command == 'evaluate':
             from promisekeeper.application.evaluations import evaluate as run_evaluation
-            report=run_evaluation(settings,catalogue=args.catalogue,repeats=args.repeats,output=args.output)
+            report=run_evaluation(settings,catalogue=args.catalogue,repeats=args.repeats,output=args.output or 'reports/live-evaluation.json')
             print(json.dumps(dict(status=report['status'],qualification_scope=report['qualification_scope'],qualified=report['qualified'],requested_model=report['requested_model'],runs=len(report['runs']))))
             if not report['qualified']:parser.exit(1,'LIVE release acceptance did not qualify. See the evaluation report.\n')
         else:

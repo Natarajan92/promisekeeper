@@ -9,9 +9,13 @@ async function select(page: Page, id: string) {
   await page.goto("/");
 }
 
-test("empty discovery requires explicit creation, then preserves the sole copy on reload", async ({ page, request }) => {
+test("empty discovery requires explicit creation, then preserves the sole copy on reload", async ({ page, playwright }) => {
+  const server=await isolatedServer();
+  await server.start();
+  const request=await playwright.request.newContext({baseURL:server.url});
+  try {
   expect((await (await request.get("/api/v1/demonstrations")).json()).demonstrations).toEqual([]);
-  await page.goto("/");
+  await page.goto(server.url);
   await expect(page.getByRole("button", {name:/create.*demonstration/i}).first()).toBeVisible();
   expect((await (await request.get("/api/v1/demonstrations")).json()).demonstrations).toEqual([]);
   await page.getByRole("button", {name:/create.*demonstration/i}).first().click();
@@ -21,9 +25,11 @@ test("empty discovery requires explicit creation, then preserves the sole copy o
   await page.reload();
   await expect(page.getByText("Northstar Analytics", {exact:true}).first()).toBeVisible();
   expect((await (await request.get("/api/v1/demonstrations")).json()).demonstrations).toEqual(copies);
+  } finally {await request.dispose();await server.stop();}
 });
 
 test("multiple copies need selection and valid saved selection opens exact raw evidence", async ({ page, request }) => {
+  await createCopy(request);
   const copy = await createCopy(request);
   await page.goto("/");
   await expect(page.getByLabel("Demonstration copy")).toBeVisible();

@@ -4,7 +4,7 @@
 
 **Input**: `specs/001-payment-case-mvp/spec.md`, including all three accepted clarifications, the four approved analysis remedies, and FV-01 through FV-18.
 
-**Status**: Gates I-III implementation is owner-approved; Gate III was pushed as 078c4db. On 24 October 2026 the owner authorized completing, approving and publishing Gate IV, then Gate V implementation and publication after completion. Gate IV final publication checks are in progress. T060 LIVE qualification remains outstanding and is not waived by implementation approval. Gate V and release acceptance evidence will preserve failed, skipped and unexecuted checks.
+**Status**: Gates I-IV are owner-approved and published; Gate IV is `0454551`. Gate V engineering and technical verification are complete. T060 qualifies under frozen criteria after 153 attempts (152 correct returns, one provider gap, zero unexecuted). The required five-owner study remains UNEXECUTED; formal Gate V / Release 0.1 acceptance is blocked. The owner approved publishing the fictional test build while retaining that acceptance block. Earlier failures remain preserved.
 
 ## Summary
 
@@ -28,7 +28,7 @@ Bind commitments to immutable catalogue anchors scoped to copy/source version, i
 
 **Project Type**: Local Python web service and React application; no production deployment.
 
-**Performance Goals**: NFR-002: at least 29/30 saved case opens within 3 seconds; at least 29/30 start acknowledgements within 2 seconds; every attempt visibly completed/limited/incomplete within 60 seconds. Backend overall deadline 55 seconds, provider calls at most 20 seconds each, no SDK retries, UI watchdog at 60 seconds. Targets are unmeasured.
+**Performance Goals**: NFR-002: at least 29/30 saved case opens within 3 seconds; at least 29/30 start acknowledgements within 2 seconds; every attempt visibly completed/limited/incomplete within 60 seconds. Backend overall deadline 55 seconds, provider calls at most 20 seconds each, no SDK retries, UI watchdog at 60 seconds. Final measurements meet the timing limits: HTTP 30/30 fast opens/starts; browser 30/30 fast opens and 29/30 fast starts, all visible terminal results within 10.414 seconds. See `reports/runtime-validation.md` from the repository root.
 
 **Constraints**: One agent role and one sequential Investigator execution slot; at most one automatic retry per failed step. Approved fictional input only; no arbitrary uploads, authentication, financial edits, sending, unattended contact, or automatic closure. Exact INR paise and Asia/Kolkata boundaries. Deadline: 26 October 2026, 10:00 IST.
 

@@ -1,6 +1,6 @@
 # Implementation and Validation Guide
 
-**Status**: Gates I-III implementation is owner-approved; Gate III was pushed as 078c4db. On 24 October 2026 the owner authorized completing, approving and publishing Gate IV, then Gate V implementation and publication after completion. Gate IV final publication checks are in progress. T060 LIVE qualification remains outstanding and is not waived by implementation approval. Gate V and release acceptance evidence will preserve failed, skipped and unexecuted checks.
+**Status**: Gates I-IV are owner-approved and published; Gate IV is `0454551`. Gate V engineering and technical verification are complete. T060 qualifies under frozen criteria after 153 attempts (152 correct returns, one provider gap, zero unexecuted). The required five-owner study remains UNEXECUTED; formal Gate V / Release 0.1 acceptance is blocked. The owner approved publishing the fictional test build while retaining that acceptance block. Earlier failures remain preserved.
 
 ## Prerequisites and phase authorization
 
@@ -29,7 +29,7 @@ Initial lockfile generation belongs to authorized Phase I; `--frozen`/`ci` inten
 
 ## Start an explicitly fictional demonstration
 
-`python -m promisekeeper.cli` provides `init-demo`, `serve` and `evaluate --suite live`. The `measure` and `report` commands remain planned for later gates. Optional `init-demo --variant <registered-id>` creates a fresh approved variant copy; it never modifies another copy.
+`python -m promisekeeper.cli` provides `init-demo`, `serve`, `evaluate --suite live`, `evaluate --suite fixtures` and `measure --suite responsiveness|preservation`. No generic `report` command is implemented. Optional `init-demo --variant <registered-id>` creates a fresh approved variant copy; it never modifies another copy.
 
 ```powershell
 $env:PK_AGENT_MODE = 'STUB'
@@ -89,14 +89,14 @@ The e2e script uses installed Chrome, the real local API and a separate temporar
 With live access configured during Phase III:
 
 ```powershell
-uv run --project backend python -m promisekeeper.cli evaluate --suite live --catalogue release-0.1 --repeats 3 --output reports/live-evaluation.json
+uv run --project backend python -m promisekeeper.cli evaluate --suite live --catalogue release-0.1 --repeats 3 --output reports/live-evaluation-new.json
 ```
 
-The following measurement commands remain planned for Gate V and are not currently available:
+The following measurement commands are available for Gate V. They require LIVE mode and the frozen Nebius model, use fresh isolated copies and refuse an existing output path:
 
 ```powershell
-uv run --project backend python -m promisekeeper.cli measure --suite responsiveness --trials-per-case 10 --report reports/responsiveness.json
-uv run --project backend python -m promisekeeper.cli measure --suite preservation --cycles 10 --report reports/preservation.json
+uv run --project backend python -m promisekeeper.cli measure --suite responsiveness --trials-per-case 10 --report reports/responsiveness-new.json
+uv run --project backend python -m promisekeeper.cli measure --suite preservation --cycles 10 --report reports/preservation-new.json
 ```
 
 Live evaluation covers baseline/update and named variants, checks provenance/unknown handling/injection resistance and compares financial/action truth with deterministic expected outcomes. Three repeats assess observed variability; they do not prove universal model reproducibility. Record failures, latency and returned model identity. Responsiveness uses a declared environment and LIVE mode; a STUB report must be separately labeled and cannot stand in for live latency acceptance.
@@ -108,3 +108,7 @@ Run the five-owner evaluations for NFR-001/SC-001–SC-003/SC-007 using equivale
 Release requires recorded passes for AC-01–AC-27, all named financial/failure variants, and every NFR. Evidence/approval/history checks require 100% pass. Record all SC measurements; disclose unmet SC-002/SC-007 learning targets. Preserve failed/skipped/unexecuted labels. A passing offline fixture suite or walkthrough alone is insufficient for live-agent, human usability or production-readiness claims.
 
 Each phase report names scope, changed artifacts, commands actually executed, actual outcomes, unresolved/unexecuted checks, constitution check and proposed next phase. Stop for human review. Cutoff is 26 October 2026 10:00 IST; report any P0 shortfall and obtain an explicit scope decision rather than waive safety/tests or declare an unvalidated release passed.
+
+## Personal user testing
+
+Follow [the hands-on guide](../../docs/user-testing/README.md), [fourteen manual cases](../../docs/user-testing/test-cases.md) and [canonical sample records](../../docs/user-testing/sample-data.json). Start in STUB/REFERENCE with a separate owner-user-tests.sqlite file; no API key is needed. For business-owner demonstration language see [the pitch and demo script](../../docs/user-testing/small-business-pitch.md). The fictional-only/no-send limits remain visible. Frozen LIVE qualification is recorded separately; the required five-owner study remains unexecuted.

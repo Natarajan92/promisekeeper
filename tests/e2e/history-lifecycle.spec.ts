@@ -2,6 +2,7 @@ import { randomUUID } from 'node:crypto';
 import { test,expect,type APIRequestContext,type Page } from './support/test';
 import { createCopy,investigate,mutationHeaders,confirmScenarioEvent } from './support/scenarioEvents';
 import { isolatedServer } from './support/server';
+import { readAvailable, type RetryableReadError } from './support/statusReads';
 
 async function detail(request:APIRequestContext,did:string,cid:string){return (await request.get(`/api/v1/cases/${cid}?demonstration_id=${did}`)).json();}
 async function openCase(page:Page,did:string,caseCode='PK-003',url='/'){
@@ -75,13 +76,33 @@ for(const destination of ['Findings','another copy'] as const){
   test(`deletion outcome survives navigation to ${destination} without clearing another selected copy`,async({page,request})=>{
     const removed=await createCopy(request);const kept=await createCopy(request);await openCase(page,removed.id,'PK-001');
     let release!:()=>void;const delayed=new Promise<void>(resolve=>{release=resolve;});const pattern=`**/api/v1/demonstrations/${removed.id}/deletion`;
-    await page.route(pattern,async route=>{await delayed;await route.fulfill({response:await route.fetch()});});
+    let entered!:()=>void;const routeEntered=new Promise<void>(resolve=>{entered=resolve;});
+    const handlers:Promise<void>[]=[];const readErrors:RetryableReadError[]=[];
+    await page.route(pattern,route=>{
+      entered();
+      const handler=(async()=>{await delayed;await route.fulfill({response:await route.fetch()});})();
+      handlers.push(handler);
+      return handler;
+    });
     try{
       await page.getByText('Delete selected demonstration',{exact:true}).click();await page.getByRole('button',{name:'Review selected-copy deletion'}).click();await page.getByLabel('Confirm deletion of this selected demonstration').check();await page.getByRole('button',{name:'Delete this demonstration'}).click();
+      await routeEntered;
       if(destination==='Findings')await page.getByRole('button',{name:'Findings',exact:true}).click();else await page.getByRole('combobox',{name:'Demonstration copy'}).selectOption(kept.id);
-      release();await expect.poll(async()=> (await (await request.get('/api/v1/demonstrations')).json()).demonstrations.some((d:any)=>d.id===removed.id)).toBe(false);
+      release();const listingDeadline=Date.now()+7_000;await expect.poll(async()=>{
+        const observed=await readAvailable(request,'/api/v1/demonstrations',readErrors,Math.max(1,listingDeadline-Date.now()));
+        if(observed===null)return 'UNOBSERVED';
+        expect(Array.isArray(observed.demonstrations)).toBe(true);
+        return observed.demonstrations.some((d:any)=>d.id===removed.id);
+      }).toBe(false);
       await expect.poll(()=>page.evaluate(()=>localStorage.getItem('selected_demonstration_id'))).not.toBe(removed.id);
       if(destination==='another copy')await expect.poll(()=>page.evaluate(()=>localStorage.getItem('selected_demonstration_id'))).toBe(kept.id);
-    }finally{release();await page.unroute(pattern);}
+    }finally{
+      release();
+      try {await Promise.all(handlers);}
+      finally {
+        await page.unroute(pattern);
+        if(readErrors.length)await test.info().attach('deletion-listing-read-errors',{body:JSON.stringify(readErrors,null,2),contentType:'application/json'});
+      }
+    }
   });
 }

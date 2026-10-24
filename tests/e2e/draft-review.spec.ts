@@ -1,4 +1,5 @@
 import { randomUUID } from 'node:crypto';
+import { fileURLToPath } from 'node:url';
 import { test,expect,type APIRequestContext,type Page } from './support/test';
 import { createCopy,investigate,mutationHeaders,confirmScenarioEvent } from './support/scenarioEvents';
 import { isolatedServer } from './support/server';
@@ -24,7 +25,7 @@ test('exact supported edit, approve and reject are durable versions without send
   await expect(page.getByText(/Approval recorded/)).toBeVisible();
   await page.setViewportSize({width:390,height:844});await page.addStyleTag({content:'html{font-size:200%}'});
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
-  await expect(page.getByLabel('Draft text')).toBeVisible();await page.screenshot({path:'../.runtime/gate-iv-draft-review-narrow.png',fullPage:true});
+  await expect(page.getByLabel('Draft text')).toBeVisible();await page.screenshot({path:fileURLToPath(new URL('../../.runtime/gate-iv-draft-review-narrow.png',import.meta.url)),fullPage:true});
   let view=await caseView(request,copy.id,cid);expect(view.review_state).toBe('APPROVED');
   const operationId=randomUUID();const rejected=await review(request,copy.id,cid,view,'REJECT',operationId);expect(rejected.status()).toBe(200);
   const repeated=await review(request,copy.id,cid,view,'REJECT',operationId);expect(await repeated.json()).toEqual(await rejected.json());

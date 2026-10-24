@@ -1,0 +1,760 @@
+{
+  "inventory_version": "gate-v-financial-1",
+  "catalogue_version": "release-0.1",
+  "basis": "Authored from approved source amounts and explicit catalogue financial cases; no product reconciler or observed result generated these expectations. Baseline: NS120000-40000=80000, MS75000-25000=50000, CR90000-30000=60000 INR. CR settlement counts60000 once, exact reversal removes it, malformed/unknown/conflicting authority leaves explicit unknowns, MS partial adds20000. Date-only due expires at next local midnight.",
+  "entries": {
+    "baseline:PK-001": {
+      "certainty": "KNOWN",
+      "invoice": {
+        "currency": "INR",
+        "minor_units": "12000000"
+      },
+      "paid": {
+        "currency": "INR",
+        "minor_units": "4000000"
+      },
+      "balance": {
+        "currency": "INR",
+        "minor_units": "8000000"
+      },
+      "due_at": "2026-10-11T00:00:00+05:30"
+    },
+    "PK-001-U1": {
+      "certainty": "KNOWN",
+      "invoice": {
+        "currency": "INR",
+        "minor_units": "12000000"
+      },
+      "paid": {
+        "currency": "INR",
+        "minor_units": "4000000"
+      },
+      "balance": {
+        "currency": "INR",
+        "minor_units": "8000000"
+      },
+      "due_at": "2026-10-11T00:00:00+05:30"
+    },
+    "FV-02-PROMISE": {
+      "certainty": "KNOWN",
+      "invoice": {
+        "currency": "INR",
+        "minor_units": "12000000"
+      },
+      "paid": {
+        "currency": "INR",
+        "minor_units": "4000000"
+      },
+      "balance": {
+        "currency": "INR",
+        "minor_units": "8000000"
+      },
+      "due_at": "2026-10-11T00:00:00+05:30"
+    },
+    "FV-09-EXTRACTION": {
+      "certainty": "KNOWN",
+      "invoice": {
+        "currency": "INR",
+        "minor_units": "12000000"
+      },
+      "paid": {
+        "currency": "INR",
+        "minor_units": "4000000"
+      },
+      "balance": {
+        "currency": "INR",
+        "minor_units": "8000000"
+      },
+      "due_at": "2026-10-11T00:00:00+05:30"
+    },
+    "FV-09-INTERRUPTION": {
+      "certainty": "KNOWN",
+      "invoice": {
+        "currency": "INR",
+        "minor_units": "12000000"
+      },
+      "paid": {
+        "currency": "INR",
+        "minor_units": "4000000"
+      },
+      "balance": {
+        "currency": "INR",
+        "minor_units": "8000000"
+      },
+      "due_at": "2026-10-11T00:00:00+05:30"
+    },
+    "FV-09-RETRIEVAL": {
+      "certainty": "KNOWN",
+      "invoice": {
+        "currency": "INR",
+        "minor_units": "12000000"
+      },
+      "paid": {
+        "currency": "INR",
+        "minor_units": "4000000"
+      },
+      "balance": {
+        "currency": "INR",
+        "minor_units": "8000000"
+      },
+      "due_at": "2026-10-11T00:00:00+05:30"
+    },
+    "FV-09-RETRY": {
+      "certainty": "KNOWN",
+      "invoice": {
+        "currency": "INR",
+        "minor_units": "12000000"
+      },
+      "paid": {
+        "currency": "INR",
+        "minor_units": "4000000"
+      },
+      "balance": {
+        "currency": "INR",
+        "minor_units": "8000000"
+      },
+      "due_at": "2026-10-11T00:00:00+05:30"
+    },
+    "FV-10-EDIT": {
+      "certainty": "KNOWN",
+      "invoice": {
+        "currency": "INR",
+        "minor_units": "12000000"
+      },
+      "paid": {
+        "currency": "INR",
+        "minor_units": "4000000"
+      },
+      "balance": {
+        "currency": "INR",
+        "minor_units": "8000000"
+      },
+      "due_at": "2026-10-11T00:00:00+05:30"
+    },
+    "FV-10-EVIDENCE": {
+      "certainty": "KNOWN",
+      "invoice": {
+        "currency": "INR",
+        "minor_units": "12000000"
+      },
+      "paid": {
+        "currency": "INR",
+        "minor_units": "4000000"
+      },
+      "balance": {
+        "currency": "INR",
+        "minor_units": "8000000"
+      },
+      "due_at": "2026-10-11T00:00:00+05:30"
+    },
+    "FV-10-RECIPIENT": {
+      "certainty": "KNOWN",
+      "invoice": {
+        "currency": "INR",
+        "minor_units": "12000000"
+      },
+      "paid": {
+        "currency": "INR",
+        "minor_units": "4000000"
+      },
+      "balance": {
+        "currency": "INR",
+        "minor_units": "8000000"
+      },
+      "due_at": "2026-10-11T00:00:00+05:30"
+    },
+    "FV-10-REPEAT": {
+      "certainty": "KNOWN",
+      "invoice": {
+        "currency": "INR",
+        "minor_units": "12000000"
+      },
+      "paid": {
+        "currency": "INR",
+        "minor_units": "4000000"
+      },
+      "balance": {
+        "currency": "INR",
+        "minor_units": "8000000"
+      },
+      "due_at": "2026-10-11T00:00:00+05:30"
+    },
+    "FV-11-AMOUNT": {
+      "certainty": "KNOWN",
+      "invoice": {
+        "currency": "INR",
+        "minor_units": "12000000"
+      },
+      "paid": {
+        "currency": "INR",
+        "minor_units": "4000000"
+      },
+      "balance": {
+        "currency": "INR",
+        "minor_units": "8000000"
+      },
+      "due_at": "2026-10-11T00:00:00+05:30"
+    },
+    "FV-11-FEE": {
+      "certainty": "KNOWN",
+      "invoice": {
+        "currency": "INR",
+        "minor_units": "12000000"
+      },
+      "paid": {
+        "currency": "INR",
+        "minor_units": "4000000"
+      },
+      "balance": {
+        "currency": "INR",
+        "minor_units": "8000000"
+      },
+      "due_at": "2026-10-11T00:00:00+05:30"
+    },
+    "FV-11-NEUTRAL": {
+      "certainty": "KNOWN",
+      "invoice": {
+        "currency": "INR",
+        "minor_units": "12000000"
+      },
+      "paid": {
+        "currency": "INR",
+        "minor_units": "4000000"
+      },
+      "balance": {
+        "currency": "INR",
+        "minor_units": "8000000"
+      },
+      "due_at": "2026-10-11T00:00:00+05:30"
+    },
+    "FV-11-PLACEHOLDER": {
+      "certainty": "KNOWN",
+      "invoice": {
+        "currency": "INR",
+        "minor_units": "12000000"
+      },
+      "paid": {
+        "currency": "INR",
+        "minor_units": "4000000"
+      },
+      "balance": {
+        "currency": "INR",
+        "minor_units": "8000000"
+      },
+      "due_at": "2026-10-11T00:00:00+05:30"
+    },
+    "FV-12": {
+      "certainty": "KNOWN",
+      "invoice": {
+        "currency": "INR",
+        "minor_units": "12000000"
+      },
+      "paid": {
+        "currency": "INR",
+        "minor_units": "4000000"
+      },
+      "balance": {
+        "currency": "INR",
+        "minor_units": "8000000"
+      },
+      "due_at": "2026-10-11T00:00:00+05:30"
+    },
+    "FV-15-TIE": {
+      "certainty": "KNOWN",
+      "invoice": {
+        "currency": "INR",
+        "minor_units": "12000000"
+      },
+      "paid": {
+        "currency": "INR",
+        "minor_units": "4000000"
+      },
+      "balance": {
+        "currency": "INR",
+        "minor_units": "8000000"
+      },
+      "due_at": "2026-10-11T00:00:00+05:30"
+    },
+    "FV-15-UNDATED": {
+      "certainty": "KNOWN",
+      "invoice": {
+        "currency": "INR",
+        "minor_units": "12000000"
+      },
+      "paid": {
+        "currency": "INR",
+        "minor_units": "4000000"
+      },
+      "balance": {
+        "currency": "INR",
+        "minor_units": "8000000"
+      },
+      "due_at": "2026-10-11T00:00:00+05:30"
+    },
+    "FV-17-EVIDENCE": {
+      "certainty": "KNOWN",
+      "invoice": {
+        "currency": "INR",
+        "minor_units": "12000000"
+      },
+      "paid": {
+        "currency": "INR",
+        "minor_units": "4000000"
+      },
+      "balance": {
+        "currency": "INR",
+        "minor_units": "8000000"
+      },
+      "due_at": "2026-10-11T00:00:00+05:30"
+    },
+    "FV-17-EVIDENCE-RUN-START": {
+      "certainty": "KNOWN",
+      "invoice": {
+        "currency": "INR",
+        "minor_units": "12000000"
+      },
+      "paid": {
+        "currency": "INR",
+        "minor_units": "4000000"
+      },
+      "balance": {
+        "currency": "INR",
+        "minor_units": "8000000"
+      },
+      "due_at": "2026-10-11T00:00:00+05:30"
+    },
+    "FV-17-SUPERSEDED": {
+      "certainty": "KNOWN",
+      "invoice": {
+        "currency": "INR",
+        "minor_units": "12000000"
+      },
+      "paid": {
+        "currency": "INR",
+        "minor_units": "4000000"
+      },
+      "balance": {
+        "currency": "INR",
+        "minor_units": "8000000"
+      },
+      "due_at": "2026-10-11T00:00:00+05:30"
+    },
+    "FV-17-UNCHANGED": {
+      "certainty": "KNOWN",
+      "invoice": {
+        "currency": "INR",
+        "minor_units": "12000000"
+      },
+      "paid": {
+        "currency": "INR",
+        "minor_units": "4000000"
+      },
+      "balance": {
+        "currency": "INR",
+        "minor_units": "8000000"
+      },
+      "due_at": "2026-10-11T00:00:00+05:30"
+    },
+    "baseline:PK-002": {
+      "certainty": "KNOWN",
+      "invoice": {
+        "currency": "INR",
+        "minor_units": "7500000"
+      },
+      "paid": {
+        "currency": "INR",
+        "minor_units": "2500000"
+      },
+      "balance": {
+        "currency": "INR",
+        "minor_units": "5000000"
+      },
+      "due_at": "2026-10-19T00:00:00+05:30"
+    },
+    "PK-002-U1": {
+      "certainty": "KNOWN",
+      "invoice": {
+        "currency": "INR",
+        "minor_units": "7500000"
+      },
+      "paid": {
+        "currency": "INR",
+        "minor_units": "2500000"
+      },
+      "balance": {
+        "currency": "INR",
+        "minor_units": "5000000"
+      },
+      "due_at": "2026-10-19T00:00:00+05:30"
+    },
+    "FV-04": {
+      "certainty": "KNOWN",
+      "invoice": {
+        "currency": "INR",
+        "minor_units": "7500000"
+      },
+      "paid": {
+        "currency": "INR",
+        "minor_units": "2500000"
+      },
+      "balance": {
+        "currency": "INR",
+        "minor_units": "5000000"
+      },
+      "due_at": "2026-10-19T00:00:00+05:30"
+    },
+    "FV-08-SOON": {
+      "certainty": "KNOWN",
+      "invoice": {
+        "currency": "INR",
+        "minor_units": "7500000"
+      },
+      "paid": {
+        "currency": "INR",
+        "minor_units": "2500000"
+      },
+      "balance": {
+        "currency": "INR",
+        "minor_units": "5000000"
+      },
+      "due_at": "2026-10-19T00:00:00+05:30"
+    },
+    "FV-08-TOMORROW": {
+      "certainty": "KNOWN",
+      "invoice": {
+        "currency": "INR",
+        "minor_units": "7500000"
+      },
+      "paid": {
+        "currency": "INR",
+        "minor_units": "2500000"
+      },
+      "balance": {
+        "currency": "INR",
+        "minor_units": "5000000"
+      },
+      "due_at": "2026-10-19T00:00:00+05:30"
+    },
+    "baseline:PK-003": {
+      "certainty": "KNOWN",
+      "invoice": {
+        "currency": "INR",
+        "minor_units": "9000000"
+      },
+      "paid": {
+        "currency": "INR",
+        "minor_units": "3000000"
+      },
+      "balance": {
+        "currency": "INR",
+        "minor_units": "6000000"
+      },
+      "due_at": "2026-10-16T00:00:00+05:30"
+    },
+    "FV-03": {
+      "certainty": "KNOWN",
+      "invoice": {
+        "currency": "INR",
+        "minor_units": "9000000"
+      },
+      "paid": {
+        "currency": "INR",
+        "minor_units": "3000000"
+      },
+      "balance": {
+        "currency": "INR",
+        "minor_units": "6000000"
+      },
+      "due_at": "2026-10-16T00:00:00+05:30"
+    },
+    "FV-06-REVERSAL": {
+      "certainty": "KNOWN",
+      "invoice": {
+        "currency": "INR",
+        "minor_units": "9000000"
+      },
+      "paid": {
+        "currency": "INR",
+        "minor_units": "3000000"
+      },
+      "balance": {
+        "currency": "INR",
+        "minor_units": "6000000"
+      },
+      "due_at": "2026-10-16T00:00:00+05:30"
+    },
+    "FV-13": {
+      "certainty": "KNOWN",
+      "invoice": {
+        "currency": "INR",
+        "minor_units": "9000000"
+      },
+      "paid": {
+        "currency": "INR",
+        "minor_units": "3000000"
+      },
+      "balance": {
+        "currency": "INR",
+        "minor_units": "6000000"
+      },
+      "due_at": "2026-10-16T00:00:00+05:30"
+    },
+    "PK-003-U1": {
+      "certainty": "KNOWN",
+      "invoice": {
+        "currency": "INR",
+        "minor_units": "9000000"
+      },
+      "paid": {
+        "currency": "INR",
+        "minor_units": "9000000"
+      },
+      "balance": {
+        "currency": "INR",
+        "minor_units": "0"
+      },
+      "due_at": "2026-10-16T00:00:00+05:30"
+    },
+    "FV-06-DUPLICATE": {
+      "certainty": "KNOWN",
+      "invoice": {
+        "currency": "INR",
+        "minor_units": "9000000"
+      },
+      "paid": {
+        "currency": "INR",
+        "minor_units": "9000000"
+      },
+      "balance": {
+        "currency": "INR",
+        "minor_units": "0"
+      },
+      "due_at": "2026-10-16T00:00:00+05:30"
+    },
+    "FV-01": {
+      "certainty": "UNKNOWN",
+      "invoice": null,
+      "paid": null,
+      "balance": null,
+      "due_at": null
+    },
+    "FV-14-INVOICE": {
+      "certainty": "UNKNOWN",
+      "invoice": null,
+      "paid": null,
+      "balance": null,
+      "due_at": null
+    },
+    "FV-02-INVOICE": {
+      "certainty": "UNKNOWN",
+      "invoice": null,
+      "paid": null,
+      "balance": null,
+      "due_at": "2026-10-11T00:00:00+05:30"
+    },
+    "FV-05": {
+      "certainty": "UNKNOWN",
+      "invoice": {
+        "currency": "INR",
+        "minor_units": "9000000"
+      },
+      "paid": null,
+      "balance": null,
+      "due_at": "2026-10-16T00:00:00+05:30"
+    },
+    "FV-07-CURRENCY": {
+      "certainty": "UNKNOWN",
+      "invoice": {
+        "currency": "INR",
+        "minor_units": "9000000"
+      },
+      "paid": null,
+      "balance": null,
+      "due_at": "2026-10-16T00:00:00+05:30"
+    },
+    "FV-07-MISSING": {
+      "certainty": "UNKNOWN",
+      "invoice": {
+        "currency": "INR",
+        "minor_units": "9000000"
+      },
+      "paid": null,
+      "balance": null,
+      "due_at": "2026-10-16T00:00:00+05:30"
+    },
+    "FV-07-NEGATIVE": {
+      "certainty": "UNKNOWN",
+      "invoice": {
+        "currency": "INR",
+        "minor_units": "9000000"
+      },
+      "paid": null,
+      "balance": null,
+      "due_at": "2026-10-16T00:00:00+05:30"
+    },
+    "FV-07-PRECISION": {
+      "certainty": "UNKNOWN",
+      "invoice": {
+        "currency": "INR",
+        "minor_units": "9000000"
+      },
+      "paid": null,
+      "balance": null,
+      "due_at": "2026-10-16T00:00:00+05:30"
+    },
+    "FV-14-PAYMENT": {
+      "certainty": "UNKNOWN",
+      "invoice": {
+        "currency": "INR",
+        "minor_units": "12000000"
+      },
+      "paid": null,
+      "balance": null,
+      "due_at": "2026-10-11T00:00:00+05:30"
+    },
+    "FV-07-OVERPAYMENT": {
+      "certainty": "KNOWN",
+      "invoice": {
+        "currency": "INR",
+        "minor_units": "9000000"
+      },
+      "paid": {
+        "currency": "INR",
+        "minor_units": "10000000"
+      },
+      "balance": {
+        "currency": "INR",
+        "minor_units": "-1000000"
+      },
+      "due_at": "2026-10-16T00:00:00+05:30"
+    },
+    "FV-16-LINKED": {
+      "certainty": "KNOWN",
+      "invoice": {
+        "currency": "INR",
+        "minor_units": "7500000"
+      },
+      "paid": {
+        "currency": "INR",
+        "minor_units": "4500000"
+      },
+      "balance": {
+        "currency": "INR",
+        "minor_units": "3000000"
+      },
+      "due_at": "2026-10-19T00:00:00+05:30"
+    },
+    "FV-16-UNLINKED": {
+      "certainty": "KNOWN",
+      "invoice": {
+        "currency": "INR",
+        "minor_units": "7500000"
+      },
+      "paid": {
+        "currency": "INR",
+        "minor_units": "4500000"
+      },
+      "balance": {
+        "currency": "INR",
+        "minor_units": "3000000"
+      },
+      "due_at": "2026-10-19T00:00:00+05:30"
+    },
+    "FV-18-A": {
+      "certainty": "KNOWN",
+      "invoice": {
+        "currency": "INR",
+        "minor_units": "7500000"
+      },
+      "paid": {
+        "currency": "INR",
+        "minor_units": "2500000"
+      },
+      "balance": {
+        "currency": "INR",
+        "minor_units": "5000000"
+      },
+      "due_at": "2026-10-25T00:00:00+05:30"
+    },
+    "FV-18-A-CLOCK-1": {
+      "certainty": "KNOWN",
+      "invoice": {
+        "currency": "INR",
+        "minor_units": "7500000"
+      },
+      "paid": {
+        "currency": "INR",
+        "minor_units": "2500000"
+      },
+      "balance": {
+        "currency": "INR",
+        "minor_units": "5000000"
+      },
+      "due_at": "2026-10-25T00:00:00+05:30"
+    },
+    "FV-18-A-CLOCK-2": {
+      "certainty": "KNOWN",
+      "invoice": {
+        "currency": "INR",
+        "minor_units": "7500000"
+      },
+      "paid": {
+        "currency": "INR",
+        "minor_units": "2500000"
+      },
+      "balance": {
+        "currency": "INR",
+        "minor_units": "5000000"
+      },
+      "due_at": "2026-10-25T00:00:00+05:30"
+    },
+    "FV-18-B": {
+      "certainty": "KNOWN",
+      "invoice": {
+        "currency": "INR",
+        "minor_units": "7500000"
+      },
+      "paid": {
+        "currency": "INR",
+        "minor_units": "2500000"
+      },
+      "balance": {
+        "currency": "INR",
+        "minor_units": "5000000"
+      },
+      "due_at": "2026-10-27T00:00:00+05:30"
+    },
+    "FV-18-B-CLOCK-1": {
+      "certainty": "KNOWN",
+      "invoice": {
+        "currency": "INR",
+        "minor_units": "7500000"
+      },
+      "paid": {
+        "currency": "INR",
+        "minor_units": "2500000"
+      },
+      "balance": {
+        "currency": "INR",
+        "minor_units": "5000000"
+      },
+      "due_at": "2026-10-27T00:00:00+05:30"
+    },
+    "FV-18-B-CLOCK-2": {
+      "certainty": "KNOWN",
+      "invoice": {
+        "currency": "INR",
+        "minor_units": "7500000"
+      },
+      "paid": {
+        "currency": "INR",
+        "minor_units": "2500000"
+      },
+      "balance": {
+        "currency": "INR",
+        "minor_units": "5000000"
+      },
+      "due_at": "2026-10-27T00:00:00+05:30"
+    }
+  }
+}

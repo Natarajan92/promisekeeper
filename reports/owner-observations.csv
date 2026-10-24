@@ -1,0 +1,6 @@
+participant_id,order,status,assisted_copy_id,manual_decision_seconds,assisted_decision_seconds,first_assisted_journey_seconds,facilitator_interventions,manual_correct,assisted_correct,claim_vs_verified_correct,supporting_source_correct,disputed_question_correct,clarity_rating_1_to_5,control_rating_1_to_5,rating_reason,notes
+P01,MANUAL_THEN_ASSISTED,UNEXECUTED,,,,,,,,,,,,,,
+P02,ASSISTED_THEN_MANUAL,UNEXECUTED,,,,,,,,,,,,,,
+P03,MANUAL_THEN_ASSISTED,UNEXECUTED,,,,,,,,,,,,,,
+P04,ASSISTED_THEN_MANUAL,UNEXECUTED,,,,,,,,,,,,,,
+P05,MANUAL_THEN_ASSISTED,UNEXECUTED,,,,,,,,,,,,,,

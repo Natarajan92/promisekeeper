@@ -1,5 +1,6 @@
 import { randomUUID } from "node:crypto";
-import { expect, type APIRequestContext } from "./test";
+import { test, expect, type APIRequestContext } from "./test";
+import { readAvailable, type RetryableReadError } from './statusReads';
 
 export const mutationHeaders = { "X-PromiseKeeper-Request": "1" };
 
@@ -39,12 +40,23 @@ export async function investigate(request: APIRequestContext, demonstration_id: 
   });
   expect(started.status()).toBe(202);
   const receipt = await started.json();
-  let attempt: any;
-  await expect.poll(async () => {
-    const response = await request.get(`/api/v1/investigations/${receipt.investigation_id}?${scope}`);
-    expect(response.status()).toBe(200);
-    attempt = await response.json();
-    return attempt.status;
-  }, { timeout: 10_000 }).not.toBe("RUNNING");
-  return attempt;
+  return waitForInvestigation(request,`/api/v1/investigations/${receipt.investigation_id}?${scope}`);
+}
+
+export async function waitForInvestigation(request:APIRequestContext,url:string,errors:RetryableReadError[]=[]) {
+  let attempt:any;
+  const deadline=Date.now()+10_000;
+  try {
+    await expect.poll(async()=>{
+      const observed=await readAvailable(request,url,errors,Math.max(1,deadline-Date.now()));
+      if(observed===null)return 'UNOBSERVED';
+      if(!['RUNNING','COMPLETE','LIMITED','INCOMPLETE'].includes(observed.status))
+        throw new Error(`GET ${url}: unexpected investigation status ${String(observed.status)}`);
+      attempt=observed;
+      return observed.status;
+    },{timeout:10_000}).toMatch(/^(COMPLETE|LIMITED|INCOMPLETE)$/);
+    return attempt;
+  } finally {
+    if(errors.length)await test.info().attach('investigation-status-read-errors',{body:JSON.stringify(errors,null,2),contentType:'application/json'});
+  }
 }
