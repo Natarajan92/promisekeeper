@@ -34,6 +34,7 @@ class MorningReviewView(StrictInput):
     failure_code: str | None
     outcomes: list[CaseOutcome]
     agent_activity: list[AgentActivityView]
+    started_by: Literal['OWNER', 'AUTONOMOUS'] = 'OWNER'
 
 
 class LatestMorningReview(StrictInput):

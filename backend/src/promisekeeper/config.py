@@ -45,6 +45,7 @@ class Settings:
     fireworks_model: str = DEFAULT_FIREWORKS_MODEL
     token_rates: dict = field(default_factory=dict)
     tracing: dict = field(default_factory=dict, repr=False)
+    autonomous_review_minutes: int = 0
 
     @property
     def capability_available(self) -> bool:
@@ -52,7 +53,8 @@ class Settings:
 
     def safe_summary(self) -> dict:
         return {"agent_mode": self.agent_mode, "model": self.model,
-                "capability_available": self.capability_available, "agents": self.agent_roster()}
+                "capability_available": self.capability_available, "agents": self.agent_roster(),
+                "autonomous_review_minutes": self.autonomous_review_minutes}
 
     def agent_roster(self) -> list[dict]:
         """Role/provider/model availability only; never credentials."""
@@ -87,7 +89,7 @@ def load_settings(env: Mapping[str, str] | None = None, *, workspace: Path | Non
             file_env[name.strip()]=value
     env = file_env | dict(process)
     allowed = {"PK_AGENT_MODE", "PK_OPENAI_MODEL", "PK_NEBIUS_MODEL", "PK_DB_PATH", "PK_ALLOW_LIVE_TESTS",
-               "PK_REVIEWER_PROVIDER", "PK_FIREWORKS_MODEL", "PK_TOKEN_RATES"}
+               "PK_REVIEWER_PROVIDER", "PK_FIREWORKS_MODEL", "PK_TOKEN_RATES", "PK_AUTONOMOUS_REVIEW_MINUTES"}
     if any(name.startswith("PK_") and name not in allowed for name in env):
         raise ValueError("Unknown PK configuration field")
     mode = env.get("PK_AGENT_MODE", "STUB")
@@ -108,8 +110,12 @@ def load_settings(env: Mapping[str, str] | None = None, *, workspace: Path | Non
         raise ValueError("PK_DB_PATH must stay inside the workspace")
     secret = env.get("NEBIUS_API_KEY", "").strip() or None
     tracing = {name: value for name, value in env.items() if name.startswith("LANGSMITH_")}
+    autonomy = env.get("PK_AUTONOMOUS_REVIEW_MINUTES", "0")
+    if not re.fullmatch(r"\d{1,4}", autonomy) or int(autonomy) > 1440:
+        raise ValueError("PK_AUTONOMOUS_REVIEW_MINUTES must be 0 (off) to 1440")
     return Settings(mode, model, db_path, secret,
                     fireworks_api_key=env.get("FIREWORKS_API_KEY", "").strip() or None,
                     mem0_api_key=env.get("MEM0_API_KEY", "").strip() or None,
                     reviewer_provider=reviewer_provider, fireworks_model=fireworks_model,
-                    token_rates=parse_token_rates(env.get("PK_TOKEN_RATES", "")), tracing=tracing)
+                    token_rates=parse_token_rates(env.get("PK_TOKEN_RATES", "")), tracing=tracing,
+                    autonomous_review_minutes=int(autonomy))

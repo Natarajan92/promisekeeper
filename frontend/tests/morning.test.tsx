@@ -46,3 +46,8 @@ it('explains why a review could not start', async () => {
   fireEvent.click(await screen.findByRole('button', {name: 'Start morning review'}));
   expect(await screen.findByText(/Morning review not started: A morning review is already running\./)).toBeInTheDocument();
 });
+
+it('says when the supervisor started the review on its own', async () => {
+  render(<MorningReview api={fake({latestMorningReview: async () => ({schema_version: '1', morning_review: {...complete, started_by: 'AUTONOMOUS'}})})} did={did} onOpenCase={() => {}} onDone={() => {}}/>);
+  expect(await screen.findByText(/Started automatically by your AI supervisor/)).toBeInTheDocument();
+});

@@ -34,16 +34,18 @@ class ReviewState(TypedDict, total=False):
     outcomes: list
     briefing: str
     briefing_source: str
+    started_by: str
 
 
 def _view(con, row):
     return dict(schema_version='1', id=row['id'], demonstration_id=row['demonstration_id'], status=row['status'],
                 started_at=row['started_at'], terminal_at=row['terminal_at'], briefing=row['briefing'],
                 briefing_source=row['briefing_source'], failure_code=row['failure_code'], outcomes=json.loads(row['outcomes_json']),
+                started_by=row['started_by'],
                 agent_activity=list_agent_activity(con, morning_review_id=row['id']))
 
 
-def start_morning_review(db, did, request):
+def start_morning_review(db, did, request, *, started_by='OWNER'):
     with db.transaction() as con:
         demonstration(con, did)
         saved = con.execute('SELECT * FROM morning_reviews WHERE operation_id=?', (request['operation_id'],)).fetchone()
@@ -54,8 +56,8 @@ def start_morning_review(db, did, request):
         if con.execute("SELECT 1 FROM morning_reviews WHERE demonstration_id=? AND status='RUNNING'", (did,)).fetchone():
             raise CommandError('MORNING_REVIEW_RUNNING', 409)
         mid = str(uuid4())
-        con.execute("INSERT INTO morning_reviews (id,demonstration_id,operation_id,status,started_at) VALUES (?,?,?,'RUNNING',?)",
-                    (mid, did, request['operation_id'], instant(utcnow())))
+        con.execute("INSERT INTO morning_reviews (id,demonstration_id,operation_id,status,started_at,started_by) VALUES (?,?,?,'RUNNING',?,?)",
+                    (mid, did, request['operation_id'], instant(utcnow()), started_by))
         return _view(con, con.execute('SELECT * FROM morning_reviews WHERE id=?', (mid,)).fetchone())
 
 
@@ -87,6 +89,15 @@ def _needs_work(summary, running, evaluated_at):
     return 'The saved recommendation is still current.'
 
 
+def case_decisions(db, did):
+    """Each case summary with None when it needs a fresh investigation, else the reason to leave it."""
+    listing = list_cases(db, did)
+    evaluated_at = datetime.fromisoformat(listing['evaluation_at'])
+    with db.connection() as con:
+        running = {row[0] for row in con.execute("SELECT case_id FROM investigations WHERE demonstration_id=? AND status='RUNNING'", (did,))}
+    return [(summary, _needs_work(summary, summary['id'] in running, evaluated_at)) for summary in listing['cases']]
+
+
 def _fact(summary, outcome, reason=None, draft_ready=False):
     review_at = summary['review_at']
     return dict(case_id=summary['id'], client=summary['client'], invoice_id=summary['invoice_id'], outcome=outcome,
@@ -108,21 +119,17 @@ def build_morning_review_graph(db, agents):
     def select_cases(state):
         started = time.monotonic()
         did = state['demonstration_id']
-        listing = list_cases(db, did)
-        evaluated_at = datetime.fromisoformat(listing['evaluation_at'])
-        queue, outcomes = [], []
-        with db.connection() as con:
-            running = {row[0] for row in con.execute("SELECT case_id FROM investigations WHERE demonstration_id=? AND status='RUNNING'", (did,))}
-        for summary in listing['cases']:
-            reason = _needs_work(summary, summary['id'] in running, evaluated_at)
-            if reason is None:
-                queue.append(summary['id'])
-            else:
+        decisions = case_decisions(db, did)
+        queue = [summary['id'] for summary, reason in decisions if reason is None]
+        prefix = 'Started automatically because cases were due. ' if state.get('started_by') == 'AUTONOMOUS' else ''
+        record(state, 'SUPERVISOR', 'Choose which cases need work', 'SUCCEEDED',
+               note=f'{prefix}{len(queue)} of {len(decisions)} cases need a fresh investigation.', started=started,
+               to='INTAKE', kind='CASE_SELECTION')
+        outcomes = []
+        for summary, reason in decisions:
+            if reason is not None:
                 outcomes.append(_fact(summary, 'SKIPPED', reason))
                 record(state, 'SUPERVISOR', f"Skip {summary['client']}", 'SKIPPED', note=reason, case_id=summary['id'])
-        record(state, 'SUPERVISOR', 'Choose which cases need work', 'SUCCEEDED',
-               note=f'{len(queue)} of {len(listing["cases"])} cases need a fresh investigation.', started=started,
-               to='INTAKE', kind='CASE_SELECTION')
         return {'queue': queue, 'outcomes': outcomes}
 
     def investigate_next(state):
@@ -187,7 +194,7 @@ def run_morning_review(db, agents, mid):
         return False
     try:
         state = build_morning_review_graph(db, agents).invoke(
-            dict(morning_review_id=mid, demonstration_id=row['demonstration_id'], queue=[], outcomes=[]),
+            dict(morning_review_id=mid, demonstration_id=row['demonstration_id'], queue=[], outcomes=[], started_by=row['started_by']),
             {'run_name': 'promisekeeper-morning-review', 'metadata': {'morning_review_id': mid}, 'recursion_limit': 50})
         with db.transaction() as con:
             con.execute("UPDATE morning_reviews SET status='COMPLETE',terminal_at=?,briefing=?,briefing_source=?,outcomes_json=? WHERE id=? AND status='RUNNING'",

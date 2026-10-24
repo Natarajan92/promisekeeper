@@ -37,7 +37,16 @@ def create_app(settings=None, *, static_dir=None):
     async def lifespan(app):
         with Database(settings.db_path) as db:
             app.state.db = db
-            yield
+            scheduler = None
+            if settings.autonomous_review_minutes:
+                from promisekeeper.orchestration.autonomy import AutonomyScheduler
+                scheduler = AutonomyScheduler(db, app.state.agents, interval_seconds=settings.autonomous_review_minutes * 60)
+                scheduler.start()
+            try:
+                yield
+            finally:
+                if scheduler:
+                    scheduler.stop()
 
     app = FastAPI(title="PromiseKeeper", version="1", lifespan=lifespan)
     app.state.db = None

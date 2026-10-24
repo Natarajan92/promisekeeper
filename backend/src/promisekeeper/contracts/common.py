@@ -77,6 +77,7 @@ class SafeConfiguration(StrictInput):
     model: str
     capability_available: bool
     agents: list[AgentRole]
+    autonomous_review_minutes: int = 0
 
 
 class Health(StrictInput):

@@ -88,3 +88,13 @@ it('shows who each agent handed its work to', async () => {
   expect(await screen.findByText('→ Communicator: revision request')).toBeInTheDocument();
   expect(screen.getByText('→ Your approval: draft for your approval')).toBeInTheDocument();
 });
+
+it('roster explains whether autonomous review is on', () => {
+  const on = {schema_version: '1', ready: true, agent_mode: 'STUB', catalogue_version: 'release-0.1', configuration: {model: 'm', capability_available: true, autonomous_review_minutes: 30,
+    agents: [{role: 'Extractor', provider: 'SCRIPTED', model: null, available: true, can_change: []}]}} as Health;
+  render(<AgentRoster health={on}/>);
+  expect(screen.getByText(/Autonomous morning review: every 30 min/)).toBeInTheDocument();
+  cleanup();
+  render(<AgentRoster health={{...on, configuration: {...on.configuration!, autonomous_review_minutes: 0}} as Health}/>);
+  expect(screen.getByText(/Autonomous morning review: off/)).toBeInTheDocument();
+});

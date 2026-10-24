@@ -53,6 +53,7 @@ export function MorningReview({api, did, onOpenCase, onDone}: {api: ApiClient; d
     {running && steps.length > 0 && <ol className="morning-steps" aria-live="polite">{steps.map((row, index) =>
       <li key={`${row.at}-${index}`}><strong>{AGENT_LABEL[row.agent]}</strong> {OUTCOME_LABEL[row.outcome]}{row.note ? `: ${row.note}` : ''}</li>)}</ol>}
     {review?.briefing && review.status !== 'RUNNING' && <div className="briefing">
+      {review.started_by === 'AUTONOMOUS' && <p className="autonomy-label">Started automatically by your AI supervisor because cases were due.</p>}
       <p className="briefing-text">{review.briefing}</p>
       <p className="subtle">{review.briefing_source === 'AGENT'
         ? 'Written by the Briefing agent. Every number was checked against your case facts.'
