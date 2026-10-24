@@ -61,6 +61,8 @@ def block_external_network(monkeypatch, request):
     """Local integration is permitted; offline tests cannot reach external hosts."""
     for name in ("LANGSMITH_TRACING", "LANGCHAIN_TRACING_V2"):
         monkeypatch.delenv(name, raising=False)
+    from promisekeeper.agents.llm_client import BREAKER
+    BREAKER.reset()
     if request.node.get_closest_marker("live"):
         if os.environ.get("PK_ALLOW_LIVE_TESTS") != "1":
             pytest.skip("Live evaluation requires explicit PK_ALLOW_LIVE_TESTS=1")
