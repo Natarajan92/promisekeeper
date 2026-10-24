@@ -46,3 +46,4 @@ export interface DraftGenerationAttempt {id:string;demonstration_id:string;case_
 export interface CaseView {draft?:DraftVersion|null;draft_reviews?:DraftReviewRecord[];draft_generation_attempt?:DraftGenerationAttempt|null;no_draft_reason?:string|null;draft_state?:string;review_state?:string;draft_generation_state?:string}
 export interface OwnerDisposition {id:string;demonstration_id:string;case_id:string;operation_id:string;investigation_id:string;decision:'ACCEPT'|'REJECT';reason:string|null;decided_at:string}
 export interface CaseView {owner_dispositions?:OwnerDisposition[]}
+export interface FeedbackRecorded {schema_version:'1';sent_to_langsmith:boolean;feedback:{id:string;case_id:string;investigation_id:string;target:'RECOMMENDATION'|'DRAFT';rating:'UP'|'DOWN';comment:string|null;created_at:string}}
