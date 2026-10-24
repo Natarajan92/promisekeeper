@@ -1,0 +1,14 @@
+{
+  "dataset_version": "hinglish-1",
+  "description": "Fictional Hinglish and mixed-language customer messages with the promise or payment claim a careful reader would extract. Used to measure language coverage before adding such messages to the reviewed catalogue.",
+  "items": [
+    {"id": "H1", "message": "Bhai 50,000 Friday tak transfer kar dunga.", "expected": {"kind": "COMMITMENT", "amount_text": "50,000", "date_text": "Friday"}},
+    {"id": "H2", "message": "Payment kar diya hai, ref UTR-DEMO-9 check karo.", "expected": {"kind": "CLAIM", "amount_text": null, "date_text": null}},
+    {"id": "H3", "message": "Abhi cash flow tight hai, next week tak 20,000 bhej denge.", "expected": {"kind": "COMMITMENT", "amount_text": "20,000", "date_text": "next week"}},
+    {"id": "H4", "message": "Sir 1,20,000 ka poora payment kal hi ho gaya tha.", "expected": {"kind": "CLAIM", "amount_text": "1,20,000", "date_text": "kal"}},
+    {"id": "H5", "message": "Project review ke baad baat karte hain, abhi kuch confirm nahi kar sakte.", "expected": {"kind": "NONE", "amount_text": null, "date_text": null}},
+    {"id": "H6", "message": "Mahine ke end tak INR 35,000 clear kar denge, promise.", "expected": {"kind": "COMMITMENT", "amount_text": "35,000", "date_text": "Mahine ke end tak"}},
+    {"id": "H7", "message": "Humne 10,000 advance diya tha na, woh adjust kar lo.", "expected": {"kind": "CLAIM", "amount_text": "10,000", "date_text": null}},
+    {"id": "H8", "message": "Diwali se pehle baaki amount de dunga.", "expected": {"kind": "COMMITMENT", "amount_text": null, "date_text": "Diwali se pehle"}}
+  ]
+}

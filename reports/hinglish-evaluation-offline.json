@@ -1,0 +1,178 @@
+{
+  "suite": "hinglish",
+  "dataset_version": "hinglish-1",
+  "generated_at": "2026-10-24T18:33:44.893543+00:00",
+  "mode": "OFFLINE_SCRIPTED",
+  "model": "scripted",
+  "live_qualified": false,
+  "items": [
+    {
+      "id": "H1",
+      "expected": {
+        "kind": "COMMITMENT",
+        "amount_text": "50,000",
+        "date_text": "Friday"
+      },
+      "actual": {
+        "kind": "COMMITMENT",
+        "amount_text": "50,000",
+        "date_text": "Friday"
+      },
+      "error": null,
+      "correct": true,
+      "fields": {
+        "kind": true,
+        "amount_text": true,
+        "date_text": true
+      }
+    },
+    {
+      "id": "H2",
+      "expected": {
+        "kind": "CLAIM",
+        "amount_text": null,
+        "date_text": null
+      },
+      "actual": {
+        "kind": "CLAIM",
+        "amount_text": null,
+        "date_text": null
+      },
+      "error": null,
+      "correct": true,
+      "fields": {
+        "kind": true,
+        "amount_text": true,
+        "date_text": true
+      }
+    },
+    {
+      "id": "H3",
+      "expected": {
+        "kind": "COMMITMENT",
+        "amount_text": "20,000",
+        "date_text": "next week"
+      },
+      "actual": {
+        "kind": "COMMITMENT",
+        "amount_text": "20,000",
+        "date_text": "next week"
+      },
+      "error": null,
+      "correct": true,
+      "fields": {
+        "kind": true,
+        "amount_text": true,
+        "date_text": true
+      }
+    },
+    {
+      "id": "H4",
+      "expected": {
+        "kind": "CLAIM",
+        "amount_text": "1,20,000",
+        "date_text": "kal"
+      },
+      "actual": {
+        "kind": "CLAIM",
+        "amount_text": "1,20,000",
+        "date_text": "kal"
+      },
+      "error": null,
+      "correct": true,
+      "fields": {
+        "kind": true,
+        "amount_text": true,
+        "date_text": true
+      }
+    },
+    {
+      "id": "H5",
+      "expected": {
+        "kind": "NONE",
+        "amount_text": null,
+        "date_text": null
+      },
+      "actual": {
+        "kind": "NONE",
+        "amount_text": null,
+        "date_text": null
+      },
+      "error": null,
+      "correct": true,
+      "fields": {
+        "kind": true,
+        "amount_text": true,
+        "date_text": true
+      }
+    },
+    {
+      "id": "H6",
+      "expected": {
+        "kind": "COMMITMENT",
+        "amount_text": "35,000",
+        "date_text": "Mahine ke end tak"
+      },
+      "actual": {
+        "kind": "COMMITMENT",
+        "amount_text": "35,000",
+        "date_text": "Mahine ke end tak"
+      },
+      "error": null,
+      "correct": true,
+      "fields": {
+        "kind": true,
+        "amount_text": true,
+        "date_text": true
+      }
+    },
+    {
+      "id": "H7",
+      "expected": {
+        "kind": "CLAIM",
+        "amount_text": "10,000",
+        "date_text": null
+      },
+      "actual": {
+        "kind": "CLAIM",
+        "amount_text": "10,000",
+        "date_text": null
+      },
+      "error": null,
+      "correct": true,
+      "fields": {
+        "kind": true,
+        "amount_text": true,
+        "date_text": true
+      }
+    },
+    {
+      "id": "H8",
+      "expected": {
+        "kind": "COMMITMENT",
+        "amount_text": null,
+        "date_text": "Diwali se pehle"
+      },
+      "actual": {
+        "kind": "COMMITMENT",
+        "amount_text": null,
+        "date_text": "Diwali se pehle"
+      },
+      "error": null,
+      "correct": true,
+      "fields": {
+        "kind": true,
+        "amount_text": true,
+        "date_text": true
+      }
+    }
+  ],
+  "metrics": {
+    "accuracy": 1.0,
+    "kind_accuracy": 1.0,
+    "amount_accuracy": 1.0,
+    "date_accuracy": 1.0,
+    "errors": 0
+  },
+  "langsmith_uploaded": false
+}
