@@ -41,7 +41,7 @@ export function FindingsView({result,view,onSource}:{result:Result;view:CaseView
     <p className="explanation">{result.explanation.text}</p>
     <div className="next-step"><h3>Next step</h3><p>{result.next_step}</p></div>
     {result.action==='VERIFY_PAYMENT'&&<p className="notice">Verify the evidence before any payment demand.</p>}
-    {result.action==='CLOSE'&&<p className="notice">This recommendation does not close the case. Owner closure confirmation is unavailable in this stage.</p>}
+    {result.action==='CLOSE'&&<p className="notice">This recommendation does not close the case. Review the settlement in History and explicitly confirm case closure.</p>}
     {result.action==='WAIT'&&<div className="review-boundary">
       <h3>Review at {instant(result.review_at)}</h3>
       <p>{reviewReached?'Review required: the review boundary has been reached. Reinvestigate; another future condition may still require waiting.':'Wait until this earliest review boundary, then reinvestigate. No contact is initiated.'}</p>

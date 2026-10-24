@@ -228,7 +228,7 @@ class InvestigationView(StrictInput):
     failure_code: str | None
     result: Result | LegacyResult | None
     action: Action | None
-    draft_status: Literal['NOT_IMPLEMENTED']
+    draft_status: Literal['NONE','RUNNING','READY','FAILED']
     progress: list[dict]
 
     @model_validator(mode='after')

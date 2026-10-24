@@ -1,6 +1,6 @@
 # Implementation and Validation Guide
 
-**Status**: Gates I–II are implemented and owner-approved. Gate III adds the case UI, bounded Investigator pipeline and live evaluation command; the owner approved implementation and moving to Gate IV on 24 October 2026, while T060 LIVE qualification remains outstanding. See [Gate I](../../reports/phase-i.md), [Gate II](../../reports/phase-ii.md) and [Gate III](../../reports/phase-iii.md) for executed checks and limits. Draft review, closure and release acceptance remain later-gate work.
+**Status**: Gates I-III implementation is owner-approved; Gate III was pushed as 078c4db. On 24 October 2026 the owner authorized completing, approving and publishing Gate IV, then Gate V implementation and publication after completion. Gate IV final publication checks are in progress. T060 LIVE qualification remains outstanding and is not waived by implementation approval. Gate V and release acceptance evidence will preserve failed, skipped and unexecuted checks.
 
 ## Prerequisites and phase authorization
 

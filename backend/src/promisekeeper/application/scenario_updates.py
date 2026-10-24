@@ -10,11 +10,16 @@ from promisekeeper.persistence.repositories import append_event, append_evidence
 
 def catalogue_view():
     events = {}
+    eligibility = {}
     for variant in (None, *variant_ids()):
-        events.update(_event_table(variant))
+        table = _event_table(variant)
+        events.update(table)
+        for event_id in table:
+            eligibility.setdefault(event_id, []).append(variant)
     return dict(schema_version="1", catalogue_version="release-0.1", baseline_case_ids=["PK-001", "PK-002", "PK-003"],
                 variant_ids=list(variant_ids()), events=[dict(id=e["id"], kind=e["kind"], case_id=e["case_id"],
-                    evaluation_at=instant(datetime.fromisoformat(e["evaluation_at"]))) for _, e in sorted(events.items())])
+                    evaluation_at=instant(datetime.fromisoformat(e["evaluation_at"])),
+                    eligible_variant_ids=eligibility[event_id]) for event_id, e in sorted(events.items())])
 
 
 def _preview(con, did, cid, event_id):

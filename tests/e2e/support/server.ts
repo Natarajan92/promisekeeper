@@ -7,7 +7,7 @@ import { randomUUID } from "node:crypto";
 
 const repo = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../..");
 
-export async function isolatedServer(preferredPort = 0) {
+export async function isolatedServer(preferredPort = 0, workflowMode?:'draft-fails-once'|'rerun-fails'|'closed-conflict') {
   const port = await new Promise<number>(resolve => {
     const probe = createServer();
     probe.listen(preferredPort,"127.0.0.1",()=> {
@@ -24,7 +24,7 @@ export async function isolatedServer(preferredPort = 0) {
   const url=`http://127.0.0.1:${port}`;
   async function start() {
     process=spawn(path.join(repo,"backend/.venv/Scripts/python.exe"),
-      ["-m","promisekeeper.cli","serve","--port",String(port),"--workers","1"],{
+      workflowMode?[path.join(repo,"tests/e2e/support/workflow_server.py"),"--port",String(port),"--mode",workflowMode]:["-m","promisekeeper.cli","serve","--port",String(port),"--workers","1"],{
         cwd:repo,windowsHide:true,stdio:"ignore",env:{...globalThis.process.env,PK_AGENT_MODE:"STUB",
           PK_DB_PATH:databasePath,PYTHONPATH:path.join(repo,"backend/tests/support")},
       });

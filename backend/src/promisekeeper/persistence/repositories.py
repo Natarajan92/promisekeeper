@@ -127,6 +127,7 @@ def capture_snapshot(con, row):
 
 def history(db, did, cid, cursor=0, limit=50):
     with db.connection() as con:
+        con.execute("BEGIN")
         case(con, did, cid)
         rows = con.execute("SELECT * FROM case_events WHERE case_id=? AND sequence>? ORDER BY sequence LIMIT ?",
                            (cid, cursor, limit + 1)).fetchall()

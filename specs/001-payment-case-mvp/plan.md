@@ -4,7 +4,7 @@
 
 **Input**: `specs/001-payment-case-mvp/spec.md`, including all three accepted clarifications, the four approved analysis remedies, and FV-01 through FV-18.
 
-**Status**: Gates I?II are implemented and owner-approved. On 24 October 2026 the owner approved Gate III implementation, commit/push and starting Gate IV (T062?T084). T060 LIVE qualification remains outstanding: the newest frozen batch stopped after 15/153 attempts (12 correct returned results, three provider gaps, 138 unexecuted). This approval authorizes implementation progress with that limitation and does not establish LIVE or release qualification. Gate V remains unauthorized.
+**Status**: Gates I-III implementation is owner-approved; Gate III was pushed as 078c4db. On 24 October 2026 the owner authorized completing, approving and publishing Gate IV, then Gate V implementation and publication after completion. Gate IV final publication checks are in progress. T060 LIVE qualification remains outstanding and is not waived by implementation approval. Gate V and release acceptance evidence will preserve failed, skipped and unexecuted checks.
 
 ## Summary
 

@@ -37,6 +37,7 @@ class CatalogueEvent(StrictInput):
     kind: Literal["EVIDENCE", "CLOCK"]
     case_id: str
     evaluation_at: Instant
+    eligible_variant_ids: list[str | None]
 
 
 class CatalogueView(StrictInput):

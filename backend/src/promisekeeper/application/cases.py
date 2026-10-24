@@ -70,7 +70,7 @@ def delete_demonstration(db, did, request):
         return save_receipt(con, did, "DELETE_DEMONSTRATION", did, request, "DELETED", demonstration_id=did)
 
 
-def _case_view(con, did, cid, fixture, demo):
+def _case_view(con, did, cid, fixture, demo, *, include_reviews=True):
     row = case(con, did, cid)
     evidence = fixture.cases[row["catalogue_case_id"]].evidence
     facts = reconcile_payments(evidence)
@@ -105,7 +105,7 @@ def _case_view(con, did, cid, fixture, demo):
     allowed["confirm_scenario_event"] = dict(allowed=True, blocking_reasons=[])
     start_blocks = (["CASE_CLOSED"] if row["lifecycle"] != "OPEN" else []) + (["INVESTIGATION_RUNNING"] if running else [])
     allowed["start_investigation"] = dict(allowed=not start_blocks, blocking_reasons=start_blocks)
-    return dict(schema_version="1", **{k: row[k] for k in (
+    view = dict(schema_version="1", **{k: row[k] for k in (
         "id", "demonstration_id", "catalogue_case_id", "client", "invoice_id", "lifecycle", "case_revision",
         "evidence_revision", "review_epoch", "current_draft_version_id", "ledger_availability")},
         ledger_complete=bool(row["ledger_complete"]), clock_mode=demo["clock_mode"], evaluation_at=instant(evaluation_at(demo)),
@@ -116,6 +116,12 @@ def _case_view(con, did, cid, fixture, demo):
         latest_completed_result=completed, current_result=current, running_attempt=running["id"] if running else None,
         draft_state="NOT_IMPLEMENTED", review_state="NOT_IMPLEMENTED", draft_generation_state="NOT_IMPLEMENTED",
         freshness=freshness, review_required=bool(reasons), review_required_reasons=reasons, allowed_commands=allowed)
+    if include_reviews:
+        from promisekeeper.application.lifecycle import lifecycle_projection
+        view = lifecycle_projection(con, row, view)
+        from promisekeeper.application.reviews import review_projection
+        return review_projection(con,row,view)
+    return view
 
 
 def get_case(db, did, cid):

@@ -26,7 +26,7 @@ def start(case_id:Id,demonstration_id:Id,body:StartInvestigation,request:Request
             from pathlib import Path
             worker=NebiusInvestigator(settings,usage_sink=usage_recorder(Path(__file__).resolve().parents[4]/'.runtime'/'application-provider-usage.jsonl'))
     response=start_investigation(app.state.db,demonstration_id,case_id,body.model_dump(),agent_mode=settings.agent_mode,requested_model=settings.model if settings.agent_mode=='LIVE' else None)
-    background_tasks.add_task(investigate,app.state.db,response['investigation_id'],worker)
+    background_tasks.add_task(investigate,app.state.db,response['investigation_id'],worker,draft_generator=getattr(app.state,'draft_generator',None))
     return response
 
 @router.get('/investigations/{investigation_id}',response_model=InvestigationView,response_model_exclude_unset=True)

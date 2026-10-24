@@ -23,6 +23,20 @@ def preview_for(client, did, cid, event):
     return response.json()
 
 
+def test_catalogue_event_eligibility_matches_baseline_and_selected_variant_preview(tmp_path):
+    with TestClient(app_for(tmp_path / "eligibility.sqlite"), base_url="http://127.0.0.1:8000") as client:
+        events = {event["id"]: event for event in client.get("/api/v1/catalogue").json()["events"]}
+        assert events["FV-17-EVIDENCE-RUN-START"]["eligible_variant_ids"] == ["FV-17-EVIDENCE"]
+        assert None in events["PK-001-U1"]["eligible_variant_ids"]
+        assert "FV-17-EVIDENCE" in events["PK-001-U1"]["eligible_variant_ids"]
+        for variant, expected_status in [(None, 422), ("FV-17-EVIDENCE", 200)]:
+            did, cases = new_demo(client, variant)
+            cid = next(case["id"] for case in cases if case["catalogue_case_id"] == "PK-001")
+            response = client.get(f"/api/v1/cases/{cid}/scenario-events/FV-17-EVIDENCE-RUN-START/preview",
+                                  params={"demonstration_id": did})
+            assert response.status_code == expected_status, response.text
+
+
 def test_read_only_preview_hash_confirmation_replay_and_foreign_target_rejection(tmp_path):
     app = app_for(tmp_path / "scenarios.sqlite")
     with TestClient(app, base_url="http://127.0.0.1:8000") as client:

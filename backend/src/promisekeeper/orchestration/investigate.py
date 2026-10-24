@@ -19,7 +19,7 @@ from promisekeeper.tools.evidence import read_snapshot, snapshot_case
 _dispatch_lock=threading.Lock()
 _dispatched=set()
 
-def investigate(db, investigation_id, investigator):
+def investigate(db, investigation_id, investigator, *, draft_generator=None):
     with _dispatch_lock:
         if investigation_id in _dispatched:return False
         _dispatched.add(investigation_id)
@@ -56,8 +56,20 @@ def investigate(db, investigation_id, investigator):
                 (recommendation.status,instant(utcnow()),response.returned_model,response.response_id,PROMPT_VERSION,'1',response.adapter_version,investigation_id))
             con.execute('INSERT INTO investigation_results VALUES (?,?,?,?,?,?,?,?)',
                 (investigation_id,attempt['demonstration_id'],attempt['case_id'],result['action'],result['review_at'],canonical(result),result['result_hash'],'rules-1'))
-            con.execute('UPDATE cases SET latest_completed_investigation_id=?,case_revision=case_revision+1 WHERE id=?',(investigation_id,attempt['case_id']))
+            con.execute('UPDATE cases SET latest_completed_investigation_id=?,current_draft_version_id=NULL,case_revision=case_revision+1 WHERE id=?',(investigation_id,attempt['case_id']))
             append_event(con,dict(id=attempt['case_id'],demonstration_id=attempt['demonstration_id']),'INVESTIGATION_COMPLETED',attempt['operation_id'],dict(investigation_id=investigation_id,status=recommendation.status,result_hash=result['result_hash']))
+            from promisekeeper.application.draft_retry import reserve_initial
+            aid=reserve_initial(con,investigation_id)
+        db.capacity.release(investigation_id)
+        db.reservations.discard(investigation_id)
+        # Recommendation is already committed. Draft failure cannot erase it.
+        try:
+            from promisekeeper.orchestration.drafts import generate_draft
+            if aid:
+                if draft_generator is None: generate_draft(db,aid)
+                else: generate_draft(db,aid,draft_generator)
+        except Exception:
+            pass
         return True
     except Exception as exc:
         finish_incomplete(db,investigation_id,getattr(exc,'code','INVESTIGATION_FAILED'))
@@ -75,6 +87,7 @@ def get_investigation(db,did,iid):
         if row is None: raise CommandError('NOT_FOUND',404)
         saved=con.execute('SELECT result_json FROM investigation_results WHERE investigation_id=?',(iid,)).fetchone()
         result=json.loads(saved[0]) if saved else None
+        draft_attempt=con.execute('SELECT status FROM draft_generation_attempts WHERE investigation_id=? ORDER BY rowid DESC LIMIT 1',(iid,)).fetchone()
         return dict(schema_version='1',id=iid,investigation_id=iid,demonstration_id=did,case_id=row['case_id'],status=row['status'],snapshot_id=row['snapshot_id'],snapshot_hash=row['hash'],
             evaluation_at=row['evaluation_at'],deadline_at=row['deadline_at'],limitations=result['limitations'] if result else [],failure_code=row['failure_code'],result=result,action=result['action'] if result else None,
-            draft_status='NOT_IMPLEMENTED',progress=[dict(r) for r in con.execute('SELECT step_name,invocation_number,invocation_kind,started_at,ended_at,outcome,failure_code FROM step_attempts WHERE investigation_id=? ORDER BY rowid',(iid,))])
+            draft_status=draft_attempt[0] if draft_attempt else 'NONE',progress=[dict(r) for r in con.execute('SELECT step_name,invocation_number,invocation_kind,started_at,ended_at,outcome,failure_code FROM step_attempts WHERE investigation_id=? AND step_name<>? ORDER BY rowid',(iid,'DRAFT'))])

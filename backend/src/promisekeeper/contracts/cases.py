@@ -149,6 +149,10 @@ class CaseList(StrictInput):
     cases: list[CaseSummary]
 
 
+from promisekeeper.contracts.reviews import DraftVersion, DraftReview, DraftGenerationAttempt
+from promisekeeper.contracts.decisions import OwnerDisposition
+
+
 class CaseView(StrictInput):
     schema_version: Literal["1"]
     id: Id
@@ -170,9 +174,14 @@ class CaseView(StrictInput):
     latest_completed_result: dict | None
     current_result: dict | None
     running_attempt: Id | None
-    draft_state: Literal["NOT_IMPLEMENTED"]
-    review_state: Literal["NOT_IMPLEMENTED"]
-    draft_generation_state: Literal["NOT_IMPLEMENTED"]
+    draft: DraftVersion | None
+    draft_reviews: list[DraftReview]
+    owner_dispositions: list[OwnerDisposition]
+    draft_generation_attempt: DraftGenerationAttempt | None
+    no_draft_reason: str | None
+    draft_state: Literal["NONE", "READY"]
+    review_state: Literal["NONE", "UNAPPROVED", "APPROVED", "REJECTED", "INVALIDATED"]
+    draft_generation_state: Literal["NONE", "RUNNING", "READY", "FAILED"]
     freshness: Literal["CURRENT", "EVIDENCE_CHANGED", "TIME_EXPIRED", "SUPERSEDED", "INCOMPLETE"]
     review_required: bool
     review_required_reasons: list[str]
