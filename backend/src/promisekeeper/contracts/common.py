@@ -64,10 +64,18 @@ class ErrorResponse(StrictInput):
     error: ErrorDetail
 
 
+class AgentRole(StrictInput):
+    role: Literal["Extractor", "Communicator", "Tone Reviewer", "Briefing", "Memory"]
+    provider: Literal["SCRIPTED", "NEBIUS", "FIREWORKS", "MEM0", "LOCAL"]
+    model: str | None
+    available: bool
+
+
 class SafeConfiguration(StrictInput):
     agent_mode: Literal["STUB", "LIVE"]
     model: str
     capability_available: bool
+    agents: list[AgentRole]
 
 
 class Health(StrictInput):

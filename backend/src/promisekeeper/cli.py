@@ -2,6 +2,7 @@
 
 import argparse
 import json
+import os
 from uuid import uuid4
 
 from promisekeeper.application.cases import create_demonstration
@@ -9,6 +10,11 @@ from promisekeeper.application.operations import CommandError
 from promisekeeper.config import load_settings
 from promisekeeper.persistence.ownership import OwnershipError
 from promisekeeper.persistence.sqlite import Database
+
+
+def export_tracing(settings):
+    """LangSmith reads its configuration from the process environment; only LANGSMITH_* entries are exported."""
+    os.environ.update(settings.tracing)
 
 
 def main(argv=None):
@@ -64,6 +70,7 @@ def main(argv=None):
                 parser.error("port must be between 1 and 65535")
             import uvicorn
             from promisekeeper.api.app import create_app
+            export_tracing(settings)
             uvicorn.run(create_app(settings), host=args.host, port=args.port, workers=1)
     except (ValueError, CommandError, OwnershipError):
         parser.exit(1, "The command could not complete. Check configuration, catalogue selection, and database ownership.\n")
