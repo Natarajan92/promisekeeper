@@ -1,10 +1,62 @@
 # PromiseKeeper
 
-A local, fictional payment-case assistant for one agency owner. It preserves invoice evidence, payment claims, customer promises, and human decisions separately. The approved design uses one Investigator; deterministic code owns money, dates, recommendations, and eligibility.
+**A team of AI agents that helps a small agency owner chase overdue invoices without ever chasing money that was already paid.**
 
-Gates I-IV are owner-approved and published; Gate IV is `0454551`. Gate V engineering and technical verification are complete, including LIVE timing and ten preservation cycles. **Formal Gate V / Release 0.1 acceptance remains blocked by the unexecuted five-owner study.** The owner approved publishing the engineering work as a fictional test build while keeping formal acceptance pending. Frozen LIVE qualification returned 152 correct results from 153 attempts, with one retained provider gap. Earlier failed reports remain preserved. No customer message is sent.
+Every morning the owner asks: *what happened with this invoice, what can I trust, and what should I do next?* Today that means digging through invoices, bank records and WhatsApp-style promises ("we'll pay 80,000 by the 20th"). PromiseKeeper's agents do that reading, code decides the money, and the owner approves every message. Nothing is ever sent automatically.
 
-To try the product yourself, start with the [hands-on guide](docs/user-testing/README.md), [14 test cases and expected results](docs/user-testing/test-cases.md) and [fictional sample data](docs/user-testing/sample-data.json). The [small-business explanation](docs/user-testing/small-business-pitch.md) includes a short pitch, demonstration script and honest answers about current limits.
+## How it works
+
+```mermaid
+flowchart LR
+  SUP[Morning supervisor<br/>picks cases that need work] -->|each due case| IN
+  SUP -->|case outcomes| BRF[Briefing agent<br/>numbers checked against facts]
+  BRF --> OWN([You])
+  subgraph CASE[Case graph, one per invoice]
+    IN[Evidence intake<br/>screens untrusted text] --> EX[Promise extractor<br/>LLM, exact quotes]
+    EX --> RU[Payment rules<br/>code: money, dates, one action]
+    RU -->|draft needed| ME[Client memory<br/>past promises]
+    ME --> CO[Communicator<br/>LLM: one friendly note]
+    CO --> SC[Safety check<br/>code: no amounts, fees, claims]
+    SC -->|blocked| CO
+    SC --> TR[Tone reviewer<br/>LLM, can run on another provider]
+    TR -->|revise, max 2| CO
+    TR --> OW[Your approval<br/>LangGraph pause and resume]
+    RU -->|wait / verify / close| OW
+  end
+```
+
+| Agent | Kind | Can change data? |
+|---|---|---|
+| Promise extractor | LLM (Nebius) | No: proposes quotes, validated against exact source text |
+| Payment rules | Deterministic code | Saves the recommendation |
+| Client memory | Store (SQLite, or mem0 when configured) | Only client payment notes |
+| Communicator | LLM (Nebius) | No: writes one personal-note paragraph |
+| Safety check | Deterministic code | No: blocks numbers, fees, payment claims, instructions |
+| Tone reviewer | LLM (Nebius or Fireworks) | No: accepts or asks for a revision |
+| Briefing writer | LLM (Nebius) | No: falls back to a plain summary if it states an unsupported number |
+| Morning supervisor | LangGraph supervisor | Starts investigations; never sends, approves or closes |
+
+**Why it is built this way.** In a finance product the AI reads and writes words; code owns every amount, date and action; the owner approves. The agents talk through a typed hand-off protocol (a note can never skip the safety check), every step is recorded with time and tokens in a visible trace, provider outages trip a circuit breaker and fall back to the standard template, and the owner's draft approval resumes the paused LangGraph run, even after a restart.
+
+## Try it in three commands
+
+```powershell
+$env:PK_AGENT_MODE = 'STUB'   # offline stand-ins, no keys needed
+uv run --project backend python -m promisekeeper.cli init-demo --catalogue release-0.1 --clock REFERENCE
+uv run --project backend python -m promisekeeper.cli serve --host 127.0.0.1 --port 8000 --workers 1
+```
+
+Build the UI once (`npm.cmd --prefix frontend ci; npm.cmd --prefix frontend run build`), open `http://127.0.0.1:8000`, and choose **Start morning review**. Then open a case to see the recommendation, the AI team trace and the draft.
+
+For real models, set `PK_AGENT_MODE=LIVE` and `NEBIUS_API_KEY` in `.env`. Optional: `PK_REVIEWER_PROVIDER=FIREWORKS` with `FIREWORKS_API_KEY` (an independent tone reviewer), `LANGSMITH_TRACING=true` with `LANGSMITH_API_KEY` (traces and owner feedback in LangSmith), `MEM0_API_KEY` (hosted client memory), `PK_AUTONOMOUS_REVIEW_MINUTES=30` (the supervisor starts reviews on its own), and `PK_TOKEN_RATES` (cost in the trace). See [.env.example](.env.example).
+
+## Status, honestly
+
+- Release 0.1 (Gates I–V) is published. The single-extractor pipeline qualified with 152 of 153 correct LIVE results under frozen criteria.
+- The multi-agent upgrade (branch `002-multi-agent-upgrade`) passes its offline tests: backend, frontend, browser, and six simulated persona walkthroughs ([report](reports/persona-walkthroughs.md)). **The new agents have not yet been measured on live models.** Run `evaluate --suite agents` and `--suite hinglish` in LIVE mode to measure them ([upgrade report](reports/multi-agent-upgrade.md)).
+- The five-owner usability study has not been run. All data is fictional; there is no authentication and no sending capability.
+
+To try the product by hand, use the [hands-on guide](docs/user-testing/README.md), the [test cases](docs/user-testing/test-cases.md) and the [fictional sample data](docs/user-testing/sample-data.json). The [small-business explanation](docs/user-testing/small-business-pitch.md) has a short pitch and honest answers about current limits.
 
 ## Project documents
 
@@ -21,6 +73,9 @@ To try the product yourself, start with the [hands-on guide](docs/user-testing/R
 - [Gate V implementation and verification](reports/phase-v.md)
 - [Requirement evidence matrix](reports/acceptance-matrix.md)
 - [Release acceptance decision](reports/release-acceptance.md)
+- [Multi-agent upgrade plan](docs/superpowers/plans/2026-10-24-multi-agent-upgrade.md) and [ADR-010](specs/001-payment-case-mvp/research.md#adr-010-multi-agent-orchestration-with-langgraph)
+- [Multi-agent upgrade report](reports/multi-agent-upgrade.md)
+- [Persona walkthroughs (simulated)](reports/persona-walkthroughs.md)
 
 ## Development
 
