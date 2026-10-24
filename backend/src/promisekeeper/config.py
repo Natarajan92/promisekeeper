@@ -9,6 +9,8 @@ from typing import Literal, Mapping
 
 DEFAULT_FIREWORKS_MODEL = "accounts/fireworks/models/gpt-oss-120b"
 AGENT_ROLES = ("Extractor", "Communicator", "Tone Reviewer", "Briefing", "Memory")
+# Least privilege: AI agents only read and propose. Code and the owner make every change.
+CAN_CHANGE = {"Extractor": (), "Communicator": (), "Tone Reviewer": (), "Briefing": (), "Memory": ("client payment notes",)}
 MODEL_PATTERN = r"[A-Za-z0-9][A-Za-z0-9_./:\-]{0,199}"
 
 
@@ -55,15 +57,17 @@ class Settings:
     def agent_roster(self) -> list[dict]:
         """Role/provider/model availability only; never credentials."""
         if self.agent_mode == "STUB":
-            return [dict(role=role, provider="SCRIPTED", model=None, available=True) for role in AGENT_ROLES]
+            return [dict(role=role, provider="SCRIPTED", model=None, available=True, can_change=list(CAN_CHANGE[role]))
+                    for role in AGENT_ROLES]
         nebius = dict(provider="NEBIUS", model=self.model, available=bool(self.api_key))
         if self.reviewer_provider == "FIREWORKS":
             reviewer = dict(provider="FIREWORKS", model=self.fireworks_model, available=bool(self.fireworks_api_key))
         else:
             reviewer = nebius
         memory = dict(provider="MEM0" if self.mem0_api_key else "LOCAL", model=None, available=True)
-        return [dict(role="Extractor", **nebius), dict(role="Communicator", **nebius), dict(role="Tone Reviewer", **reviewer),
-                dict(role="Briefing", **nebius), dict(role="Memory", **memory)]
+        roster = [dict(role="Extractor", **nebius), dict(role="Communicator", **nebius), dict(role="Tone Reviewer", **reviewer),
+                  dict(role="Briefing", **nebius), dict(role="Memory", **memory)]
+        return [dict(entry, can_change=list(CAN_CHANGE[entry["role"]])) for entry in roster]
 
 
 def load_settings(env: Mapping[str, str] | None = None, *, workspace: Path | None = None) -> Settings:

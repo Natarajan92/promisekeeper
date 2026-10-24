@@ -31,6 +31,7 @@ from promisekeeper.domain.commitments import reconcile_commitments
 from promisekeeper.domain.draft_validation import validate_draft
 from promisekeeper.domain.personal_note import compose_with_note
 from promisekeeper.domain.recommendations import recommend
+from promisekeeper.domain.untrusted import screen_message
 from promisekeeper.orchestration.deadlines import Budget, bounded_call
 from promisekeeper.orchestration.retries import run_step
 from promisekeeper.persistence.repositories import append_event, case
@@ -60,6 +61,11 @@ class CaseState(TypedDict, total=False):
     draft_version_id: str | None
     decision: str | None
     route: str
+
+
+def customer_messages(packet):
+    return [r['original_content'] for r in packet['evidence']
+            if r.get('kind') == 'MESSAGE' and r.get('availability') == 'AVAILABLE' and r.get('original_content')]
 
 
 def graph_checkpointer(db):
@@ -110,8 +116,7 @@ def build_case_graph(db, agents, *, draft_generator=None, pause_for_owner=True):
             return plan_for(con, case(con, state['demonstration_id'], state['case_id']))
 
     def note_context(state, draft_plan):
-        messages = tuple(r['original_content'] for r in state['packet']['evidence']
-                         if r.get('kind') == 'MESSAGE' and r.get('availability') == 'AVAILABLE' and r.get('original_content'))
+        messages = tuple(screen_message(text)[0] for text in customer_messages(state['packet']))
         return NoteContext(client=draft_plan.recipient, invoice_id=draft_plan.invoice_id, action=state.get('action') or '',
                            customer_messages=messages, draft_text=draft_plan.exact_text, reviewer_feedback=state.get('feedback'),
                            memory=state.get('memory'))
@@ -123,7 +128,12 @@ def build_case_graph(db, agents, *, draft_generator=None, pause_for_owner=True):
             raw = json.loads(con.execute('SELECT packet_json FROM evidence_snapshots WHERE id=?', (attempt['snapshot_id'],)).fetchone()[0])
         packet = run_step(db, attempt, 'EVIDENCE_LOOKUP', Budget(attempt['deadline_at']), lambda: read_snapshot(
             db, dict(schema_version='1', snapshot_id=attempt['snapshot_id'], evidence_version_ids=[r['id'] for r in raw['evidence']])))
-        record(state, 'INTAKE', 'Read the saved evidence snapshot', 'SUCCEEDED', note=f"{len(packet['evidence'])} evidence records", started=started)
+        flagged = sum(screen_message(text)[1] for text in customer_messages(packet))
+        note = f"{len(packet['evidence'])} evidence records"
+        if flagged:
+            note += (f'; {flagged} customer message(s) contain instruction-like text, treated as evidence only and hidden '
+                     'from the writing agents')
+        record(state, 'INTAKE', 'Read the saved evidence snapshot', 'SUCCEEDED', note=note + '.', started=started)
         return {'packet': packet}
 
     def promise_extractor(state):

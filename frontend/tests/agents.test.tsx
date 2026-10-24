@@ -55,12 +55,15 @@ it('limits the trace to the requested agents', async () => {
 
 it('roster shows roles and providers but never key-like text', () => {
   const health = {schema_version: '1', ready: true, agent_mode: 'LIVE', catalogue_version: 'release-0.1', configuration: {model: 'm', capability_available: true, agents: [
-    {role: 'Extractor', provider: 'NEBIUS', model: 'zai-org/GLM-5.3-Flash', available: true},
-    {role: 'Tone Reviewer', provider: 'FIREWORKS', model: 'accounts/fireworks/models/gpt-oss-120b', available: false}]}} as Health;
+    {role: 'Extractor', provider: 'NEBIUS', model: 'zai-org/GLM-5.3-Flash', available: true, can_change: []},
+    {role: 'Tone Reviewer', provider: 'FIREWORKS', model: 'accounts/fireworks/models/gpt-oss-120b', available: false, can_change: []},
+    {role: 'Memory', provider: 'LOCAL', model: null, available: true, can_change: ['client payment notes']}]}} as Health;
   const {container} = render(<AgentRoster health={health}/>);
   expect(screen.getByText('Extractor')).toBeInTheDocument();
   expect(screen.getByText(/Fireworks/)).toBeInTheDocument();
   expect(screen.getByText(/not configured/)).toBeInTheDocument();
+  expect(screen.getAllByText('read-only')).toHaveLength(2);
+  expect(screen.getByText('can change: client payment notes')).toBeInTheDocument();
   expect(container.textContent).not.toMatch(/key|secret/i);
 });
 

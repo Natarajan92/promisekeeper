@@ -10,6 +10,7 @@ export function AgentRoster({health}: {health: Health | null}) {
       <strong>{agent.role}</strong>
       <span>{PROVIDER_LABEL[agent.provider] ?? agent.provider}{agent.model ? ` · ${agent.model}` : ''}</span>
       {!agent.available && <span className="agent-unavailable">not configured; safe fallback used</span>}
+      {agent.can_change && <span className="agent-permission">{agent.can_change.length ? `can change: ${agent.can_change.join(', ')}` : 'read-only'}</span>}
     </li>)}</ul>
     <p className="subtle">AI agents read and write drafts. Code decides money and next steps. You approve everything; nothing is sent.</p>
   </details>;

@@ -69,6 +69,7 @@ class AgentRole(StrictInput):
     provider: Literal["SCRIPTED", "NEBIUS", "FIREWORKS", "MEM0", "LOCAL"]
     model: str | None
     available: bool
+    can_change: list[str]
 
 
 class SafeConfiguration(StrictInput):

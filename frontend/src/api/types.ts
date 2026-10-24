@@ -33,7 +33,7 @@ export type AgentName = 'INTAKE'|'EXTRACTOR'|'RULES_ENGINE'|'MEMORY'|'COMMUNICAT
 export type AgentOutcome = 'STARTED'|'SUCCEEDED'|'REVISE'|'FALLBACK'|'FAILED'|'WAITING'|'SKIPPED';
 export interface AgentActivity {agent:AgentName;event:string;outcome:AgentOutcome;note:string|null;model:string|null;input_tokens:number|null;output_tokens:number|null;latency_ms:number|null;at:string;case_id:string|null;investigation_id:string|null;morning_review_id:string|null}
 export interface AgentTotals {input_tokens:number;output_tokens:number;latency_ms:number;cost_usd:number|null}
-export interface AgentRole {role:string;provider:'SCRIPTED'|'NEBIUS'|'FIREWORKS'|'MEM0'|'LOCAL';model:string|null;available:boolean}
+export interface AgentRole {role:string;provider:'SCRIPTED'|'NEBIUS'|'FIREWORKS'|'MEM0'|'LOCAL';model:string|null;available:boolean;can_change?:string[]}
 export interface Attempt {schema_version:'1';id:string;investigation_id:string;demonstration_id:string;case_id:string;status:Status;snapshot_id:string;snapshot_hash:string;evaluation_at:string;deadline_at:string;limitations:string[];failure_code:string|null;result:Result|null;action:Action|null;draft_status:string;progress:Record<string,unknown>[];agent_activity?:AgentActivity[];agent_totals?:AgentTotals|null}
 export interface HistoryEvent {id:string;demonstration_id:string;case_id:string;sequence:number;event_type:string;operation_id:string|null;payload:Record<string,unknown>;occurred_at:string}
 export interface CatalogueEvent {id:string;kind:'EVIDENCE'|'CLOCK';case_id:string;evaluation_at:string;eligible_variant_ids:(string|null)[]}
