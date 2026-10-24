@@ -60,3 +60,5 @@ button{min-width:0;max-width:100%;white-space:normal}
 .agent-roster .agent-permission{font-size:.72rem;padding:0 .35rem;border:1px solid var(--line);border-radius:3px}
 .agent-handoff{font-size:.76rem;color:var(--blue);margin:.1rem 0;font-weight:bold}
 .autonomy-label{font-size:.8rem;font-weight:bold;color:var(--blue);margin-bottom:.4rem}
+.skip-link{top:auto;transform:translateY(-200vh)}.skip-link:focus{transform:none;top:1rem}
+@media(max-width:720px){.app-header{flex-wrap:wrap;align-items:flex-start}.wordmark{font-size:min(2rem,9vw);white-space:nowrap;flex:1 1 100%}.wordmark span{white-space:normal}}

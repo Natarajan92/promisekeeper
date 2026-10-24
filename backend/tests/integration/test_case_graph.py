@@ -64,6 +64,8 @@ def test_follow_up_case_runs_all_agents_and_waits_for_owner(tmp_path):
         assert [r['agent'] for r in rows if r['outcome'] != 'STARTED'] == [
             'INTAKE', 'EXTRACTOR', 'RULES_ENGINE', 'MEMORY', 'COMMUNICATOR', 'SAFETY_CHECK', 'TONE_REVIEWER', 'OWNER']
         assert rows[-1]['outcome'] == 'WAITING'
+        rules = next(r for r in rows if r['agent'] == 'RULES_ENGINE')
+        assert rules['note'] == 'Follow up: verified overdue balance.'
         detail = get_investigation(db, did, iid)
         assert [r['agent'] for r in detail['agent_activity']] == [r['agent'] for r in rows]
         assert detail['agent_totals']['cost_usd'] is None

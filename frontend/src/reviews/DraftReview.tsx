@@ -67,7 +67,7 @@ export function DraftReview({api,view,onRefresh}:{api:ApiClient;view:CaseView;on
   const changedHead=dirty&&buffer.base!==(draft?.id??null);
   const eligibility=view.allowed_commands;
   const failed=view.draft_generation_attempt?.status==='FAILED'?view.draft_generation_attempt:null;
-  return <section className="draft-review" aria-labelledby="draft-review-heading"><h2 id="draft-review-heading">Communication review</h2><p>Approval records your review of the exact saved message. No customer message is sent.</p>{draft&&<AgentTraceDisclosure key={`draft-trace:${draft.investigation_id}`} api={api} did={view.demonstration_id} investigationId={draft.investigation_id}/>}{draft&&<FeedbackButtons key={`draft-feedback:${draft.id}`} api={api} did={view.demonstration_id} cid={view.id} investigationId={draft.investigation_id} target="DRAFT"/>}
+  return <section className="draft-review" aria-labelledby="draft-review-heading"><h2 id="draft-review-heading">Communication review</h2><p>Approval records your review of the exact saved message. No customer message is sent.</p>{draft&&<AgentTraceDisclosure key={`draft-trace:${draft.investigation_id}`} api={api} did={view.demonstration_id} investigationId={draft.investigation_id}/>}
     {!draft?<p className="notice">{view.no_draft_reason?words(view.no_draft_reason):view.draft_generation_attempt?.status==='RUNNING'?'Preparing a draft from the saved recommendation.':'Investigate this case to see whether a customer draft is needed.'}</p>:<>
       <p><strong>Invoice {draft.invoice_id}</strong> · Version {draft.version} · {words(view.review_state??'UNAPPROVED')}</p>
       <p className="subtle">Saved {instant(draft.created_at)}. Review decisions apply to the saved version shown below.</p>
@@ -80,6 +80,7 @@ export function DraftReview({api,view,onRefresh}:{api:ApiClient;view:CaseView;on
       <div className="decision-actions"><button disabled={locked||!dirty||changedHead||!eligibility.edit_draft?.allowed||!buffer.text.length} onClick={()=>void save()}>Save unapproved version</button>
       <button disabled={locked||dirty||!eligibility.approve_draft?.allowed||draft.validation_status!=='VALID'} onClick={()=>void review('APPROVE')}>Approve exact saved version</button>
       <button disabled={locked||!eligibility.reject_draft?.allowed} onClick={()=>void review('REJECT')}>Reject exact saved version</button></div>
+      {draft&&<FeedbackButtons key={`draft-feedback:${draft.id}`} api={api} did={view.demonstration_id} cid={view.id} investigationId={draft.investigation_id} target="DRAFT"/>}
       {view.review_state==='APPROVED'&&<section className="approved-handoff" aria-label="Approved message handoff">
         <h3>{copyEligible?'Approved and ready for you to use':'Check the saved approval before using this message'}</h3>
         <p>Nothing has been sent. {copyEligible?'Copy the approved wording to your usual communication tool and review the recipient there.':'Resolve pending changes and check the latest saved version before using this message.'}</p>

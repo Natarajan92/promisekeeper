@@ -3,7 +3,7 @@ import type {ReactNode} from 'react';
 import { FinancialSummary } from '../cases/CaseEvidence';
 import { actionTitle, instant, localDates, money, words } from '../components/format';
 
-export function FindingsView({result,view,onSource,onNavigate,actions}:{result:Result;view:CaseView;onSource:(id:string)=>void;onNavigate?:(section:'evidence'|'review')=>void;actions?:ReactNode}) {
+export function FindingsView({result,view,onSource,onNavigate,actions,team}:{result:Result;view:CaseView;onSource:(id:string)=>void;onNavigate?:(section:'evidence'|'review')=>void;actions?:ReactNode;team?:ReactNode}) {
   const reviewReached=!!result.review_at && Date.parse(view.evaluation_at)>=Date.parse(result.review_at);
   function resolveSource(value:string|SourceVersionRef) {
     if(typeof value!=='string')return view.evidence.find(source=>source.id===value.evidence_version_id&&source.stable_source_id===value.source_id);
@@ -53,6 +53,7 @@ export function FindingsView({result,view,onSource,onNavigate,actions}:{result:R
       <p>{reviewReached?'Review required: the review date has arrived. Investigate again; another future promise may still require waiting.':'Wait until this review date, then investigate again. No reminder or customer message is sent.'}</p>
       <p>Invoice overdue boundary {instant(result.financial_facts.due_at)}</p>
     </div>}
+    {team}
     <FinancialSummary facts={{...result.financial_facts,label:words(result.financial_label)}} showIssues={false}/>
     {actions}
     <div className="source-links">{result.explanation.sources.map(sourceButton)}</div>

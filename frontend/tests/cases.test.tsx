@@ -39,7 +39,7 @@ it('opens exact evidence versions by keyboard-accessible buttons without investi
   render(<CaseEvidence view={caseView as any} onSource={open} />);
   expect(screen.getByText(/Customer wording is a claim/)).toBeInTheDocument();
   expect(screen.getByText(/Ledger complete/)).toBeInTheDocument();
-  fireEvent.click(screen.getByRole('button',{name:/Open source message-1, version 1/}));
+  fireEvent.click(screen.getByRole('button',{name:/^Inspect exact source version: message-1, version 1/}));
   expect(open).toHaveBeenCalledWith(source.id);
 });
 it('binds all case and evidence reads to the selected copy', async () => {
@@ -86,7 +86,7 @@ it('discards a delayed source reply after navigating away and back within the sa
   });
   render(<App api={api}/>);
   await screen.findByRole('heading',{name:'Studio North'});
-  fireEvent.click(screen.getByRole('button',{name:/Open source message-1/}));
+  fireEvent.click(screen.getByRole('button',{name:/^Inspect exact source version: message-1/}));
   fireEvent.click(screen.getByRole('button',{name:/PK-002.*Second Studio/}));
   await screen.findByRole('heading',{name:'Second Studio'});
   fireEvent.click(screen.getByRole('button',{name:/PK-001.*Studio North/}));

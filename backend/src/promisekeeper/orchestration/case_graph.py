@@ -38,6 +38,7 @@ from promisekeeper.persistence.repositories import append_event, case
 from promisekeeper.tools.evidence import read_snapshot, snapshot_case
 
 MAX_NOTE_ATTEMPTS = 2
+ACTION_WORDS = {'FOLLOW_UP': 'Follow up', 'WAIT': 'Wait', 'VERIFY_PAYMENT': 'Verify the payment', 'CLOSE': 'Ready to close'}
 DRAFTING_RESERVE_SECONDS = 8
 _checkpointer_lock = threading.Lock()
 
@@ -196,7 +197,7 @@ def build_case_graph(db, agents, *, draft_generator=None, pause_for_owner=True):
         db.capacity.release(iid)
         db.reservations.discard(iid)
         record(state, 'RULES_ENGINE', 'Apply payment rules and choose one action', 'SUCCEEDED',
-               note=f"{result['action']}: {recommendation.reason_code}", started=started,
+               note=f"{ACTION_WORDS[result['action']]}: {recommendation.reason_code.lower().replace('_', ' ')}.", started=started,
                to='MEMORY' if drafting else 'OWNER', kind='DECISION')
         try:
             store = memory_store()
