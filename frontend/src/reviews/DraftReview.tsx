@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from 'react';
+import { AgentTraceDisclosure } from '../agents/AgentTrace';
 import type { ApiClient } from '../api/client';
 import type { CaseView } from '../api/types';
 import { draftBufferKey, readPending } from '../api/pendingOperations';
@@ -65,7 +66,7 @@ export function DraftReview({api,view,onRefresh}:{api:ApiClient;view:CaseView;on
   const changedHead=dirty&&buffer.base!==(draft?.id??null);
   const eligibility=view.allowed_commands;
   const failed=view.draft_generation_attempt?.status==='FAILED'?view.draft_generation_attempt:null;
-  return <section className="draft-review" aria-labelledby="draft-review-heading"><h2 id="draft-review-heading">Communication review</h2><p>Approval records your review of the exact saved message. No customer message is sent.</p>
+  return <section className="draft-review" aria-labelledby="draft-review-heading"><h2 id="draft-review-heading">Communication review</h2><p>Approval records your review of the exact saved message. No customer message is sent.</p>{draft&&<AgentTraceDisclosure key={`draft-trace:${draft.investigation_id}`} api={api} did={view.demonstration_id} investigationId={draft.investigation_id}/>}
     {!draft?<p className="notice">{view.no_draft_reason?words(view.no_draft_reason):view.draft_generation_attempt?.status==='RUNNING'?'Preparing a draft from the saved recommendation.':'Investigate this case to see whether a customer draft is needed.'}</p>:<>
       <p><strong>Invoice {draft.invoice_id}</strong> · Version {draft.version} · {words(view.review_state??'UNAPPROVED')}</p>
       <p className="subtle">Saved {instant(draft.created_at)}. Review decisions apply to the saved version shown below.</p>
