@@ -19,6 +19,7 @@ const labels:Record<string,string> = {
   NO_COMPLETED_RESULT:'Investigate the case first', CASE_CLOSED:'The case is closed',
   ATTRIBUTION:'Which payment belongs to this promise',
   NOTE_HAS_DIGITS:'The personal note contains a number. Amounts and dates belong only in the fact lines.',
+  NOTE_PAYMENT_TOPIC:'The personal note mentions payment, money, dates or contact details. Keep it to warmth; the fact lines carry those.',
   NOTE_INSTRUCTION_LIKE:'The personal note reads like an instruction. Keep it to a friendly, factual sentence.',
   NOTE_TOO_LONG:'The personal note is longer than 400 characters. Shorten it.',
   NOTE_MULTI_PARAGRAPH:'The personal note must be a single paragraph.',

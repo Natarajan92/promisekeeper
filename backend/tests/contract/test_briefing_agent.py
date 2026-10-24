@@ -41,3 +41,15 @@ def test_nebius_briefing_parses_strict_output(tmp_path):
     settings = load_settings({'PK_AGENT_MODE': 'LIVE', 'NEBIUS_API_KEY': 'k'}, workspace=tmp_path)
     call = NebiusBriefing(settings, client=SimpleNamespace(chat=SimpleNamespace(completions=Completions()))).summarize(FACTS, timeout=5)
     assert call.value == {'briefing': 'All good.'} and calls[0]['response_format']['json_schema']['strict'] is True
+
+
+def test_spelled_out_amounts_are_not_trusted():
+    assert briefing_numbers_supported('Asha owes fifty thousand rupees and has already paid in full.', FACTS) is False
+    assert briefing_numbers_supported('Northstar Analytics owes two lakh.', FACTS) is False
+
+
+def test_numbers_must_belong_to_the_client_they_are_attached_to():
+    swapped = 'Northstar Analytics owes INR 50,000.00. Meridian Software owes INR 80,000.00.'
+    assert briefing_numbers_supported(swapped, FACTS) is False
+    correct = 'Northstar Analytics owes INR 80,000.00. Meridian Software can wait until 26 Oct 2026, 00:00 IST.'
+    assert briefing_numbers_supported(correct, FACTS) is True

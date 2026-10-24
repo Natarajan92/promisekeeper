@@ -12,6 +12,17 @@ from promisekeeper.persistence.repositories import demonstration
 _dispatch_lock=threading.Lock()
 _dispatched=set()
 
+def release_running_drafts(db,investigation_id):
+    """A graph fault after the result was saved must leave a retryable FAILED draft, never one stuck RUNNING."""
+    from promisekeeper.orchestration import drafts
+    with db.connection() as con:
+        running=[r[0] for r in con.execute("SELECT id FROM draft_generation_attempts WHERE investigation_id=? AND status='RUNNING'",(investigation_id,))]
+    for aid in running:
+        try:
+            drafts.failure(db,aid,'DRAFT_FAILED')
+        except Exception:
+            pass
+
 def investigate(db, investigation_id, investigator, *, draft_generator=None, agents=None):
     """Run the case graph. True only when a recommendation was committed for this attempt.
 
@@ -37,6 +48,7 @@ def investigate(db, investigation_id, investigator, *, draft_generator=None, age
                          graph_config(investigation_id))
         except Exception as exc:
             finish_incomplete(db,investigation_id,getattr(exc,'code','INVESTIGATION_FAILED'))
+            release_running_drafts(db,investigation_id)
         with db.connection() as con:
             saved=con.execute('SELECT 1 FROM investigation_results WHERE investigation_id=?',(investigation_id,)).fetchone()
         return saved is not None

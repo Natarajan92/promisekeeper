@@ -96,3 +96,19 @@ def test_mem0_adapter_sends_and_reads_client_scoped_memories():
     assert memory.recall('Northstar Analytics') == 'Missed a promise to pay INR 80,000.00 by 20 Oct 2026.'
     assert seen[0][0] == 'POST' and seen[0][2] == 'Token m0-key' and b'client:Northstar Analytics' in seen[0][3]
     assert seen[1][0] == 'GET'
+
+
+def test_memory_is_scoped_to_its_demonstration_copy(tmp_path):
+    with Database(tmp_path / 'db.sqlite') as db:
+        communicator = RecordingCommunicator()
+        agent_set = AgentSet(ScriptedInvestigator(), communicator, ScriptedReviewer(), ScriptedBriefing())
+        did_a, cid_a = create_case(db, catalogue_case_id='PK-001')
+        run_once(db, did_a, cid_a, agent_set)
+        did_b, cid_b = create_case(db, catalogue_case_id='PK-001')
+        assert LocalMemory(db).recall('Northstar Analytics', scope=did_b) is None
+        run_once(db, did_b, cid_b, agent_set)
+        assert LocalMemory(db).recall('Northstar Analytics', scope=did_b) == 'Missed a promise to pay INR 80,000.00 by 20 Oct 2026.'
+        from promisekeeper.application.cases import delete_demonstration
+        from uuid import uuid4
+        delete_demonstration(db, did_a, dict(schema_version='1', operation_id=str(uuid4()), confirmed_demonstration_id=did_a, confirm=True))
+        assert LocalMemory(db).recall('Northstar Analytics', scope=did_b) == 'Missed a promise to pay INR 80,000.00 by 20 Oct 2026.'

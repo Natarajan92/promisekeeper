@@ -222,7 +222,7 @@ def build_case_graph(db, agents, *, draft_generator=None, pause_for_owner=True):
     def client_memory(state):
         started = time.monotonic()
         try:
-            remembered = memory_store().recall(state['client'])
+            remembered = memory_store().recall(state['client'], scope=state['demonstration_id'])
         except Exception as exc:
             record(state, 'MEMORY', 'Recall payment history', 'FAILED',
                    note=f"{getattr(exc, 'code', type(exc).__name__)}; the note is written without history.", started=started,
@@ -260,7 +260,7 @@ def build_case_graph(db, agents, *, draft_generator=None, pause_for_owner=True):
         reasons = validate_draft(draft_plan, text, draft_plan.recipient)
         if not reasons:
             record(state, 'SAFETY_CHECK', 'Check the note against money and safety rules', 'SUCCEEDED',
-                   note='No amounts, fees, payment claims or instructions.', started=started)
+                   note='Warmth only: no money, payment, date, contact or instruction wording found.', started=started)
             return {'final_text': text, 'route': 'tone_reviewer'}
         blocked = ', '.join(reasons)
         if state.get('revisions', 0) < MAX_NOTE_ATTEMPTS:
@@ -285,8 +285,8 @@ def build_case_graph(db, agents, *, draft_generator=None, pause_for_owner=True):
             verdict, call = bounded_call(lambda: agents.reviewer.review(note_context(state, plan(state)), state['note'], timeout=timeout), timeout)
         except Exception as exc:
             record(state, 'TONE_REVIEWER', event, 'FAILED',
-                   note=f"{getattr(exc, 'code', 'AGENT_FAILED')}; the note passed the safety check and still needs your review.")
-            return {'route': 'save_draft'}
+                   note=f"{getattr(exc, 'code', 'AGENT_FAILED')}; the unreviewed note is dropped and the standard template is used.")
+            return {'note': None, 'final_text': None, 'route': 'save_draft'}
         if verdict.accepted:
             record(state, 'TONE_REVIEWER', event, 'SUCCEEDED', note=verdict.feedback, call=call)
             return {'route': 'save_draft'}

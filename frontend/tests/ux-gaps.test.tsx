@@ -11,7 +11,7 @@ afterEach(cleanup);
 
 it('explains draft safety reasons in plain language', () => {
   expect(words('NOTE_HAS_DIGITS')).toBe('The personal note contains a number. Amounts and dates belong only in the fact lines.');
-  for (const code of ['NOTE_INSTRUCTION_LIKE', 'NOTE_TOO_LONG', 'NOTE_MULTI_PARAGRAPH', 'UNSUPPORTED_CLAUSE', 'UNSUPPORTED_FEE_OR_THREAT',
+  for (const code of ['NOTE_PAYMENT_TOPIC', 'NOTE_INSTRUCTION_LIKE', 'NOTE_TOO_LONG', 'NOTE_MULTI_PARAGRAPH', 'UNSUPPORTED_CLAUSE', 'UNSUPPORTED_FEE_OR_THREAT',
     'UNSUPPORTED_PAYMENT_INSTRUCTION', 'UNSUPPORTED_PAYMENT_ASSERTION', 'UNSUPPORTED_CURRENCY', 'UNSUPPORTED_AMOUNT', 'UNRESOLVED_PLACEHOLDER',
     'MISSING_REQUIRED_CLAUSE', 'PROVIDER_CIRCUIT_OPEN']) {
     expect(words(code)).not.toBe(code.toLowerCase().replaceAll('_', ' '));

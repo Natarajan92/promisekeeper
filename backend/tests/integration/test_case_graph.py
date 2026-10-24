@@ -189,3 +189,32 @@ def test_save_failure_marks_draft_attempt_failed_not_running(tmp_path, monkeypat
         view = get_case(db, did, cid)
         assert view['current_result']['action'] == 'FOLLOW_UP'
         assert view['draft_generation_attempt']['status'] == 'FAILED'
+
+
+def test_reviewer_error_drops_unreviewed_note(tmp_path):
+    with Database(tmp_path / 'db.sqlite') as db:
+        broken = ScriptedReviewer([InvestigatorFailure('AGENT_UNAVAILABLE', transient=True)])
+        did, cid, iid, _ = run(db, agent_set=agents(reviewer=broken))
+        assert draft_text(db, did, cid) == template(db, did, cid)
+        assert [r['outcome'] for r in activity(db, iid) if r['agent'] == 'TONE_REVIEWER'] == ['FAILED']
+
+
+def test_graph_fault_after_commit_never_leaves_draft_running(tmp_path, monkeypatch):
+    from promisekeeper.orchestration import drafts
+    real_failure, calls = drafts.failure, []
+
+    def flaky_failure(db, aid, code):
+        calls.append(code)
+        if len(calls) == 1:
+            raise RuntimeError('database busy')
+        return real_failure(db, aid, code)
+
+    def broken_save(*args, **kwargs):
+        raise RuntimeError('unexpected save fault')
+    monkeypatch.setattr(drafts, 'generate_draft', broken_save)
+    monkeypatch.setattr(drafts, 'failure', flaky_failure)
+    with Database(tmp_path / 'db.sqlite') as db:
+        did, cid, iid, _ = run(db)
+        view = get_case(db, did, cid)
+        assert view['current_result']['action'] == 'FOLLOW_UP'
+        assert view['draft_generation_attempt']['status'] == 'FAILED'

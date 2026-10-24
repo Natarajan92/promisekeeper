@@ -25,7 +25,7 @@ it('shows the latest briefing and case chips that open a case', async () => {
   const opened: string[] = [];
   render(<MorningReview api={fake({latestMorningReview: async () => ({schema_version: '1', morning_review: complete})})} did={did} onOpenCase={id => opened.push(id)} onDone={() => {}}/>);
   expect(await screen.findByText(/Northstar Analytics needs a follow-up today/)).toBeInTheDocument();
-  expect(screen.getByText(/Every number was checked against your case facts/)).toBeInTheDocument();
+  expect(screen.getByText(/Each amount and date was checked against that case's facts/)).toBeInTheDocument();
   fireEvent.click(screen.getByRole('button', {name: /Northstar Analytics.*Follow up.*draft ready/}));
   expect(opened).toEqual(['c1']);
   expect(screen.getByRole('button', {name: /Meridian Studio.*no change needed/})).toBeInTheDocument();
@@ -50,4 +50,20 @@ it('explains why a review could not start', async () => {
 it('says when the supervisor started the review on its own', async () => {
   render(<MorningReview api={fake({latestMorningReview: async () => ({schema_version: '1', morning_review: {...complete, started_by: 'AUTONOMOUS'}})})} did={did} onOpenCase={() => {}} onDone={() => {}}/>);
   expect(await screen.findByText(/Started automatically by your AI supervisor/)).toBeInTheDocument();
+});
+
+it('keeps following a review that is already running when the page opens', async () => {
+  let done = 0;
+  render(<MorningReview api={fake({latestMorningReview: async () => ({schema_version: '1', morning_review: {...complete, status: 'RUNNING', briefing: null}})})}
+    did={did} onOpenCase={() => {}} onDone={() => { done++; }}/>);
+  expect(await screen.findByText(/Northstar Analytics needs a follow-up today/, {}, {timeout: 4000})).toBeInTheDocument();
+  expect(done).toBe(1);
+});
+
+it('offers to check again instead of staying disabled when a review runs long', async () => {
+  const running = {...complete, status: 'RUNNING' as const, briefing: null};
+  render(<MorningReview api={fake({latestMorningReview: async () => ({schema_version: '1', morning_review: running}), morningReview: async () => running})}
+    did={did} onOpenCase={() => {}} onDone={() => {}} maxWaitMs={50}/>);
+  const again = await screen.findByRole('button', {name: 'Check again'}, {timeout: 4000});
+  expect(again).toBeEnabled();
 });

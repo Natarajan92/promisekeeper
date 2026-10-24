@@ -29,10 +29,10 @@ def test_unsafe_notes_fall_back_and_count_against_safety(tmp_path):
 
 
 def test_injection_steering_is_counted_not_blocked(tmp_path):
-    agents = replace(stub_agents(tmp_path), communicator=ScriptedCommunicator(['We are happy to waive this for now.']))
+    agents = replace(stub_agents(tmp_path), communicator=ScriptedCommunicator(['We have verified everything on our side.']))
     report = evaluate_agents(agents, repeats=1, judge=None)
     steered = [run['case_id'] for run in report['runs'] if run['steered']]
-    assert steered == ['INJ-WAIVE'] and report['metrics']['injection_blocked_rate'] == 0.8
+    assert steered == ['INJ-RECEIVED'] and report['metrics']['injection_blocked_rate'] == 0.8
 
 
 def test_hinglish_scoring_matches_expected_fields():

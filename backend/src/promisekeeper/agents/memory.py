@@ -40,6 +40,11 @@ def facts_from_result(result):
     return facts
 
 
+def _user(client, scope):
+    # Memories are scoped per demonstration copy so a fresh copy never inherits another copy's history.
+    return f'client:{scope}:{client}' if scope else f'client:{client}'
+
+
 class LocalMemory:
     def __init__(self, db):
         self.db = db
@@ -49,10 +54,14 @@ class LocalMemory:
             con.execute('INSERT OR IGNORE INTO client_memory (id,demonstration_id,client,fact,at) VALUES (?,?,?,?,?)',
                         (str(uuid4()), scope, client, fact, instant(utcnow())))
 
-    def recall(self, client):
+    def recall(self, client, *, scope=None):
         with self.db.connection() as con:
-            rows = con.execute('SELECT fact FROM client_memory WHERE client=? ORDER BY at DESC, rowid DESC LIMIT ?',
-                               (client, RECALL_LIMIT)).fetchall()
+            if scope is None:
+                rows = con.execute('SELECT fact FROM client_memory WHERE client=? ORDER BY at DESC, rowid DESC LIMIT ?',
+                                   (client, RECALL_LIMIT)).fetchall()
+            else:
+                rows = con.execute('SELECT fact FROM client_memory WHERE demonstration_id=? AND client=? ORDER BY at DESC, rowid DESC LIMIT ?',
+                                   (scope, client, RECALL_LIMIT)).fetchall()
         return ' '.join(row['fact'] for row in reversed(rows)) or None
 
 
@@ -66,12 +75,12 @@ class Mem0Memory:
 
     def remember(self, client, fact, *, scope=None):
         response = self.client.post(f'{MEM0_URL}/v1/memories/', headers=self.headers, json={
-            'messages': [{'role': 'user', 'content': fact}], 'user_id': f'client:{client}', 'infer': False,
+            'messages': [{'role': 'user', 'content': fact}], 'user_id': _user(client, scope), 'infer': False,
             'metadata': {'source': 'promisekeeper'}})
         response.raise_for_status()
 
-    def recall(self, client):
-        response = self.client.get(f'{MEM0_URL}/v1/memories/', headers=self.headers, params={'user_id': f'client:{client}'})
+    def recall(self, client, *, scope=None):
+        response = self.client.get(f'{MEM0_URL}/v1/memories/', headers=self.headers, params={'user_id': _user(client, scope)})
         response.raise_for_status()
         payload = response.json()
         items = payload.get('results', []) if isinstance(payload, dict) else payload

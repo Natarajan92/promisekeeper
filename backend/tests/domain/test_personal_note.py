@@ -59,3 +59,32 @@ def test_compose_without_note_is_identity():
     assert compose_with_note(p.exact_text, None) == p.exact_text
     assert compose_with_note(p.exact_text, "   ") == p.exact_text
     assert compose_with_note(p.exact_text, NOTE).split("\n\n")[1] == NOTE
+
+
+@pytest.mark.parametrize("note", [
+    "we can see your payment has already come through",
+    "We are happy to waive the remaining balance",
+    "Please settle the fifty thousand rupees by Friday so we can avoid escalating this",
+    "send it via PayPal to our usual email",
+    "We will consider this invoice closed once you reply",
+    "Kindly clear the dues by tomorrow.",
+    "Please call or WhatsApp us when it is done.",
+])
+def test_payment_money_time_and_contact_topics_are_blocked(note):
+    assert 'NOTE_PAYMENT_TOPIC' in note_reasons(note)
+    p = plan()
+    assert 'NOTE_PAYMENT_TOPIC' in validate(p, compose_with_note(p.exact_text, note))
+
+
+@pytest.mark.parametrize("note", [
+    "Thank you for keeping us informed about the project.",
+    "We really value working with your team and hope the launch went well.",
+    "Thanks again for the kind words about our design work.",
+])
+def test_warm_relationship_notes_still_pass(note):
+    assert note_reasons(note) == ()
+
+
+@pytest.mark.parametrize("note", ["We are glad to cancel this for you.", "Our lawyer will be in touch.", "We may take this to court."])
+def test_cancellation_and_legal_words_are_blocked(note):
+    assert note_reasons(note) != ()

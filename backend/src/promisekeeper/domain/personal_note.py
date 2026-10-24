@@ -13,6 +13,16 @@ PAYMENT_ASSERTION = re.compile(r'\b(?:not paid|non-payment|never paid|payment (?
 FOREIGN_CURRENCY = re.compile(r'\b(?:USD|EUR|GBP|AUD|CAD|JPY)\b|[$€£]')
 STATED_AMOUNT = re.compile(r'\b(?:INR|USD|EUR|GBP)\s*[0-9,]+(?:\.[0-9]+)?')
 INSTRUCTION_LIKE = re.compile(r'\b(?:ignore|instructions?|prompt|system|approve|disregard)\b', re.I)
+# The note is warmth only: any payment, money, time or contact topic belongs to code-owned clauses.
+PAYMENT_TOPIC = re.compile(r'\b(?:pay\w*|paid|settle\w*|balance\w*|amount\w*|invoice\w*|dues?|overdue|owe[ds]?|owing|outstanding|'
+                           r'waive\w*|forgiv\w*|discount\w*|refund\w*|cancel\w*|clos(?:e|ed|ing|ure)|clear(?:ed|ing)?|remit\w*|transfer\w*|'
+                           r'lawyers?|attorneys?|courts?|collections?|'
+                           r'rupees?|rs|inr|lakhs?|crores?|hundreds?|thousands?|millions?|'
+                           r'(?:twenty|thirty|forty|fifty|sixty|seventy|eighty|ninety)\w*|'
+                           r'deadlines?|today|tomorrow|tonight|yesterday|weeks?|weekend|months?|'
+                           r'monday|tuesday|wednesday|thursday|friday|saturday|sunday|'
+                           r'january|february|march|april|june|july|august|september|october|november|december|'
+                           r'e-?mail\w*|phone\w*|call\w*|whatsapp|paypal|links?|url|https?|www|escalat\w*|receipt\w*|reference\w*)\b', re.I)
 
 
 def note_reasons(note: str) -> tuple[str, ...]:
@@ -26,6 +36,7 @@ def note_reasons(note: str) -> tuple[str, ...]:
         (PAYMENT_ASSERTION.search(note), 'UNSUPPORTED_PAYMENT_ASSERTION'),
         (PLACEHOLDER.search(note), 'UNRESOLVED_PLACEHOLDER'),
         (INSTRUCTION_LIKE.search(note), 'NOTE_INSTRUCTION_LIKE'),
+        (PAYMENT_TOPIC.search(note), 'NOTE_PAYMENT_TOPIC'),
     )
     return tuple(reason for failed, reason in checks if failed)
 

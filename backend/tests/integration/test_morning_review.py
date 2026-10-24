@@ -119,3 +119,14 @@ def test_morning_review_api(tmp_path):
         latest = client.get(f'{url}/latest').json()
         assert latest['morning_review']['id'] == started.json()['id']
         assert client.get(f'/api/v1/morning-reviews/{uuid4()}', params={'demonstration_id': did}).status_code == 404
+
+
+def test_restart_releases_an_interrupted_morning_review(tmp_path):
+    path = tmp_path / 'db.sqlite'
+    with Database(path) as db:
+        did = demo(db)
+        stuck = start_morning_review(db, did, dict(schema_version='1', operation_id=str(uuid4())))
+    with Database(path) as db:
+        assert get_morning_review(db, did, stuck['id'])['status'] == 'FAILED'
+        assert get_morning_review(db, did, stuck['id'])['failure_code'] == 'PROCESS_RESTARTED'
+        assert review(db, did)['status'] == 'COMPLETE'

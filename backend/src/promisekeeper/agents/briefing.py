@@ -38,10 +38,27 @@ def _normalise(token):
     return value.split('.')[0] if re.fullmatch(r'\d+\.0+', value) else value
 
 
+NUMBER_WORDS = re.compile(r'\b(?:hundreds?|thousands?|lakhs?|crores?|millions?|billions?|'
+                          r'(?:twenty|thirty|forty|fifty|sixty|seventy|eighty|ninety)\w*|'
+                          r'two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen)\b', re.I)
+SENTENCE = re.compile(r'(?<=[.!?])\s+')
+
+
+def _numbers(facts):
+    return {_normalise(token) for fact in facts for value in fact.values() if isinstance(value, str) for token in NUMBER.findall(value)}
+
+
 def briefing_numbers_supported(text, facts):
-    supported = {_normalise(token) for fact in facts for value in fact.values() if isinstance(value, str)
-                 for token in NUMBER.findall(value)}
-    return all(_normalise(token) in supported for token in NUMBER.findall(text))
+    """Digits only (no spelled-out amounts); in a sentence naming one client, only that client's numbers."""
+    if NUMBER_WORDS.search(text):
+        return False
+    pooled = _numbers(facts)
+    for sentence in SENTENCE.split(text):
+        named = [fact for fact in facts if fact.get('client') and fact['client'] in sentence]
+        allowed = _numbers(named) if len(named) == 1 else pooled
+        if any(_normalise(token) not in allowed for token in NUMBER.findall(sentence)):
+            return False
+    return True
 
 
 def deterministic_briefing(facts):
