@@ -61,6 +61,7 @@ def delete_demonstration(db, did, request):
         con.execute("UPDATE demonstrations SET deleted=1 WHERE id=?", (did,))
         con.execute("DELETE FROM cases WHERE demonstration_id=?", (did,))
         con.execute("DELETE FROM agent_activity WHERE demonstration_id=?", (did,))
+        con.execute("DELETE FROM morning_reviews WHERE demonstration_id=?", (did,))
         con.execute("""INSERT INTO operation_tombstones
             SELECT operation_id,demonstration_id,operation_type,canonical_request_hash,committed_at
             FROM operation_receipts WHERE demonstration_id=?""", (did,))

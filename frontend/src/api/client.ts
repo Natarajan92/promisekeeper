@@ -1,4 +1,4 @@
-import type { Attempt, CaseListResponse, FeedbackRecorded, CaseView, Catalogue, Demonstration, Evidence, Health, HistoryEvent, ReceiptResponse } from './types';
+import type { Attempt, CaseListResponse, FeedbackRecorded, MorningReviewView, CaseView, Catalogue, Demonstration, Evidence, Health, HistoryEvent, ReceiptResponse } from './types';
 import {notifyCaseActivity} from './caseActivity';
 export class ApiError extends Error {
   constructor(public code:string, message:string, public status:number, public retryable=false, public blockingReasons:string[] = []) {super(message);this.name='ApiError';}
@@ -50,6 +50,9 @@ export class ApiClient {
   attempt(did:string,iid:string) {return this.request<Attempt>(`/investigations/${encodeURIComponent(iid)}${this.scope(did)}`);}
   operation(did:string,oid:string) {return this.request<ReceiptResponse>(`/operations/${encodeURIComponent(oid)}${this.scope(did)}`);}
   create(operation:Operation) {return this.request<ReceiptResponse>('/demonstrations',operation);}
+  startMorningReview(did:string,operation:Operation) {return this.request<MorningReviewView>(`/demonstrations/${encodeURIComponent(did)}/morning-reviews`,operation);}
+  morningReview(did:string,id:string) {return this.request<MorningReviewView>(`/morning-reviews/${encodeURIComponent(id)}${this.scope(did)}`);}
+  latestMorningReview(did:string) {return this.request<{schema_version:'1';morning_review:MorningReviewView|null}>(`/demonstrations/${encodeURIComponent(did)}/morning-reviews/latest`);}
   feedback(did:string,cid:string,operation:Operation) {return this.request<FeedbackRecorded>(`/cases/${encodeURIComponent(cid)}/feedback${this.scope(did)}`,operation);}
   private scope(did:string) {return `?demonstration_id=${encodeURIComponent(did)}`;}
 }

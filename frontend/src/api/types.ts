@@ -47,3 +47,5 @@ export interface CaseView {draft?:DraftVersion|null;draft_reviews?:DraftReviewRe
 export interface OwnerDisposition {id:string;demonstration_id:string;case_id:string;operation_id:string;investigation_id:string;decision:'ACCEPT'|'REJECT';reason:string|null;decided_at:string}
 export interface CaseView {owner_dispositions?:OwnerDisposition[]}
 export interface FeedbackRecorded {schema_version:'1';sent_to_langsmith:boolean;feedback:{id:string;case_id:string;investigation_id:string;target:'RECOMMENDATION'|'DRAFT';rating:'UP'|'DOWN';comment:string|null;created_at:string}}
+export interface CaseOutcome {case_id:string;client:string;invoice_id:string;outcome:'INVESTIGATED'|'SKIPPED'|'FAILED';action:Action|null;reason:string|null;balance_text:string|null;review_at_text:string|null;draft_ready:boolean}
+export interface MorningReviewView {schema_version:'1';id:string;demonstration_id:string;status:'RUNNING'|'COMPLETE'|'FAILED';started_at:string;terminal_at:string|null;briefing:string|null;briefing_source:'AGENT'|'DETERMINISTIC'|null;failure_code:string|null;outcomes:CaseOutcome[];agent_activity:AgentActivity[]}

@@ -103,8 +103,8 @@ def create_app(settings=None, *, static_dir=None):
         return dict(schema_version="1", ready=app.state.db.ready, catalogue_version="release-0.1",
                     agent_mode=settings.agent_mode, configuration=settings.safe_summary())
 
-    from promisekeeper.api import cases, demonstrations, operations, scenarios, investigations, reviews, history, decisions, feedback
-    for router in (operations.router, demonstrations.router, cases.router, scenarios.router, investigations.router, reviews.router, history.router, decisions.router, feedback.router):
+    from promisekeeper.api import cases, demonstrations, operations, scenarios, investigations, reviews, history, decisions, feedback, morning_reviews
+    for router in (operations.router, demonstrations.router, cases.router, scenarios.router, investigations.router, reviews.router, history.router, decisions.router, feedback.router, morning_reviews.router):
         app.include_router(router, prefix="/api/v1")
     dist = Path(static_dir) if static_dir else Path(__file__).resolve().parents[4] / "frontend" / "dist"
     if dist.is_dir():

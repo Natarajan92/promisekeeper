@@ -48,3 +48,12 @@ button{min-width:0;max-width:100%;white-space:normal}
 @media(max-width:720px){.header-tools{justify-content:flex-start}.agent-trace{padding:.9rem .8rem}}
 .agent-disclosure{margin:.6rem 0 1.2rem;font-size:.9rem}.agent-disclosure summary{color:var(--blue);font-weight:bold;padding:.4rem 0}
 .feedback{margin:1rem 0;padding:.8rem 0;border-top:1px solid var(--line);max-width:80ch}.feedback-question{font-weight:bold;font-size:.9rem;margin-bottom:.5rem}.feedback-actions{display:flex;gap:.6rem;flex-wrap:wrap}.feedback-actions button[aria-pressed="true"]{border-color:var(--blue);background:#edf3f3;font-weight:bold}.feedback-comment{display:flex;flex-direction:column;gap:.4rem;margin-top:.7rem}.feedback-comment label{font-size:.85rem}.feedback-comment textarea{font:inherit;padding:.6rem;border:1px solid #64777c;border-radius:4px;resize:vertical}.feedback-comment button{align-self:flex-start}
+.morning-review{margin:0 0 1.8rem;padding:1.3rem 1.5rem;background:var(--paper);border:1px solid var(--line);border-left:4px solid var(--blue);border-radius:7px}
+.morning-head{display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;flex-wrap:wrap}.morning-head h2{font:400 1.6rem/1.15 Georgia,serif;margin-bottom:.35rem}.morning-head>div{min-width:0;max-width:60ch}
+.morning-steps{margin:.8rem 0 0;padding-left:1.2rem;font-size:.86rem}.morning-steps li{padding:.2rem 0;overflow-wrap:anywhere}
+.briefing{margin-top:1rem;border-top:1px solid var(--line);padding-top:1rem}.briefing-text{font-size:1.05rem;line-height:1.65;max-width:75ch}
+.briefing-cases{list-style:none;padding:0;margin:.8rem 0 0;display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:.6rem}
+.briefing-cases button{width:100%;display:flex;flex-direction:column;align-items:flex-start;gap:.2rem;text-align:left;padding:.75rem .9rem}
+.briefing-cases button span{font-size:.82rem;color:var(--muted)}.briefing-cases li>p{margin:.3rem .2rem 0;font-size:.78rem}
+.briefing-outcome{font-weight:bold}.briefing-outcome.outcome-investigated{color:var(--blue)!important}.briefing-outcome.outcome-failed{color:var(--amber)!important}
+@media(max-width:720px){.morning-review{padding:1rem}.morning-head button{width:100%}}
