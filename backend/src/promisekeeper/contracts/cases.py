@@ -139,6 +139,10 @@ class CaseSummary(StrictInput):
     case_revision: Revision
     has_previous_investigation: bool
     review_required: bool
+    balance: MoneyView | None
+    balance_label: Literal['VERIFIED_REMAINDER', 'RECORDED_REMAINDER', 'UNKNOWN_REMAINDER']
+    recommended_action: Literal['FOLLOW_UP', 'WAIT', 'VERIFY_PAYMENT', 'CLOSE'] | None
+    review_at: Instant | None
 
 
 class CaseList(StrictInput):

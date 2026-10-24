@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import {rememberCaseRevision} from '../api/caseActivity';
 import { ApiClient, ApiError } from '../api/client';
 import type { ReceiptResponse } from '../api/types';
 import { completePending, forgetPending, readPending, retainPending, subscribeCommitted, subscribePending, type PendingCommand } from '../api/pendingOperations';
@@ -52,6 +53,9 @@ export function useDraftReview(api:ApiClient,did:string,cid:string,onRefresh:()=
       return recoverFirst?await recover(command,true):complete(command,await api.request<ReceiptResponse>(command.path,command.operation));
     }catch(failure){
       if(readPending(did,cid)?.operation.operation_id!==command.operation.operation_id)return null;
+      if(failure instanceof ApiError&&failure.code==='REVISION_CONFLICT'&&typeof command.operation.expected_case_revision==='number') {
+        rememberCaseRevision(did,cid,command.operation.expected_case_revision+1);
+      }
       if(failure instanceof ApiError&&[400,404,409,422].includes(failure.status)&&failure.code!=='OPERATION_PAYLOAD_MISMATCH') {
         forgetPending(did,cid,command.operation.operation_id);
         if(current())refresh.current();

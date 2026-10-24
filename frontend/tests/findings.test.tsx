@@ -38,7 +38,7 @@ function SourceHarness({result,caseData=view}:{result:Result;caseData?:CaseView}
 
 it('shows every financial and commitment issue once for COMPLETE CLOSE without limitations', () => {
   render(<FindingsView result={{...saved,financial_facts:{...saved.financial_facts,issues:[financialIssue,{code:'INVALID_REVERSAL',detail:'A reversal record needs review.',sources:[],source_versions:[]}]},commitment_issues:[commitmentIssue,{code:'MISSING_IDENTITY',detail:'A promise identity needs review.',sources:[],source_versions:[]}]}} view={view} onSource={()=>{}}/>);
-  expect(screen.getByRole('heading',{name:'CLOSE'})).toBeInTheDocument();
+  expect(screen.getByRole('heading',{name:'Review case closure'})).toBeInTheDocument();
   expect(screen.getByRole('heading',{name:'Financial issues'})).toBeInTheDocument();
   expect(screen.getByRole('heading',{name:'Commitment issues'})).toBeInTheDocument();
   expect(screen.getAllByText('Payment records may be duplicated.')).toHaveLength(1);

@@ -144,10 +144,17 @@ def list_cases(db, did):
             superseded={i.source.supersedes_version_id for i in invoices if i.source.supersedes_version_id}
             due_texts={i.due_text for i in invoices if i.source.authoritative and i.source.availability=='AVAILABLE' and i.source.id not in superseded
                        and view['financial_facts']['due_at'] and deadline(i.due_text,original_at=i.source.event_at).expires_at==datetime.fromisoformat(view['financial_facts']['due_at'])}
+            current = view['current_result'] if not view['running_attempt'] else None
+            balance = view['financial_facts']['balance']
+            balance_label = ('UNKNOWN_REMAINDER' if balance is None else
+                             current['financial_label'] if current else 'RECORDED_REMAINDER')
             summaries.append({k: view[k] for k in ("id", "catalogue_case_id", "client", "invoice_id", "lifecycle", "case_revision", "review_required")}
                              | dict(currency="INR" if view["financial_facts"]["invoice"] else None,
                                     due_at=view["financial_facts"]["due_at"],
                                     due_text=next(iter(due_texts)) if len(due_texts)==1 else None,
+                                    balance=balance, balance_label=balance_label,
+                                    recommended_action=current['action'] if current else None,
+                                    review_at=current['review_at'] if current else None,
                                     has_previous_investigation=bool(con.execute("SELECT 1 FROM investigations WHERE case_id=?", (row["id"],)).fetchone())))
         return dict(schema_version="1", demonstration_id=did, clock_mode=demo["clock_mode"], evaluation_at=instant(evaluation_at(demo)), cases=summaries)
 

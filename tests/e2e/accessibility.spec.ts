@@ -33,7 +33,7 @@ test('keyboard-only evidence, investigation, exact review, history and lifecycle
   await expect(page.getByRole('button',{name:sourceName}).first()).toBeFocused();
   await keyControl(page,'button','Investigate case');
   await expect(page.getByText(/COMPLETE result saved/).first()).toBeVisible();
-  await keyControl(page,'button','Findings');await expect(page.getByRole('heading',{name:'FOLLOW_UP',exact:true})).toBeVisible();
+  await keyControl(page,'button','Findings');await expect(page.getByRole('heading',{name:'Follow up on the overdue balance',exact:true})).toBeVisible();
   await keyControl(page,'button','Review');await expect(page.getByLabel('Draft text')).toBeVisible();
   const original=await page.getByLabel('Draft text').inputValue();
   await keyControl(page,'textbox','Draft text','');await page.keyboard.press('Control+A');
@@ -69,7 +69,7 @@ test('all case sections remain readable at 200 percent text with textual status'
   }
   await page.addStyleTag({content:'*{color:#000!important;background-color:#fff!important;border-color:#000!important}'});
   await page.getByRole('button',{name:'Findings',exact:true}).click();
-  await expect(page.getByRole('heading',{name:'FOLLOW_UP',exact:true})).toBeVisible();
+  await expect(page.getByRole('heading',{name:'Follow up on the overdue balance',exact:true})).toBeVisible();
   await expect(page.getByText(/Saved recommendation/).first()).toBeVisible();
   await expect(page.getByText(/Fictional demonstration/).first()).toBeVisible();
   await expect(page.getByText(/No customer messages are sent/).first()).toBeVisible();
@@ -80,9 +80,9 @@ test('uncertainty and limited outcomes remain explicit without color',async({pag
   await open(page,copy.id);await page.getByRole('button',{name:/PK-003/}).first().click();
   await page.getByRole('button',{name:'Findings',exact:true}).click();
   await page.addStyleTag({content:'*{color:#000!important;background-color:#fff!important}'});
-  await expect(page.getByRole('heading',{name:'VERIFY_PAYMENT',exact:true})).toBeVisible();
+  await expect(page.getByRole('heading',{name:'Verify the payment',exact:true})).toBeVisible();
   await expect(page.getByText(/Limited investigation/)).toBeVisible();
   await expect(page.getByText(/Unknown/).first()).toBeVisible();
   await page.getByRole('button',{name:'Review',exact:true}).click();
-  await expect(page.getByText(/customer draft/i).first()).toBeVisible();
+  await expect(page.getByText(/No customer message is needed/i).first()).toBeVisible();
 });

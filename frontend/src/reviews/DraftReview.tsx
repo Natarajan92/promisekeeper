@@ -1,7 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from 'react';
 import type { ApiClient } from '../api/client';
 import type { CaseView } from '../api/types';
-import { draftBufferKey } from '../api/pendingOperations';
+import { draftBufferKey, readPending } from '../api/pendingOperations';
+import {caseActivitySnapshot,caseIsUpdating,subscribeCaseActivity} from '../api/caseActivity';
 import { instant, words } from '../components/format';
 import { useDraftReview } from './useDraftReview';
 
@@ -35,6 +36,32 @@ export function DraftReview({api,view,onRefresh}:{api:ApiClient;view:CaseView;on
     await commands.execute('review',path('draft-reviews'),{expected_case_revision:view.case_revision,draft_version_id:draft.id,payload_hash:draft.payload_hash,expected_review_epoch:view.review_epoch,decision});
   }
   const locked=commands.busy||!!commands.pending;
+  useSyncExternalStore(
+    useCallback(listener=>subscribeCaseActivity(view.demonstration_id,view.id,listener),[view.demonstration_id,view.id]),
+    useCallback(()=>caseActivitySnapshot(view.demonstration_id,view.id),[view.demonstration_id,view.id]),
+  );
+  const [copyResult,setCopyResult]=useState<{key:string;state:'copied'|'manual'}|null>(null);
+  const [copying,setCopying]=useState(false);
+  const copyKey=`${view.demonstration_id}:${view.id}:${draft?.id}:${draft?.payload_hash}:${view.review_epoch}:${view.review_state}:${view.case_revision}`;
+  const activeCopy=useRef(copyKey);activeCopy.current=copyKey;
+  const copyEligible=!!draft&&view.review_state==='APPROVED'&&draft.validation_status==='VALID'&&
+    draft.id===view.current_draft_version_id&&
+    view.freshness==='CURRENT'&&!view.running_attempt&&!!view.allowed_commands.approve_draft?.allowed&&
+    draft.investigation_id===view.current_result?.investigation_id&&!dirty&&!locked&&
+    !caseIsUpdating(view.demonstration_id,view.id,view.case_revision);
+  const canCopy=useRef(copyEligible);canCopy.current=copyEligible;
+  useEffect(()=>()=>{activeCopy.current='';},[]);
+  async function copyApproved() {
+    if(!copyEligible||!draft||copying||caseIsUpdating(view.demonstration_id,view.id,view.case_revision)||readPending(view.demonstration_id,view.id))return;
+    const requestedKey=copyKey;const exact=draft.exact_text;setCopying(true);setCopyResult(null);
+    try {
+      if(!navigator.clipboard?.writeText)throw new Error('Clipboard unavailable');
+      await navigator.clipboard.writeText(exact);
+      if(activeCopy.current===requestedKey&&canCopy.current&&!caseIsUpdating(view.demonstration_id,view.id,view.case_revision)&&!readPending(view.demonstration_id,view.id))setCopyResult({key:requestedKey,state:'copied'});
+    }catch {
+      if(activeCopy.current===requestedKey&&canCopy.current&&!caseIsUpdating(view.demonstration_id,view.id,view.case_revision)&&!readPending(view.demonstration_id,view.id))setCopyResult({key:requestedKey,state:'manual'});
+    }finally {if(activeCopy.current)setCopying(false);}
+  }
   const changedHead=dirty&&buffer.base!==(draft?.id??null);
   const eligibility=view.allowed_commands;
   const failed=view.draft_generation_attempt?.status==='FAILED'?view.draft_generation_attempt:null;
@@ -51,6 +78,14 @@ export function DraftReview({api,view,onRefresh}:{api:ApiClient;view:CaseView;on
       <div className="decision-actions"><button disabled={locked||!dirty||changedHead||!eligibility.edit_draft?.allowed||!buffer.text.length} onClick={()=>void save()}>Save unapproved version</button>
       <button disabled={locked||dirty||!eligibility.approve_draft?.allowed||draft.validation_status!=='VALID'} onClick={()=>void review('APPROVE')}>Approve exact saved version</button>
       <button disabled={locked||!eligibility.reject_draft?.allowed} onClick={()=>void review('REJECT')}>Reject exact saved version</button></div>
+      {view.review_state==='APPROVED'&&<section className="approved-handoff" aria-label="Approved message handoff">
+        <h3>{copyEligible?'Approved and ready for you to use':'Check the saved approval before using this message'}</h3>
+        <p>Nothing has been sent. {copyEligible?'Copy the approved wording to your usual communication tool and review the recipient there.':'Resolve pending changes and check the latest saved version before using this message.'}</p>
+        <button className="primary" disabled={!copyEligible||copying} onClick={()=>void copyApproved()}>{copying?'Copying approved message…':'Copy approved message'}</button>
+        {!copyEligible&&<p className="subtle">Copying is unavailable while wording is unsaved, a request is pending, or the saved approval needs review.</p>}
+        {copyEligible&&copyResult?.key===copyKey&&copyResult.state==='copied'&&<p role="status">Version {draft.version} copied. Nothing has been sent.</p>}
+        {copyEligible&&copyResult?.key===copyKey&&copyResult.state==='manual'&&<div><p role="status">Clipboard access is unavailable. Select and copy the approved text below.</p><label htmlFor="approved-manual-copy">Approved message for manual copying</label><textarea id="approved-manual-copy" readOnly value={draft.exact_text} onFocus={event=>event.currentTarget.select()}/></div>}
+      </section>}
       <details><summary>Exact saved version and recipient</summary><p>{draft.recipient} / {draft.invoice_id} / version {draft.version}</p><pre>{draft.exact_text}</pre><p className="subtle">Payload hash {draft.payload_hash}</p></details>
     </>}
     {failed&&<div className="notice"><p>The recommendation is saved. Draft preparation failed: {words(failed.failure_code??'DRAFT_FAILED')}.</p><button disabled={locked||!view.allowed_commands.retry_draft?.allowed} onClick={()=>void commands.execute('retry',path('draft-retries'),{expected_case_revision:view.case_revision,investigation_id:failed.investigation_id,failed_draft_attempt_id:failed.id,expected_draft_head:view.current_draft_version_id})}>Retry failed draft step</button></div>}

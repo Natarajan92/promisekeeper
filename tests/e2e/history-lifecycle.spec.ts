@@ -13,14 +13,14 @@ async function closeCase(request:APIRequestContext,did:string,cid:string){const 
 
 test('PK-003 preview, settlement, advice disposition and explicit closure preserve the original result',async({page,request})=>{
   const copy=await createCopy(request);const cid=copy.cases[2].id;const earlier=await investigate(request,copy.id,cid);
-  await openCase(page,copy.id);await expect(page.getByRole('button',{name:'Review case closure'})).toBeDisabled();
+  await openCase(page,copy.id);await expect(page.getByRole('button',{name:'Review case closure',exact:true})).toBeDisabled();
   await page.getByLabel('Fictional update').selectOption('PK-003-U1');await page.getByRole('button',{name:'Preview selected fictional update'}).click();
   await expect(page.getByText(/Exact update preview/)).toBeVisible();await page.getByLabel('I reviewed this exact fictional update').check();await page.getByRole('button',{name:'Confirm fictional update'}).click();
-  await expect(page.getByText(/evidence changed/i).first()).toBeVisible();await expect(page.getByRole('button',{name:'Review case closure'})).toBeDisabled();
-  await page.getByRole('button',{name:'Investigate case',exact:true}).click();await expect(page.getByRole('button',{name:'Review case closure'})).toBeEnabled();
+  await expect(page.getByText(/evidence changed/i).first()).toBeVisible();await expect(page.getByRole('button',{name:'Review case closure',exact:true})).toBeDisabled();
+  await page.getByRole('button',{name:'Investigate case',exact:true}).click();await expect(page.getByRole('button',{name:'Review case closure',exact:true})).toBeEnabled();
   await page.getByLabel('Advice decision reason (optional)').fill('The settlement evidence is clear.');await page.getByRole('button',{name:'Accept recommendation'}).click();await expect(page.getByText('Decision saved.').first()).toBeVisible();
   expect((await detail(request,copy.id,cid)).lifecycle).toBe('OPEN');
-  await page.getByRole('button',{name:'Review case closure'}).click();await page.getByLabel('Confirm closure of invoice CR-312').check();await page.getByRole('button',{name:'Confirm case closure'}).click();
+  await page.getByRole('button',{name:'Review case closure',exact:true}).click();await page.getByLabel('Confirm closure of invoice CR-312').check();await page.getByRole('button',{name:'Confirm case closure'}).click();
   await expect(page.getByText(/PK-003 \/ CR-312 \/ CLOSED/)).toBeVisible();const closed=await detail(request,copy.id,cid);expect(closed.lifecycle).toBe('CLOSED');
   const old=await (await request.get(`/api/v1/investigations/${earlier.investigation_id}?demonstration_id=${copy.id}`)).json();expect(old.result).toEqual(earlier.result);expect(old.result.action).toBe('VERIFY_PAYMENT');
   await page.reload();await page.getByRole('button',{name:/PK-003/}).first().click();await page.getByRole('button',{name:'History',exact:true}).click();

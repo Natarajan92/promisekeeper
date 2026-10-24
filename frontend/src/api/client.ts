@@ -1,4 +1,5 @@
 import type { Attempt, CaseListResponse, CaseView, Catalogue, Demonstration, Evidence, Health, HistoryEvent, ReceiptResponse } from './types';
+import {notifyCaseActivity} from './caseActivity';
 export class ApiError extends Error {
   constructor(public code:string, message:string, public status:number, public retryable=false, public blockingReasons:string[] = []) {super(message);this.name='ApiError';}
 }
@@ -19,9 +20,10 @@ export function stableOperation(did:string,cid:string,kind:string,payload:Record
   }
   const operation:Operation={schema_version:'1',operation_id:crypto.randomUUID(),...payload};
   localStorage.setItem(keyFor(did,cid,kind),JSON.stringify(operation));
+  notifyCaseActivity(did,cid);
   return operation;
 }
-export function clearOperation(did:string,cid:string,kind:string) {localStorage.removeItem(keyFor(did,cid,kind));}
+export function clearOperation(did:string,cid:string,kind:string) {localStorage.removeItem(keyFor(did,cid,kind));notifyCaseActivity(did,cid);}
 export class ApiClient {
   constructor(private fetcher:Fetcher=(...args)=>fetch(...args)) {}
   async request<T>(path:string,operation?:Operation):Promise<T> {

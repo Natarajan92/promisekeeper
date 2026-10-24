@@ -19,6 +19,53 @@ def new_demo(client, variant=None, clock="REFERENCE"):
     return did, response.json()["cases"]
 
 
+def test_overview_reports_recorded_balance_without_inventing_a_recommendation(tmp_path):
+    with TestClient(app_for(tmp_path / 'overview.sqlite'), base_url='http://127.0.0.1:8000') as client:
+        did, _ = new_demo(client)
+        summaries = client.get(f'/api/v1/demonstrations/{did}/cases').json()['cases']
+        assert summaries[0]['balance'] == {'currency': 'INR', 'minor_units': '8000000'}
+        assert summaries[0]['balance_label'] == 'RECORDED_REMAINDER'
+        assert all(item['recommended_action'] is None and item['review_at'] is None for item in summaries)
+
+
+def test_overview_publishes_only_current_non_running_recommendations(tmp_path):
+    from support.lifecycle import create_case, run, update, command
+    from promisekeeper.application.start_investigation import start_investigation
+    app = app_for(tmp_path / 'overview-current.sqlite')
+    with TestClient(app, base_url='http://127.0.0.1:8000') as client:
+        did, cid = create_case(app.state.db, catalogue_case_id='PK-001')
+        current = run(app.state.db, did, cid)
+        def first():
+            return client.get(f'/api/v1/demonstrations/{did}/cases').json()['cases'][0]
+        assert first()['recommended_action'] == 'FOLLOW_UP'
+        assert first()['balance_label'] == 'VERIFIED_REMAINDER'
+        update(app.state.db, did, cid, 'PK-001-U1')
+        assert first()['recommended_action'] is None and first()['review_at'] is None
+        assert first()['balance_label'] == 'RECORDED_REMAINDER'
+        current = run(app.state.db, did, cid)
+        assert first()['recommended_action'] == 'WAIT'
+        assert first()['review_at'] == current['current_result']['review_at']
+        start_investigation(app.state.db, did, cid, command(current, retry_of=None))
+        assert first()['recommended_action'] is None and first()['review_at'] is None
+
+
+def test_overview_clears_expired_wait_and_preserves_unknown_money(tmp_path):
+    from support.lifecycle import create_case, run, update
+    app = app_for(tmp_path / 'overview-wait.sqlite')
+    with TestClient(app, base_url='http://127.0.0.1:8000') as client:
+        did, cid = create_case(app.state.db, catalogue_case_id='PK-002')
+        run(app.state.db, did, cid)
+        before = client.get(f'/api/v1/demonstrations/{did}/cases').json()['cases'][1]
+        assert before['recommended_action'] == 'WAIT' and before['review_at'] is not None
+        update(app.state.db, did, cid, 'PK-002-U1')
+        after = client.get(f'/api/v1/demonstrations/{did}/cases').json()['cases'][1]
+        assert after['review_required'] is True
+        assert after['recommended_action'] is None and after['review_at'] is None
+        unknown, _ = new_demo(client, 'FV-05')
+        limited = client.get(f'/api/v1/demonstrations/{unknown}/cases').json()['cases'][2]
+        assert limited['balance'] is None and limited['balance_label'] == 'UNKNOWN_REMAINDER'
+
+
 def test_discovery_is_read_only_three_cases_and_exact_raw_sources_survive_restart(tmp_path):
     path = tmp_path / "cases.sqlite"
     with TestClient(app_for(path), base_url="http://127.0.0.1:8000") as client:

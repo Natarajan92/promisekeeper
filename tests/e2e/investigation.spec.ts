@@ -25,7 +25,7 @@ test("deterministic findings retain invoice issue source after an approved evide
   await page.addInitScript(id=>localStorage.setItem("selected_demonstration_id",id),copy.id);
   await page.goto("/");
   await page.getByRole("button",{name:"Findings",exact:true}).click();
-  await expect(page.getByText(/Historical result: evidence changed/)).toBeVisible();
+  await expect(page.getByText(/Historical result: evidence changed/i)).toBeVisible();
   await expect(page.getByRole("heading",{name:"Financial issues",exact:true})).toBeVisible();
   const row=page.locator(".findings li").filter({hasText:"Preserve and review both invoice authorities."});
   await expect(row).toHaveCount(1);
@@ -165,7 +165,7 @@ test("owner starts an investigation and opens exact source versions from its fin
   await page.getByRole("button",{name:/PK-001|Northstar Analytics/i}).first().click();
   await page.getByRole("button",{name:"Findings",exact:true}).click();
   await page.getByRole("button",{name:"Investigate case",exact:true}).click();
-  await expect(page.getByRole("heading",{name:"FOLLOW_UP",exact:true})).toBeVisible();
+  await expect(page.getByRole("heading",{name:"Follow up on the overdue balance",exact:true})).toBeVisible();
   await expect(page.getByText(/80,000/).first()).toBeVisible();
   const source=page.getByRole("button",{name:"PK-001-I1 / v1",exact:true}).first();
   await source.click();
@@ -194,7 +194,7 @@ test("lost start response reconciles the original operation after reload without
   await page.unroute(`**/api/v1/cases/${cid}/investigations?*`);
   await page.reload();
   await page.getByRole("button",{name:"Findings",exact:true}).click();
-  await expect(page.getByRole("heading",{name:"FOLLOW_UP",exact:true})).toBeVisible();
+  await expect(page.getByRole("heading",{name:"Follow up on the overdue balance",exact:true})).toBeVisible();
   const history=await (await request.get(`/api/v1/cases/${cid}/history?demonstration_id=${copy.id}`)).json();
   expect(history.events.filter((e:any)=>e.event_type==="INVESTIGATION_STARTED")).toHaveLength(1);
   expect((await request.get(`/api/v1/operations/${operationId}?demonstration_id=${copy.id}`)).status()).toBe(200);

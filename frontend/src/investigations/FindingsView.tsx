@@ -1,8 +1,9 @@
 import type { CaseView, EvidenceObservation, FinancialIssue, Result, SourceVersionRef } from '../api/types';
+import type {ReactNode} from 'react';
 import { FinancialSummary } from '../cases/CaseEvidence';
-import { instant, money, words } from '../components/format';
+import { actionTitle, instant, localDates, money, words } from '../components/format';
 
-export function FindingsView({result,view,onSource}:{result:Result;view:CaseView;onSource:(id:string)=>void}) {
+export function FindingsView({result,view,onSource,onNavigate,actions}:{result:Result;view:CaseView;onSource:(id:string)=>void;onNavigate?:(section:'evidence'|'review')=>void;actions?:ReactNode}) {
   const reviewReached=!!result.review_at && Date.parse(view.evaluation_at)>=Date.parse(result.review_at);
   function resolveSource(value:string|SourceVersionRef) {
     if(typeof value!=='string')return view.evidence.find(source=>source.id===value.evidence_version_id&&source.stable_source_id===value.source_id);
@@ -32,22 +33,28 @@ export function FindingsView({result,view,onSource}:{result:Result;view:CaseView
   }
   return <section className="findings" aria-labelledby="findings-heading">
     <div className="findings-heading">
-      <div><p>Saved recommendation · {result.status}</p><h2 id="findings-heading">{result.action}</h2></div>
+      <div><p>Saved recommendation · {words(result.status)}</p><h2 id="findings-heading">{actionTitle(result.action)}</h2></div>
       <p>Evaluated {instant(result.evaluation_at)}</p>
     </div>
     {view.freshness!=='CURRENT'&&<p className="notice">Historical result: {words(view.freshness)}. Inspect current evidence before acting.</p>}
     {!result.findings_version&&<p className="notice">Legacy findings: saved before the current findings profile. Reinvestigate to include source-linked issues and evidence observations.</p>}
     {result.status==='LIMITED'&&<p className="notice">Limited investigation. Review the missing or unresolved evidence below.</p>}
-    <p className="explanation">{result.explanation.text}</p>
-    <div className="next-step"><h3>Next step</h3><p>{result.next_step}</p></div>
+    <p className="explanation">{localDates(result.explanation.text)}</p>
+    <div className="next-step"><h3>Next step</h3><p>{localDates(result.next_step)}</p>
+      {onNavigate&&view.freshness==='CURRENT'&&!view.running_attempt&&<div className="decision-actions">
+        {(result.action==='FOLLOW_UP'||!!view.draft)&&<button className="primary" onClick={()=>onNavigate('review')}>Review suggested message</button>}
+        {result.action==='VERIFY_PAYMENT'&&<button onClick={()=>onNavigate('evidence')}>Inspect payment evidence</button>}
+      </div>}
+    </div>
     {result.action==='VERIFY_PAYMENT'&&<p className="notice">Verify the evidence before any payment demand.</p>}
-    {result.action==='CLOSE'&&<p className="notice">This recommendation does not close the case. Review the settlement in History and explicitly confirm case closure.</p>}
+    {result.action==='CLOSE'&&<p className="notice">This recommendation does not close the case. Review the settlement in Case actions and explicitly confirm case closure.</p>}
     {result.action==='WAIT'&&<div className="review-boundary">
       <h3>Review at {instant(result.review_at)}</h3>
-      <p>{reviewReached?'Review required: the review boundary has been reached. Reinvestigate; another future condition may still require waiting.':'Wait until this earliest review boundary, then reinvestigate. No contact is initiated.'}</p>
+      <p>{reviewReached?'Review required: the review date has arrived. Investigate again; another future promise may still require waiting.':'Wait until this review date, then investigate again. No reminder or customer message is sent.'}</p>
       <p>Invoice overdue boundary {instant(result.financial_facts.due_at)}</p>
     </div>}
     <FinancialSummary facts={{...result.financial_facts,label:words(result.financial_label)}} showIssues={false}/>
+    {actions}
     <div className="source-links">{result.explanation.sources.map(sourceButton)}</div>
     {result.financial_facts.issues.length>0&&<><h3>Financial issues</h3>{issueList(result.financial_facts.issues)}</>}
     {!!result.commitment_issues?.length&&<><h3>Commitment issues</h3>{issueList(result.commitment_issues)}</>}
@@ -62,8 +69,9 @@ export function FindingsView({result,view,onSource}:{result:Result;view:CaseView
         <div><dt>Promise expiry</dt><dd>{instant(commitment.expires_at)}</dd></div>
         <div><dt>Fulfillment</dt><dd>{commitment.fulfillment_unresolved?'Unresolved':commitment.fulfilled?'Fulfilled':'Unfulfilled'}{commitment.superseded?' · explicitly superseded':''}</dd></div>
         <div><dt>Explicitly credited</dt><dd>{money(commitment.credited)}</dd></div>
-        <div><dt>Commitment identity</dt><dd>{commitment.commitment_stable_id ?? 'Unresolved identity'}</dd></div>
+        <div><dt>Payment matching</dt><dd>{commitment.fulfillment_unresolved?'The records do not yet establish which payments fulfilled this promise.':'Payments have been checked against this promise.'}</dd></div>
       </dl>
+      <details><summary>Promise reference</summary><p>{commitment.commitment_stable_id ?? 'Unresolved identity'}</p></details>
       {sourceButton(commitment.evidence_version_id,i)}
     </article>)}</>}
     {result.claims.length>0&&<><h3>Payment claims</h3>{result.claims.map((claim,i)=><div className="claim" key={i}>
@@ -79,6 +87,7 @@ export function FindingsView({result,view,onSource}:{result:Result;view:CaseView
     <details className="result-provenance"><summary>Saved investigation provenance</summary>
       <p>Investigation {result.investigation_id}</p><p>Snapshot {result.snapshot_id}</p><p>Result hash {result.result_hash}</p>
       <p>Findings profile: {result.findings_version ?? 'legacy'}</p>
+      <p>Recorded action: {result.action}</p>
     </details>
   </section>;
 }

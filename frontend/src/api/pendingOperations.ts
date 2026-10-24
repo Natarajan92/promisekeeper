@@ -1,5 +1,6 @@
 import type { Operation } from './client';
 import type { ReceiptResponse } from './types';
+import {rememberCaseRevision} from './caseActivity';
 
 export type PendingCommand = {kind:'edit'|'review'|'retry'|'disposition'|'closure'|'reopening'|'scenario'|'deletion';path:string;operation:Operation};
 const key=(did:string,cid:string)=>`promisekeeper.pending.${did}.${cid}`;
@@ -45,6 +46,7 @@ export function completePending(did:string,cid:string,command:PendingCommand,res
   const identity=`${key(did,cid)}:${command.operation.operation_id}`;
   if(completed.has(identity))return;
   completed.add(identity);
+  rememberCaseRevision(did,cid,response.receipt.case_revision);
   if(command.kind==='edit') {
     const bufferKey=draftBufferKey(did,cid),raw=localStorage.getItem(bufferKey);
     if(raw) {

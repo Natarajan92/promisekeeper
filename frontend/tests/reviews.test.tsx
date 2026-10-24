@@ -1,8 +1,10 @@
 import { afterEach, expect, it, vi } from 'vitest';
-import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { act, cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/vitest';
+import {StrictMode} from 'react';
 import { DraftReview } from '../src/reviews/DraftReview';
-import { ApiClient } from '../src/api/client';
+import { ApiClient, clearOperation, stableOperation } from '../src/api/client';
+import {rememberCaseRevision} from '../src/api/caseActivity';
 import { caseView, cid, did } from './fixtures';
 
 afterEach(() => { cleanup(); localStorage.clear(); vi.restoreAllMocks(); });
@@ -10,6 +12,89 @@ const draft = { id:'44444444-4444-4444-8444-444444444444',demonstration_id:did,c
 const eligibility = { allowed:true,blocking_reasons:[] };
 const view = { ...caseView,draft,draft_state:'READY',draft_reviews:[],review_state:'UNAPPROVED',draft_generation_attempt:null,no_draft_reason:null,current_draft_version_id:draft.id,allowed_commands:{...caseView.allowed_commands,edit_draft:eligibility,approve_draft:eligibility,reject_draft:eligibility} };
 const receipt = { schema_version:'1',receipt:{operation_id:'op',operation_type:'SAVE_DRAFT',target_id:cid,committed_at:'2026-10-24T00:00:00Z',outcome:'SAVED',case_revision:1} };
+const approved = {...view,review_state:'APPROVED',freshness:'CURRENT',current_result:{investigation_id:draft.investigation_id}};
+it('copies only the exact approved saved message and identifies the copied version', async () => {
+  const writeText=vi.fn().mockResolvedValue(undefined);
+  Object.defineProperty(navigator,'clipboard',{configurable:true,value:{writeText}});
+  render(<StrictMode><DraftReview api={new ApiClient()} view={approved as any} onRefresh={()=>{}}/></StrictMode>);
+  fireEvent.click(screen.getByRole('button',{name:'Copy approved message'}));
+  await screen.findByText(/Version 1 copied/);
+  expect(writeText).toHaveBeenCalledWith(draft.exact_text);
+  expect(screen.getByText(/Version 1 copied/)).toHaveTextContent('Nothing has been sent.');
+});
+it.each(['UNAPPROVED','INVALIDATED','REJECTED'])('does not offer approved copy for %s',state=>{
+  render(<DraftReview api={new ApiClient()} view={{...approved,review_state:state} as any} onRefresh={()=>{}}/>);
+  expect(screen.queryByRole('button',{name:'Copy approved message'})).not.toBeInTheDocument();
+});
+it.each([
+  {freshness:'EVIDENCE_CHANGED'},
+  {running_attempt:'running'},
+  {current_result:null},
+  {current_draft_version_id:'different-head'},
+  {draft:{...draft,validation_status:'INVALID'}},
+])('blocks copying when the current approval context does not match: %j',changes=>{
+  render(<DraftReview api={new ApiClient()} view={{...approved,...changes} as any} onRefresh={()=>{}}/>);
+  expect(screen.getByRole('button',{name:'Copy approved message'})).toBeDisabled();
+});
+it('blocks approved copy when local wording is unsaved or server eligibility changes',()=>{
+  const rendered=render(<DraftReview api={new ApiClient()} view={approved as any} onRefresh={()=>{}}/>);
+  fireEvent.change(screen.getByLabelText('Draft text'),{target:{value:'Unsaved text'}});
+  expect(screen.getByRole('button',{name:'Copy approved message'})).toBeDisabled();
+  rendered.rerender(<DraftReview api={new ApiClient()} view={{...approved,allowed_commands:{...approved.allowed_commands,approve_draft:{allowed:false,blocking_reasons:['EVIDENCE_CHANGED']}}} as any} onRefresh={()=>{}}/>);
+  expect(screen.getByRole('button',{name:'Copy approved message'})).toBeDisabled();
+});
+it('blocks approved copy immediately when a same-case investigation start is unresolved',()=>{
+  const writeText=vi.fn().mockResolvedValue(undefined);
+  Object.defineProperty(navigator,'clipboard',{configurable:true,value:{writeText}});
+  render(<DraftReview api={new ApiClient()} view={approved as any} onRefresh={()=>{}}/>);
+  act(()=>{stableOperation(did,cid,'investigation',{expected_case_revision:0,retry_of:null});});
+  expect(screen.getByRole('button',{name:'Copy approved message'})).toBeDisabled();
+  fireEvent.click(screen.getByRole('button',{name:'Copy approved message'}));
+  expect(writeText).not.toHaveBeenCalled();
+});
+it('keeps copying blocked after rejection commits until refreshed case state arrives',async()=>{
+  const api=new ApiClient(async()=>new Response(JSON.stringify(receipt)));
+  render(<DraftReview api={api} view={approved as any} onRefresh={()=>{}}/>);
+  fireEvent.click(screen.getByRole('button',{name:'Reject exact saved version'}));
+  await screen.findByText(/Rejection recorded/);
+  expect(screen.getByRole('button',{name:'Copy approved message'})).toBeDisabled();
+});
+it('keeps copying blocked when a revision conflict proves the displayed case is stale',async()=>{
+  const api=new ApiClient(async()=>new Response(JSON.stringify({schema_version:'1',error:{code:'REVISION_CONFLICT',message:'The case changed. Refresh and review again.'}}),{status:409}));
+  render(<DraftReview api={api} view={approved as any} onRefresh={()=>{}}/>);
+  fireEvent.click(screen.getByRole('button',{name:'Reject exact saved version'}));
+  await screen.findByRole('alert');
+  expect(screen.getByRole('button',{name:'Copy approved message'})).toBeDisabled();
+});
+it('retains the investigation receipt fence through remount until a current case revision arrives',()=>{
+  const api=new ApiClient();
+  const first=render(<DraftReview api={api} view={approved as any} onRefresh={()=>{}}/>);
+  act(()=>{
+    stableOperation(did,cid,'investigation',{expected_case_revision:0,retry_of:null});
+    rememberCaseRevision(did,cid,2);clearOperation(did,cid,'investigation');
+  });
+  expect(screen.getByRole('button',{name:'Copy approved message'})).toBeDisabled();first.unmount();
+  const second=render(<DraftReview api={api} view={approved as any} onRefresh={()=>{}}/>);
+  expect(screen.getByRole('button',{name:'Copy approved message'})).toBeDisabled();
+  second.rerender(<DraftReview api={api} view={{...approved,case_revision:2} as any} onRefresh={()=>{}}/>);
+  expect(screen.getByRole('button',{name:'Copy approved message'})).toBeEnabled();
+});
+it('offers manual copying after clipboard failure without claiming success',async()=>{
+  Object.defineProperty(navigator,'clipboard',{configurable:true,value:{writeText:vi.fn().mockRejectedValue(new Error('Denied'))}});
+  render(<DraftReview api={new ApiClient()} view={approved as any} onRefresh={()=>{}}/>);
+  fireEvent.click(screen.getByRole('button',{name:'Copy approved message'}));
+  expect(await screen.findByText(/Select and copy the approved text below/)).toBeInTheDocument();
+  expect(screen.getByLabelText('Approved message for manual copying')).toHaveValue(draft.exact_text);
+  expect(screen.queryByText(/Version 1 copied/)).not.toBeInTheDocument();
+});
+it('does not report a late clipboard result for a newer saved version',async()=>{
+  let finish!:()=>void;
+  Object.defineProperty(navigator,'clipboard',{configurable:true,value:{writeText:()=>new Promise<void>(resolve=>{finish=resolve;})}});
+  const api=new ApiClient();const rendered=render(<DraftReview api={api} view={approved as any} onRefresh={()=>{}}/>);
+  fireEvent.click(screen.getByRole('button',{name:'Copy approved message'}));
+  rendered.rerender(<DraftReview api={api} view={{...approved,draft:{...draft,id:'new-version',version:2}} as any} onRefresh={()=>{}}/>);
+  finish();await waitFor(()=>expect(screen.queryByText(/Version 1 copied/)).not.toBeInTheDocument());
+});
 it('displays exact recipient, invoice and version, with explicit review actions and no Send', () => {
   render(<DraftReview api={new ApiClient()} view={view as any} onRefresh={()=>{}} />);
   expect(screen.getByLabelText('Draft recipient')).toHaveValue('Studio North');
@@ -53,7 +138,7 @@ it('shows clause reasons and server stale blocking reasons, with approval disabl
 });
 it('explains why no customer draft is needed without inventing a draft', () => {
   render(<DraftReview api={new ApiClient()} view={{...view,draft:null,no_draft_reason:'WAIT_NO_CUSTOMER_DRAFT'} as any} onRefresh={()=>{}} />);
-  expect(screen.getByText(/wait no customer draft/i)).toBeInTheDocument();
+  expect(screen.getByText(/No message is needed yet/)).toBeInTheDocument();
   expect(screen.queryByLabelText('Draft text')).not.toBeInTheDocument();
 });
 it('checks an unknown save outcome and retries only its exact original request', async () => {

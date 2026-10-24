@@ -26,14 +26,15 @@ uv run --project backend python -m promisekeeper.cli serve --host 127.0.0.1 --po
 
 Keep that terminal open. Visit **http://127.0.0.1:8000** in Chrome. If port 8000 is occupied, stop its existing server or use `--port 8001` and open that port. Never start two servers on the same database.
 
-In the browser, open **Create another fictional copy**, select **Baseline** and **REFERENCE**, then choose **Create fictional demonstration**. In an empty workspace the creation form is already open. Note the selected copy ID and the time shown. The reference business time is 23 October 2026, 10:00 IST; it intentionally differs from today's date. The STUB label means extraction uses approved scripted answers through the real rules and storage. It does not demonstrate LIVE model reliability.
+In the browser, open **Create another fictional copy**, select **Standard payment examples** and **Fixed sample date**, then choose **Create fictional demonstration**. In an empty workspace the creation form is already open. Note the selected copy ID and the time shown. The reference business time is 23 October 2026, 10:00 IST; it intentionally differs from today's date. The STUB label means extraction uses approved scripted answers through the real rules and storage. It does not demonstrate LIVE model reliability.
 
 ## Follow the tests
 
 1. Open [test-cases.md](test-cases.md). Run UT-01 through UT-14 in order, creating a fresh copy whenever instructed.
 2. Compare what you see with each expected outcome. Record Pass, Fail or Blocked in [results-template.csv](results-template.csv), including the copy ID, test time, observed amount/action and any problem.
-3. For a source, choose **Evidence**, then **Inspect exact source version**. For the reasoning choose **Findings**. **Timeline** orders source events; arrival time may be later. **Review** holds exact draft versions and decisions. **History** holds advice decisions, update previews, closure/reopening and earlier results.
-4. Do not change the displayed amount or payment instructions to make a test pass. A claim from a customer is not a verified payment. Approval records your decision; it does not send a message.
+3. Use **View recommendation** after investigating. **Findings > Case actions** records your advice decision and offers closure when settlement is supported; the same controls remain available in History. Use **Review suggested message** when offered. After approving an exact saved version, **Copy approved message** copies it for use in your usual communication tool. Nothing is sent. If clipboard access is unavailable, select the exact approved text in the manual-copy field.
+4. For a source, choose **Evidence**, then **Inspect exact source version**. For the reasoning choose **Findings**. **Timeline** orders source events; arrival time may be later. **Review** holds exact draft versions and decisions. **History** holds previous decisions, update previews, closure/reopening and earlier results. The case overview shows recorded balances, current recommendations and next review dates; changed evidence clears old advice from the overview.
+5. Do not change the displayed amount or payment instructions to make a test pass. A claim from a customer is not a verified payment. Approval records your decision; it does not send a message.
 
 The [sample data](sample-data.json) contains the original catalogue records and staged updates, with amounts as written. It is a readable reference, not an upload file. The [manual review packet](manual-review-packet.md) contains inputs without the answer key, for comparing your unaided decision with the app.
 
