@@ -17,9 +17,9 @@
 | A | 1 Setup and activity log, 2 Personal note, 3 Agents with strict schemas, 4 Case graph | 2 h 30 |
 | B | 5 Trace UI with cost and speed, 6 Feedback and edit learning, 7 Evaluations and Hinglish set | 1 h 45 |
 | C | 8 Morning Review, 9 Client payment memory (only if time remains) | remainder |
-| D | 10 Docs, full verification, whole-branch review | 40 min, reserved, always done |
+| D | 10 Docs, full verification, whole-branch review; 11 Six-persona walkthroughs and gap fixes | 1 h 30, reserved, always done |
 
-- Start Task 10 when about 40 minutes remain, whatever is unfinished. An unfinished task is reverted or left off the branch, and is listed in the report as not done.
+- Start Phase D when about 1 h 30 remains, whatever is unfinished. An unfinished task is reverted or left off the branch, and is listed in the report as not done.
 - If a task's tests cannot be made green within 15 minutes past its time box, revert that task's commit and record why.
 - Overnight autonomy limits: no LIVE provider calls (the evaluation harness is verified offline, and the LIVE commands are left ready for the owner); no push; no reading `.env`; commit locally after each task.
 
@@ -284,3 +284,33 @@
 - [ ] **Step 3:** Dispatch one fresh whole-branch code reviewer; fix Critical/Important findings with regression tests; record deferred Minor findings.
 - [ ] **Step 4:** Check `git diff --cached --name-only` (no accounting files), then commit `docs: record multi-agent architecture, ADR-007 and verification`.
 - [ ] **Step 5:** Leave the branch unpushed; the morning handoff lists what to review, the LIVE commands, and the push decision.
+
+### Task 11: Six-persona walkthroughs and gap fixes (owner request, after development)
+
+**Method (truthful labelling):** these are simulated persona walkthroughs by the agent against the running app in STUB mode on a fresh copy, driven with Playwright scripts plus a heuristic review. They are not a real-user study and do not replace the five-owner evaluation.
+
+**Personas:**
+1. Busy agency owner, not technical, checks invoices between client calls (first-run clarity, time to first decision).
+2. Relationship-protective owner whose client says "already paid" (PK-003: VERIFY_PAYMENT, never a demand).
+3. Returning owner after a week (history, stale results, re-investigate, WAIT review date).
+4. Bookkeeper/accountant verifying ledger figures (source evidence, exact amounts, settlement update, closure).
+5. Sceptical owner testing AI safety (edits an amount/fee/injection into the note, rejects advice, checks the agent trace and feedback).
+6. Owner on a small laptop using keyboard and 200% zoom, writing in Hinglish (keyboard path, narrow layout, Hinglish note handling).
+
+**Files:** create `tests/e2e/personas.spec.ts` (one journey per persona, assertions on what each must be able to do) and `reports/persona-walkthroughs.md` (per persona: goal, steps, what worked, gaps with severity, fixed or deferred).
+
+- [ ] **Step 1:** Write the six persona journeys as Playwright tests against a fresh STUB server; run them and record failures and observed friction.
+- [ ] **Step 2:** Grade gaps by what that person would experience (Critical/Important/Minor).
+- [ ] **Step 3:** Fix Critical/Important gaps, each with a failing test first; re-run the persona suite and the full suites.
+- [ ] **Step 4:** Write `reports/persona-walkthroughs.md` (simulated label, fixed and deferred gaps) and commit `test: add six persona walkthroughs and close found gaps`.
+
+- [ ] **Step 5 (owner request):** UX improvement pass driven by the persona findings: first-run clarity, plain-language labels, agent trace readability, empty/error states, keyboard and narrow-screen layout. Each change has a component or browser test.
+
+### Task 12: Multi-agent hardening, if time remains (owner request: reliability, safety and security first; more autonomy)
+
+Strengthen only what keeps humans in charge of money and customer contact:
+- **Communication:** typed inter-agent messages (Pydantic `AgentMessage{sender, recipient, kind, payload, correlation_id}`) logged in `agent_activity`, replacing loose state fields where agents hand off.
+- **Coordination and allocation:** a supervisor policy that assigns each step to an agent and model by capability and availability (an unavailable reviewer gives SKIPPED, never a silent provider swap), plus autonomous Morning Review triggering for cases whose review time has passed.
+- **Reliability:** a per-provider circuit breaker (opens after 3 consecutive transient failures for 60 s, then falls back without calling), idempotent graph re-entry after restart, and per-agent time budgets.
+- **Safety and security:** least-privilege tool access per agent (an explicit allow-list; only `rules_engine` and `save_draft` touch the database for writes), injection screening of customer text before any LLM sees it (flagged in the trace), and output guardrails already enforced by the safety check and number validation.
+Each item gets a failing test first and is recorded in `reports/multi-agent-upgrade.md`.
