@@ -1,0 +1,5637 @@
+{
+  "schema_version": "1",
+  "suite": "live",
+  "agent_mode": "LIVE",
+  "provider": "NEBIUS",
+  "catalogue_version": "release-0.1",
+  "requested_model": "zai-org/GLM-5.3-Flash",
+  "prompt_version": "candidate-extraction-5",
+  "extraction_schema_version": "1",
+  "adapter_version": "nebius-chat-json-schema-7",
+  "request_parameters": {
+    "temperature": 0,
+    "max_tokens": 8000,
+    "reasoning_effort": "low"
+  },
+  "repeats": 3,
+  "started_at": "2026-10-24T10:39:04.560267+00:00",
+  "status": "INTERRUPTED",
+  "qualified": false,
+  "qualification_scope": "RELEASE",
+  "blocking_reason": "EVALUATION_STOP_REQUESTED",
+  "evaluator_version": "3",
+  "criteria_version": "gate-iii-live-2",
+  "criteria_uri": "reports/live-evaluation-criteria.md",
+  "manifest_entries": [
+    "baseline:PK-001",
+    "baseline:PK-002",
+    "baseline:PK-003",
+    "PK-001-U1",
+    "PK-002-U1",
+    "PK-003-U1",
+    "FV-01",
+    "FV-02-INVOICE",
+    "FV-02-PROMISE",
+    "FV-03",
+    "FV-04",
+    "FV-05",
+    "FV-06-DUPLICATE",
+    "FV-06-REVERSAL",
+    "FV-07-CURRENCY",
+    "FV-07-MISSING",
+    "FV-07-NEGATIVE",
+    "FV-07-OVERPAYMENT",
+    "FV-07-PRECISION",
+    "FV-08-SOON",
+    "FV-08-TOMORROW",
+    "FV-09-EXTRACTION",
+    "FV-09-INTERRUPTION",
+    "FV-09-RETRIEVAL",
+    "FV-09-RETRY",
+    "FV-10-EDIT",
+    "FV-10-EVIDENCE",
+    "FV-10-RECIPIENT",
+    "FV-10-REPEAT",
+    "FV-11-AMOUNT",
+    "FV-11-FEE",
+    "FV-11-NEUTRAL",
+    "FV-11-PLACEHOLDER",
+    "FV-12",
+    "FV-13",
+    "FV-14-INVOICE",
+    "FV-14-PAYMENT",
+    "FV-15-TIE",
+    "FV-15-UNDATED",
+    "FV-16-LINKED",
+    "FV-16-UNLINKED",
+    "FV-17-EVIDENCE",
+    "FV-17-EVIDENCE-RUN-START",
+    "FV-17-SUPERSEDED",
+    "FV-17-UNCHANGED",
+    "FV-18-A",
+    "FV-18-A-CLOCK-1",
+    "FV-18-A-CLOCK-2",
+    "FV-18-B",
+    "FV-18-B-CLOCK-1",
+    "FV-18-B-CLOCK-2"
+  ],
+  "manifest_definitions": [
+    {
+      "id": "baseline:PK-001",
+      "variant": null,
+      "case_id": "PK-001",
+      "events": []
+    },
+    {
+      "id": "baseline:PK-002",
+      "variant": null,
+      "case_id": "PK-002",
+      "events": []
+    },
+    {
+      "id": "baseline:PK-003",
+      "variant": null,
+      "case_id": "PK-003",
+      "events": []
+    },
+    {
+      "id": "PK-001-U1",
+      "variant": null,
+      "case_id": "PK-001",
+      "events": [
+        "PK-001-U1"
+      ]
+    },
+    {
+      "id": "PK-002-U1",
+      "variant": null,
+      "case_id": "PK-002",
+      "events": [
+        "PK-002-U1"
+      ]
+    },
+    {
+      "id": "PK-003-U1",
+      "variant": null,
+      "case_id": "PK-003",
+      "events": [
+        "PK-003-U1"
+      ]
+    },
+    {
+      "id": "FV-01",
+      "variant": "FV-01",
+      "case_id": "PK-001",
+      "events": []
+    },
+    {
+      "id": "FV-02-INVOICE",
+      "variant": "FV-02-INVOICE",
+      "case_id": "PK-001",
+      "events": []
+    },
+    {
+      "id": "FV-02-PROMISE",
+      "variant": "FV-02-PROMISE",
+      "case_id": "PK-001",
+      "events": []
+    },
+    {
+      "id": "FV-03",
+      "variant": "FV-03",
+      "case_id": "PK-003",
+      "events": []
+    },
+    {
+      "id": "FV-04",
+      "variant": "FV-04",
+      "case_id": "PK-002",
+      "events": []
+    },
+    {
+      "id": "FV-05",
+      "variant": "FV-05",
+      "case_id": "PK-003",
+      "events": []
+    },
+    {
+      "id": "FV-06-DUPLICATE",
+      "variant": "FV-06-DUPLICATE",
+      "case_id": "PK-003",
+      "events": []
+    },
+    {
+      "id": "FV-06-REVERSAL",
+      "variant": "FV-06-REVERSAL",
+      "case_id": "PK-003",
+      "events": []
+    },
+    {
+      "id": "FV-07-CURRENCY",
+      "variant": "FV-07-CURRENCY",
+      "case_id": "PK-003",
+      "events": []
+    },
+    {
+      "id": "FV-07-MISSING",
+      "variant": "FV-07-MISSING",
+      "case_id": "PK-003",
+      "events": []
+    },
+    {
+      "id": "FV-07-NEGATIVE",
+      "variant": "FV-07-NEGATIVE",
+      "case_id": "PK-003",
+      "events": []
+    },
+    {
+      "id": "FV-07-OVERPAYMENT",
+      "variant": "FV-07-OVERPAYMENT",
+      "case_id": "PK-003",
+      "events": []
+    },
+    {
+      "id": "FV-07-PRECISION",
+      "variant": "FV-07-PRECISION",
+      "case_id": "PK-003",
+      "events": []
+    },
+    {
+      "id": "FV-08-SOON",
+      "variant": "FV-08-SOON",
+      "case_id": "PK-002",
+      "events": []
+    },
+    {
+      "id": "FV-08-TOMORROW",
+      "variant": "FV-08-TOMORROW",
+      "case_id": "PK-002",
+      "events": []
+    },
+    {
+      "id": "FV-09-EXTRACTION",
+      "variant": "FV-09-EXTRACTION",
+      "case_id": "PK-001",
+      "events": []
+    },
+    {
+      "id": "FV-09-INTERRUPTION",
+      "variant": "FV-09-INTERRUPTION",
+      "case_id": "PK-001",
+      "events": []
+    },
+    {
+      "id": "FV-09-RETRIEVAL",
+      "variant": "FV-09-RETRIEVAL",
+      "case_id": "PK-001",
+      "events": []
+    },
+    {
+      "id": "FV-09-RETRY",
+      "variant": "FV-09-RETRY",
+      "case_id": "PK-001",
+      "events": []
+    },
+    {
+      "id": "FV-10-EDIT",
+      "variant": "FV-10-EDIT",
+      "case_id": "PK-001",
+      "events": []
+    },
+    {
+      "id": "FV-10-EVIDENCE",
+      "variant": "FV-10-EVIDENCE",
+      "case_id": "PK-001",
+      "events": []
+    },
+    {
+      "id": "FV-10-RECIPIENT",
+      "variant": "FV-10-RECIPIENT",
+      "case_id": "PK-001",
+      "events": []
+    },
+    {
+      "id": "FV-10-REPEAT",
+      "variant": "FV-10-REPEAT",
+      "case_id": "PK-001",
+      "events": []
+    },
+    {
+      "id": "FV-11-AMOUNT",
+      "variant": "FV-11-AMOUNT",
+      "case_id": "PK-001",
+      "events": []
+    },
+    {
+      "id": "FV-11-FEE",
+      "variant": "FV-11-FEE",
+      "case_id": "PK-001",
+      "events": []
+    },
+    {
+      "id": "FV-11-NEUTRAL",
+      "variant": "FV-11-NEUTRAL",
+      "case_id": "PK-001",
+      "events": []
+    },
+    {
+      "id": "FV-11-PLACEHOLDER",
+      "variant": "FV-11-PLACEHOLDER",
+      "case_id": "PK-001",
+      "events": []
+    },
+    {
+      "id": "FV-12",
+      "variant": "FV-12",
+      "case_id": "PK-001",
+      "events": []
+    },
+    {
+      "id": "FV-13",
+      "variant": "FV-13",
+      "case_id": "PK-003",
+      "events": []
+    },
+    {
+      "id": "FV-14-INVOICE",
+      "variant": "FV-14-INVOICE",
+      "case_id": "PK-001",
+      "events": []
+    },
+    {
+      "id": "FV-14-PAYMENT",
+      "variant": "FV-14-PAYMENT",
+      "case_id": "PK-001",
+      "events": []
+    },
+    {
+      "id": "FV-15-TIE",
+      "variant": "FV-15-TIE",
+      "case_id": "PK-001",
+      "events": []
+    },
+    {
+      "id": "FV-15-UNDATED",
+      "variant": "FV-15-UNDATED",
+      "case_id": "PK-001",
+      "events": []
+    },
+    {
+      "id": "FV-16-LINKED",
+      "variant": "FV-16-LINKED",
+      "case_id": "PK-002",
+      "events": []
+    },
+    {
+      "id": "FV-16-UNLINKED",
+      "variant": "FV-16-UNLINKED",
+      "case_id": "PK-002",
+      "events": []
+    },
+    {
+      "id": "FV-17-EVIDENCE",
+      "variant": "FV-17-EVIDENCE",
+      "case_id": "PK-001",
+      "events": []
+    },
+    {
+      "id": "FV-17-EVIDENCE-RUN-START",
+      "variant": "FV-17-EVIDENCE",
+      "case_id": "PK-001",
+      "events": [
+        "FV-17-EVIDENCE-RUN-START"
+      ]
+    },
+    {
+      "id": "FV-17-SUPERSEDED",
+      "variant": "FV-17-SUPERSEDED",
+      "case_id": "PK-001",
+      "events": []
+    },
+    {
+      "id": "FV-17-UNCHANGED",
+      "variant": "FV-17-UNCHANGED",
+      "case_id": "PK-001",
+      "events": []
+    },
+    {
+      "id": "FV-18-A",
+      "variant": "FV-18-A",
+      "case_id": "PK-002",
+      "events": []
+    },
+    {
+      "id": "FV-18-A-CLOCK-1",
+      "variant": "FV-18-A",
+      "case_id": "PK-002",
+      "events": [
+        "FV-18-A-CLOCK-1"
+      ]
+    },
+    {
+      "id": "FV-18-A-CLOCK-2",
+      "variant": "FV-18-A",
+      "case_id": "PK-002",
+      "events": [
+        "FV-18-A-CLOCK-1",
+        "FV-18-A-CLOCK-2"
+      ]
+    },
+    {
+      "id": "FV-18-B",
+      "variant": "FV-18-B",
+      "case_id": "PK-002",
+      "events": []
+    },
+    {
+      "id": "FV-18-B-CLOCK-1",
+      "variant": "FV-18-B",
+      "case_id": "PK-002",
+      "events": [
+        "FV-18-B-CLOCK-1"
+      ]
+    },
+    {
+      "id": "FV-18-B-CLOCK-2",
+      "variant": "FV-18-B",
+      "case_id": "PK-002",
+      "events": [
+        "FV-18-B-CLOCK-1",
+        "FV-18-B-CLOCK-2"
+      ]
+    }
+  ],
+  "manifest_hash": "17bcb26aa33ae4bab8fd37abf7e2260cda1089d47eaedc9bc67e7b89f38e1f81",
+  "runs": [
+    {
+      "case": "baseline:PK-001",
+      "repeat": 1,
+      "attempt_status": "COMPLETE",
+      "failure_code": null,
+      "returned_models": [
+        "zai-org/GLM-5.3-Flash"
+      ],
+      "response_ids": [
+        "3633238eb2ec4b9b88c83690ecb7ed5f"
+      ],
+      "extraction_correct": true,
+      "source_validation_correct": true,
+      "uncertainty_correct": true,
+      "validated_uncertainty": {
+        "contradictions": [],
+        "unresolved": []
+      },
+      "actual_candidate_facts": {
+        "commitments": [
+          {
+            "source_id": "PK-001-M1",
+            "commitment_key": "PK-001-M1-C1",
+            "speaker": "Fictional client",
+            "amount_text": "80,000",
+            "currency_text": "INR",
+            "date_text": "20 October 2026",
+            "explicitly_replaces_source_id": null
+          }
+        ],
+        "payment_claims": []
+      },
+      "expected_candidate_facts": {
+        "commitments": [
+          {
+            "source_id": "PK-001-M1",
+            "commitment_key": "PK-001-M1-C1",
+            "speaker": "Fictional client",
+            "amount_text": "80,000",
+            "currency_text": "INR",
+            "date_text": "20 October 2026",
+            "explicitly_replaces_source_id": null
+          }
+        ],
+        "payment_claims": []
+      },
+      "deterministic_outcome_correct": true,
+      "latency_seconds": 3.656,
+      "action": "FOLLOW_UP",
+      "result_present": true,
+      "progress": [
+        {
+          "step_name": "EVIDENCE_LOOKUP",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:39:05.248403+00:00",
+          "ended_at": "2026-10-24T10:39:05.257041+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "EXTRACTION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:39:05.265388+00:00",
+          "ended_at": "2026-10-24T10:39:08.196283+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "VALIDATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:39:08.218951+00:00",
+          "ended_at": "2026-10-24T10:39:08.236376+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "RECONCILIATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:39:08.253317+00:00",
+          "ended_at": "2026-10-24T10:39:08.296478+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        }
+      ],
+      "attempt_timing": {
+        "started_at": "2026-10-24T10:39:05.018473+00:00",
+        "terminal_at": "2026-10-24T10:39:08.322970+00:00",
+        "deadline_at": "2026-10-24T10:40:00.018473+00:00"
+      },
+      "status": "PASS"
+    },
+    {
+      "case": "baseline:PK-002",
+      "repeat": 1,
+      "attempt_status": "COMPLETE",
+      "failure_code": null,
+      "returned_models": [
+        "zai-org/GLM-5.3-Flash"
+      ],
+      "response_ids": [
+        "a2775cc1222f42afb2b7443dcbf28086"
+      ],
+      "extraction_correct": true,
+      "source_validation_correct": true,
+      "uncertainty_correct": true,
+      "validated_uncertainty": {
+        "contradictions": [],
+        "unresolved": []
+      },
+      "actual_candidate_facts": {
+        "commitments": [
+          {
+            "source_id": "PK-002-M1",
+            "commitment_key": "PK-002-M1-C1",
+            "speaker": "Fictional client",
+            "amount_text": "50,000",
+            "currency_text": "INR",
+            "date_text": "25 October 2026",
+            "explicitly_replaces_source_id": null
+          }
+        ],
+        "payment_claims": []
+      },
+      "expected_candidate_facts": {
+        "commitments": [
+          {
+            "source_id": "PK-002-M1",
+            "commitment_key": "PK-002-M1-C1",
+            "speaker": "Fictional client",
+            "amount_text": "50,000",
+            "currency_text": "INR",
+            "date_text": "25 October 2026",
+            "explicitly_replaces_source_id": null
+          }
+        ],
+        "payment_claims": []
+      },
+      "deterministic_outcome_correct": true,
+      "latency_seconds": 3.609,
+      "action": "WAIT",
+      "result_present": true,
+      "progress": [
+        {
+          "step_name": "EVIDENCE_LOOKUP",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:39:08.950541+00:00",
+          "ended_at": "2026-10-24T10:39:08.960928+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "EXTRACTION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:39:08.975963+00:00",
+          "ended_at": "2026-10-24T10:39:12.003137+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "VALIDATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:39:12.039800+00:00",
+          "ended_at": "2026-10-24T10:39:12.064327+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "RECONCILIATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:39:12.086244+00:00",
+          "ended_at": "2026-10-24T10:39:12.095255+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        }
+      ],
+      "attempt_timing": {
+        "started_at": "2026-10-24T10:39:08.898220+00:00",
+        "terminal_at": "2026-10-24T10:39:12.109771+00:00",
+        "deadline_at": "2026-10-24T10:40:03.898220+00:00"
+      },
+      "status": "PASS"
+    },
+    {
+      "case": "baseline:PK-003",
+      "repeat": 1,
+      "attempt_status": "COMPLETE",
+      "failure_code": null,
+      "returned_models": [
+        "zai-org/GLM-5.3-Flash"
+      ],
+      "response_ids": [
+        "2932d71b8ac34bef864e0b29e159f99b"
+      ],
+      "extraction_correct": true,
+      "source_validation_correct": true,
+      "uncertainty_correct": true,
+      "validated_uncertainty": {
+        "contradictions": [],
+        "unresolved": []
+      },
+      "actual_candidate_facts": {
+        "commitments": [],
+        "payment_claims": [
+          {
+            "source_id": "PK-003-M1",
+            "speaker": "Fictional client",
+            "amount_text": "60,000",
+            "currency_text": "INR",
+            "payment_date_text": "today",
+            "transaction_reference_text": "CR-T2"
+          }
+        ]
+      },
+      "expected_candidate_facts": {
+        "commitments": [],
+        "payment_claims": [
+          {
+            "source_id": "PK-003-M1",
+            "speaker": "Fictional client",
+            "amount_text": "60,000",
+            "currency_text": "INR",
+            "payment_date_text": "today",
+            "transaction_reference_text": "CR-T2"
+          }
+        ]
+      },
+      "deterministic_outcome_correct": true,
+      "latency_seconds": 3.078,
+      "action": "VERIFY_PAYMENT",
+      "result_present": true,
+      "progress": [
+        {
+          "step_name": "EVIDENCE_LOOKUP",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:39:12.560506+00:00",
+          "ended_at": "2026-10-24T10:39:12.572537+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "EXTRACTION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:39:12.585569+00:00",
+          "ended_at": "2026-10-24T10:39:15.230531+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "VALIDATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:39:15.254525+00:00",
+          "ended_at": "2026-10-24T10:39:15.270550+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "RECONCILIATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:39:15.281680+00:00",
+          "ended_at": "2026-10-24T10:39:15.291691+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        }
+      ],
+      "attempt_timing": {
+        "started_at": "2026-10-24T10:39:12.530423+00:00",
+        "terminal_at": "2026-10-24T10:39:15.303145+00:00",
+        "deadline_at": "2026-10-24T10:40:07.530423+00:00"
+      },
+      "status": "PASS"
+    },
+    {
+      "case": "PK-001-U1",
+      "repeat": 1,
+      "attempt_status": "COMPLETE",
+      "failure_code": null,
+      "returned_models": [
+        "zai-org/GLM-5.3-Flash"
+      ],
+      "response_ids": [
+        "0baec4c1c9464d4880c48733880f78c6"
+      ],
+      "extraction_correct": true,
+      "source_validation_correct": true,
+      "uncertainty_correct": true,
+      "validated_uncertainty": {
+        "contradictions": [],
+        "unresolved": []
+      },
+      "actual_candidate_facts": {
+        "commitments": [
+          {
+            "source_id": "PK-001-M1",
+            "commitment_key": "PK-001-M1-C1",
+            "speaker": "Fictional client",
+            "amount_text": "80,000",
+            "currency_text": "INR",
+            "date_text": "20 October 2026",
+            "explicitly_replaces_source_id": null
+          },
+          {
+            "source_id": "PK-001-M2",
+            "commitment_key": "PK-001-M2-C1",
+            "speaker": "Fictional client",
+            "amount_text": "80,000",
+            "currency_text": "INR",
+            "date_text": "25 October 2026",
+            "explicitly_replaces_source_id": "PK-001-M1"
+          }
+        ],
+        "payment_claims": []
+      },
+      "expected_candidate_facts": {
+        "commitments": [
+          {
+            "source_id": "PK-001-M1",
+            "commitment_key": "PK-001-M1-C1",
+            "speaker": "Fictional client",
+            "amount_text": "80,000",
+            "currency_text": "INR",
+            "date_text": "20 October 2026",
+            "explicitly_replaces_source_id": null
+          },
+          {
+            "source_id": "PK-001-M2",
+            "commitment_key": "PK-001-M2-C1",
+            "speaker": "Fictional client",
+            "amount_text": "80,000",
+            "currency_text": "INR",
+            "date_text": "25 October 2026",
+            "explicitly_replaces_source_id": "PK-001-M1"
+          }
+        ],
+        "payment_claims": []
+      },
+      "deterministic_outcome_correct": true,
+      "latency_seconds": 4.782,
+      "action": "WAIT",
+      "result_present": true,
+      "progress": [
+        {
+          "step_name": "EVIDENCE_LOOKUP",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:39:15.791042+00:00",
+          "ended_at": "2026-10-24T10:39:15.799331+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "EXTRACTION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:39:15.815891+00:00",
+          "ended_at": "2026-10-24T10:39:20.095013+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "VALIDATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:39:20.124373+00:00",
+          "ended_at": "2026-10-24T10:39:20.140898+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "RECONCILIATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:39:20.153923+00:00",
+          "ended_at": "2026-10-24T10:39:20.161657+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        }
+      ],
+      "attempt_timing": {
+        "started_at": "2026-10-24T10:39:15.751352+00:00",
+        "terminal_at": "2026-10-24T10:39:20.169680+00:00",
+        "deadline_at": "2026-10-24T10:40:10.751352+00:00"
+      },
+      "status": "PASS"
+    },
+    {
+      "case": "PK-002-U1",
+      "repeat": 1,
+      "attempt_status": "COMPLETE",
+      "failure_code": null,
+      "returned_models": [
+        "zai-org/GLM-5.3-Flash"
+      ],
+      "response_ids": [
+        "313932e5491b4f8e82e0df4ed7c900c1"
+      ],
+      "extraction_correct": true,
+      "source_validation_correct": true,
+      "uncertainty_correct": true,
+      "validated_uncertainty": {
+        "contradictions": [],
+        "unresolved": []
+      },
+      "actual_candidate_facts": {
+        "commitments": [
+          {
+            "source_id": "PK-002-M1",
+            "commitment_key": "PK-002-M1-C1",
+            "speaker": "Fictional client",
+            "amount_text": "50,000",
+            "currency_text": "INR",
+            "date_text": "25 October 2026",
+            "explicitly_replaces_source_id": null
+          }
+        ],
+        "payment_claims": []
+      },
+      "expected_candidate_facts": {
+        "commitments": [
+          {
+            "source_id": "PK-002-M1",
+            "commitment_key": "PK-002-M1-C1",
+            "speaker": "Fictional client",
+            "amount_text": "50,000",
+            "currency_text": "INR",
+            "date_text": "25 October 2026",
+            "explicitly_replaces_source_id": null
+          }
+        ],
+        "payment_claims": []
+      },
+      "deterministic_outcome_correct": true,
+      "latency_seconds": 5.609,
+      "action": "FOLLOW_UP",
+      "result_present": true,
+      "progress": [
+        {
+          "step_name": "EVIDENCE_LOOKUP",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:39:20.653345+00:00",
+          "ended_at": "2026-10-24T10:39:20.663744+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "EXTRACTION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:39:20.665618+00:00",
+          "ended_at": "2026-10-24T10:39:25.821163+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "VALIDATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:39:25.859637+00:00",
+          "ended_at": "2026-10-24T10:39:25.866611+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "RECONCILIATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:39:25.877609+00:00",
+          "ended_at": "2026-10-24T10:39:25.892685+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        }
+      ],
+      "attempt_timing": {
+        "started_at": "2026-10-24T10:39:20.618615+00:00",
+        "terminal_at": "2026-10-24T10:39:25.905594+00:00",
+        "deadline_at": "2026-10-24T10:40:15.618615+00:00"
+      },
+      "status": "PASS"
+    },
+    {
+      "case": "PK-003-U1",
+      "repeat": 1,
+      "attempt_status": "COMPLETE",
+      "failure_code": null,
+      "returned_models": [
+        "zai-org/GLM-5.3-Flash"
+      ],
+      "response_ids": [
+        "dc543cea64d8437188e380fe4ba2d922"
+      ],
+      "extraction_correct": true,
+      "source_validation_correct": true,
+      "uncertainty_correct": true,
+      "validated_uncertainty": {
+        "contradictions": [],
+        "unresolved": []
+      },
+      "actual_candidate_facts": {
+        "commitments": [],
+        "payment_claims": [
+          {
+            "source_id": "PK-003-M1",
+            "speaker": "Fictional client",
+            "amount_text": "60,000",
+            "currency_text": "INR",
+            "payment_date_text": "today",
+            "transaction_reference_text": "CR-T2"
+          }
+        ]
+      },
+      "expected_candidate_facts": {
+        "commitments": [],
+        "payment_claims": [
+          {
+            "source_id": "PK-003-M1",
+            "speaker": "Fictional client",
+            "amount_text": "60,000",
+            "currency_text": "INR",
+            "payment_date_text": "today",
+            "transaction_reference_text": "CR-T2"
+          }
+        ]
+      },
+      "deterministic_outcome_correct": true,
+      "latency_seconds": 3.391,
+      "action": "CLOSE",
+      "result_present": true,
+      "progress": [
+        {
+          "step_name": "EVIDENCE_LOOKUP",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:39:26.405758+00:00",
+          "ended_at": "2026-10-24T10:39:26.416287+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "EXTRACTION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:39:26.423584+00:00",
+          "ended_at": "2026-10-24T10:39:29.304516+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "VALIDATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:39:29.330741+00:00",
+          "ended_at": "2026-10-24T10:39:29.348029+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "RECONCILIATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:39:29.364135+00:00",
+          "ended_at": "2026-10-24T10:39:29.372618+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        }
+      ],
+      "attempt_timing": {
+        "started_at": "2026-10-24T10:39:26.371864+00:00",
+        "terminal_at": "2026-10-24T10:39:29.381618+00:00",
+        "deadline_at": "2026-10-24T10:40:21.371864+00:00"
+      },
+      "status": "PASS"
+    },
+    {
+      "case": "FV-01",
+      "repeat": 1,
+      "attempt_status": "LIMITED",
+      "failure_code": null,
+      "returned_models": [
+        "zai-org/GLM-5.3-Flash"
+      ],
+      "response_ids": [
+        "2a24a71ce2e64bb8a1e554c2850dd81b"
+      ],
+      "extraction_correct": true,
+      "source_validation_correct": true,
+      "uncertainty_correct": true,
+      "validated_uncertainty": {
+        "contradictions": [],
+        "unresolved": []
+      },
+      "actual_candidate_facts": {
+        "commitments": [
+          {
+            "source_id": "PK-001-M1",
+            "commitment_key": "PK-001-M1-C1",
+            "speaker": "Fictional client",
+            "amount_text": "80,000",
+            "currency_text": "INR",
+            "date_text": "20 October 2026",
+            "explicitly_replaces_source_id": null
+          }
+        ],
+        "payment_claims": []
+      },
+      "expected_candidate_facts": {
+        "commitments": [
+          {
+            "source_id": "PK-001-M1",
+            "commitment_key": "PK-001-M1-C1",
+            "speaker": "Fictional client",
+            "amount_text": "80,000",
+            "currency_text": "INR",
+            "date_text": "20 October 2026",
+            "explicitly_replaces_source_id": null
+          }
+        ],
+        "payment_claims": []
+      },
+      "deterministic_outcome_correct": true,
+      "latency_seconds": 4.094,
+      "action": "VERIFY_PAYMENT",
+      "result_present": true,
+      "progress": [
+        {
+          "step_name": "EVIDENCE_LOOKUP",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:39:29.925510+00:00",
+          "ended_at": "2026-10-24T10:39:29.941880+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "EXTRACTION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:39:29.958271+00:00",
+          "ended_at": "2026-10-24T10:39:33.603816+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "VALIDATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:39:33.625742+00:00",
+          "ended_at": "2026-10-24T10:39:33.635428+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "RECONCILIATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:39:33.649205+00:00",
+          "ended_at": "2026-10-24T10:39:33.664247+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        }
+      ],
+      "attempt_timing": {
+        "started_at": "2026-10-24T10:39:29.879027+00:00",
+        "terminal_at": "2026-10-24T10:39:33.679727+00:00",
+        "deadline_at": "2026-10-24T10:40:24.879027+00:00"
+      },
+      "status": "PASS"
+    },
+    {
+      "case": "FV-02-INVOICE",
+      "repeat": 1,
+      "attempt_status": "LIMITED",
+      "failure_code": null,
+      "returned_models": [
+        "zai-org/GLM-5.3-Flash"
+      ],
+      "response_ids": [
+        "c099a17c589d4629b6b314ce2fb5b4da"
+      ],
+      "extraction_correct": true,
+      "source_validation_correct": true,
+      "uncertainty_correct": true,
+      "validated_uncertainty": {
+        "contradictions": [],
+        "unresolved": []
+      },
+      "actual_candidate_facts": {
+        "commitments": [
+          {
+            "source_id": "PK-001-M1",
+            "commitment_key": "PK-001-M1-C1",
+            "speaker": "Fictional client",
+            "amount_text": "80,000",
+            "currency_text": "INR",
+            "date_text": "20 October 2026",
+            "explicitly_replaces_source_id": null
+          }
+        ],
+        "payment_claims": []
+      },
+      "expected_candidate_facts": {
+        "commitments": [
+          {
+            "source_id": "PK-001-M1",
+            "commitment_key": "PK-001-M1-C1",
+            "speaker": "Fictional client",
+            "amount_text": "80,000",
+            "currency_text": "INR",
+            "date_text": "20 October 2026",
+            "explicitly_replaces_source_id": null
+          }
+        ],
+        "payment_claims": []
+      },
+      "deterministic_outcome_correct": true,
+      "latency_seconds": 4.578,
+      "action": "VERIFY_PAYMENT",
+      "result_present": true,
+      "progress": [
+        {
+          "step_name": "EVIDENCE_LOOKUP",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:39:34.282164+00:00",
+          "ended_at": "2026-10-24T10:39:34.296719+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "EXTRACTION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:39:34.316804+00:00",
+          "ended_at": "2026-10-24T10:39:38.323971+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "VALIDATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:39:38.341911+00:00",
+          "ended_at": "2026-10-24T10:39:38.357774+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "RECONCILIATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:39:38.374525+00:00",
+          "ended_at": "2026-10-24T10:39:38.390813+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        }
+      ],
+      "attempt_timing": {
+        "started_at": "2026-10-24T10:39:34.240071+00:00",
+        "terminal_at": "2026-10-24T10:39:38.396396+00:00",
+        "deadline_at": "2026-10-24T10:40:29.240071+00:00"
+      },
+      "status": "PASS"
+    },
+    {
+      "case": "FV-02-PROMISE",
+      "repeat": 1,
+      "attempt_status": "COMPLETE",
+      "failure_code": null,
+      "returned_models": [
+        "zai-org/GLM-5.3-Flash"
+      ],
+      "response_ids": [
+        "2a4cc42dd4ec4927a95abd11d377d4fc"
+      ],
+      "extraction_correct": true,
+      "source_validation_correct": true,
+      "uncertainty_correct": true,
+      "validated_uncertainty": {
+        "contradictions": [],
+        "unresolved": [
+          {
+            "field": "AMOUNT",
+            "sources": [
+              {
+                "evidence_version_id": "3faae890-1e47-5325-bbd3-9b780efcabd5",
+                "source_id": "PK-001-M1",
+                "start": 0,
+                "end": 31,
+                "quote": "We will pay by 20 October 2026."
+              }
+            ]
+          },
+          {
+            "field": "CURRENCY",
+            "sources": [
+              {
+                "evidence_version_id": "3faae890-1e47-5325-bbd3-9b780efcabd5",
+                "source_id": "PK-001-M1",
+                "start": 0,
+                "end": 31,
+                "quote": "We will pay by 20 October 2026."
+              }
+            ]
+          }
+        ]
+      },
+      "actual_candidate_facts": {
+        "commitments": [
+          {
+            "source_id": "PK-001-M1",
+            "commitment_key": "PK-001-M1-C1",
+            "speaker": "Fictional client",
+            "amount_text": null,
+            "currency_text": null,
+            "date_text": "20 October 2026",
+            "explicitly_replaces_source_id": null
+          }
+        ],
+        "payment_claims": []
+      },
+      "expected_candidate_facts": {
+        "commitments": [
+          {
+            "source_id": "PK-001-M1",
+            "commitment_key": "PK-001-M1-C1",
+            "speaker": "Fictional client",
+            "amount_text": null,
+            "currency_text": null,
+            "date_text": "20 October 2026",
+            "explicitly_replaces_source_id": null
+          }
+        ],
+        "payment_claims": []
+      },
+      "deterministic_outcome_correct": true,
+      "latency_seconds": 5.016,
+      "action": "FOLLOW_UP",
+      "result_present": true,
+      "progress": [
+        {
+          "step_name": "EVIDENCE_LOOKUP",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:39:38.885801+00:00",
+          "ended_at": "2026-10-24T10:39:38.901786+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "EXTRACTION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:39:38.917681+00:00",
+          "ended_at": "2026-10-24T10:39:43.440399+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "VALIDATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:39:43.467657+00:00",
+          "ended_at": "2026-10-24T10:39:43.483909+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "RECONCILIATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:39:43.501111+00:00",
+          "ended_at": "2026-10-24T10:39:43.510425+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        }
+      ],
+      "attempt_timing": {
+        "started_at": "2026-10-24T10:39:38.853815+00:00",
+        "terminal_at": "2026-10-24T10:39:43.522154+00:00",
+        "deadline_at": "2026-10-24T10:40:33.853815+00:00"
+      },
+      "status": "PASS"
+    },
+    {
+      "case": "FV-03",
+      "repeat": 1,
+      "attempt_status": "COMPLETE",
+      "failure_code": null,
+      "returned_models": [
+        "zai-org/GLM-5.3-Flash"
+      ],
+      "response_ids": [
+        "7e97317b6d3b4201a33fc434524ad98e"
+      ],
+      "extraction_correct": true,
+      "source_validation_correct": true,
+      "uncertainty_correct": true,
+      "validated_uncertainty": {
+        "contradictions": [],
+        "unresolved": []
+      },
+      "actual_candidate_facts": {
+        "commitments": [],
+        "payment_claims": [
+          {
+            "source_id": "PK-003-M1",
+            "speaker": "Fictional client",
+            "amount_text": "60,000",
+            "currency_text": "INR",
+            "payment_date_text": "today",
+            "transaction_reference_text": "CR-T2"
+          }
+        ]
+      },
+      "expected_candidate_facts": {
+        "commitments": [],
+        "payment_claims": [
+          {
+            "source_id": "PK-003-M1",
+            "speaker": "Fictional client",
+            "amount_text": "60,000",
+            "currency_text": "INR",
+            "payment_date_text": "today",
+            "transaction_reference_text": "CR-T2"
+          }
+        ]
+      },
+      "deterministic_outcome_correct": true,
+      "latency_seconds": 4.141,
+      "action": "VERIFY_PAYMENT",
+      "result_present": true,
+      "progress": [
+        {
+          "step_name": "EVIDENCE_LOOKUP",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:39:44.040826+00:00",
+          "ended_at": "2026-10-24T10:39:44.062770+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "EXTRACTION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:39:44.078224+00:00",
+          "ended_at": "2026-10-24T10:39:47.712851+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "VALIDATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:39:47.743591+00:00",
+          "ended_at": "2026-10-24T10:39:47.750661+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "RECONCILIATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:39:47.761344+00:00",
+          "ended_at": "2026-10-24T10:39:47.771451+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        }
+      ],
+      "attempt_timing": {
+        "started_at": "2026-10-24T10:39:43.995635+00:00",
+        "terminal_at": "2026-10-24T10:39:47.787502+00:00",
+        "deadline_at": "2026-10-24T10:40:38.995635+00:00"
+      },
+      "status": "PASS"
+    },
+    {
+      "case": "FV-04",
+      "repeat": 1,
+      "attempt_status": "COMPLETE",
+      "failure_code": null,
+      "returned_models": [
+        "zai-org/GLM-5.3-Flash"
+      ],
+      "response_ids": [
+        "ed8d624b1c7b4fd79726d76ece181c99"
+      ],
+      "extraction_correct": true,
+      "source_validation_correct": true,
+      "uncertainty_correct": true,
+      "validated_uncertainty": {
+        "contradictions": [],
+        "unresolved": []
+      },
+      "actual_candidate_facts": {
+        "commitments": [
+          {
+            "source_id": "PK-002-FV-04-M1",
+            "commitment_key": "PK-002-FV-04-M1-C1",
+            "speaker": "Fictional client",
+            "amount_text": "50,000",
+            "currency_text": "INR",
+            "date_text": "24 October 2026",
+            "explicitly_replaces_source_id": null
+          },
+          {
+            "source_id": "PK-002-M1",
+            "commitment_key": "PK-002-M1-C1",
+            "speaker": "Fictional client",
+            "amount_text": "50,000",
+            "currency_text": "INR",
+            "date_text": "25 October 2026",
+            "explicitly_replaces_source_id": null
+          }
+        ],
+        "payment_claims": []
+      },
+      "expected_candidate_facts": {
+        "commitments": [
+          {
+            "source_id": "PK-002-FV-04-M1",
+            "commitment_key": "PK-002-FV-04-M1-C1",
+            "speaker": "Fictional client",
+            "amount_text": "50,000",
+            "currency_text": "INR",
+            "date_text": "24 October 2026",
+            "explicitly_replaces_source_id": null
+          },
+          {
+            "source_id": "PK-002-M1",
+            "commitment_key": "PK-002-M1-C1",
+            "speaker": "Fictional client",
+            "amount_text": "50,000",
+            "currency_text": "INR",
+            "date_text": "25 October 2026",
+            "explicitly_replaces_source_id": null
+          }
+        ],
+        "payment_claims": []
+      },
+      "deterministic_outcome_correct": true,
+      "latency_seconds": 11.532,
+      "action": "VERIFY_PAYMENT",
+      "result_present": true,
+      "progress": [
+        {
+          "step_name": "EVIDENCE_LOOKUP",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:39:48.341377+00:00",
+          "ended_at": "2026-10-24T10:39:48.358781+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "EXTRACTION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:39:48.363310+00:00",
+          "ended_at": "2026-10-24T10:39:59.211127+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "VALIDATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:39:59.321687+00:00",
+          "ended_at": "2026-10-24T10:39:59.345684+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "RECONCILIATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:39:59.402098+00:00",
+          "ended_at": "2026-10-24T10:39:59.458877+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        }
+      ],
+      "attempt_timing": {
+        "started_at": "2026-10-24T10:39:48.309739+00:00",
+        "terminal_at": "2026-10-24T10:39:59.472873+00:00",
+        "deadline_at": "2026-10-24T10:40:43.309739+00:00"
+      },
+      "status": "PASS"
+    },
+    {
+      "case": "FV-05",
+      "repeat": 1,
+      "attempt_status": "LIMITED",
+      "failure_code": null,
+      "returned_models": [
+        "zai-org/GLM-5.3-Flash"
+      ],
+      "response_ids": [
+        "45dd017317b74f36851c5e8b5485f001"
+      ],
+      "extraction_correct": true,
+      "source_validation_correct": true,
+      "uncertainty_correct": true,
+      "validated_uncertainty": {
+        "contradictions": [],
+        "unresolved": []
+      },
+      "actual_candidate_facts": {
+        "commitments": [],
+        "payment_claims": [
+          {
+            "source_id": "PK-003-M1",
+            "speaker": "Fictional client",
+            "amount_text": "60,000",
+            "currency_text": "INR",
+            "payment_date_text": "today",
+            "transaction_reference_text": "CR-T2"
+          }
+        ]
+      },
+      "expected_candidate_facts": {
+        "commitments": [],
+        "payment_claims": [
+          {
+            "source_id": "PK-003-M1",
+            "speaker": "Fictional client",
+            "amount_text": "60,000",
+            "currency_text": "INR",
+            "payment_date_text": "today",
+            "transaction_reference_text": "CR-T2"
+          }
+        ]
+      },
+      "deterministic_outcome_correct": true,
+      "latency_seconds": 3.453,
+      "action": "VERIFY_PAYMENT",
+      "result_present": true,
+      "progress": [
+        {
+          "step_name": "EVIDENCE_LOOKUP",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:40:00.141959+00:00",
+          "ended_at": "2026-10-24T10:40:00.154878+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "EXTRACTION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:40:00.169810+00:00",
+          "ended_at": "2026-10-24T10:40:02.832416+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "VALIDATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:40:02.874067+00:00",
+          "ended_at": "2026-10-24T10:40:03.057983+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "RECONCILIATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:40:03.081434+00:00",
+          "ended_at": "2026-10-24T10:40:03.101326+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        }
+      ],
+      "attempt_timing": {
+        "started_at": "2026-10-24T10:40:00.092278+00:00",
+        "terminal_at": "2026-10-24T10:40:03.124959+00:00",
+        "deadline_at": "2026-10-24T10:40:55.092278+00:00"
+      },
+      "status": "PASS"
+    },
+    {
+      "case": "FV-06-DUPLICATE",
+      "repeat": 1,
+      "attempt_status": "COMPLETE",
+      "failure_code": null,
+      "returned_models": [
+        "zai-org/GLM-5.3-Flash"
+      ],
+      "response_ids": [
+        "e0bf2392b12344449ed65ef8d83a0011"
+      ],
+      "extraction_correct": true,
+      "source_validation_correct": true,
+      "uncertainty_correct": true,
+      "validated_uncertainty": {
+        "contradictions": [],
+        "unresolved": []
+      },
+      "actual_candidate_facts": {
+        "commitments": [],
+        "payment_claims": [
+          {
+            "source_id": "PK-003-M1",
+            "speaker": "Fictional client",
+            "amount_text": "60,000",
+            "currency_text": "INR",
+            "payment_date_text": "today",
+            "transaction_reference_text": "CR-T2"
+          }
+        ]
+      },
+      "expected_candidate_facts": {
+        "commitments": [],
+        "payment_claims": [
+          {
+            "source_id": "PK-003-M1",
+            "speaker": "Fictional client",
+            "amount_text": "60,000",
+            "currency_text": "INR",
+            "payment_date_text": "today",
+            "transaction_reference_text": "CR-T2"
+          }
+        ]
+      },
+      "deterministic_outcome_correct": true,
+      "latency_seconds": 11.218,
+      "action": "CLOSE",
+      "result_present": true,
+      "progress": [
+        {
+          "step_name": "EVIDENCE_LOOKUP",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:40:03.824466+00:00",
+          "ended_at": "2026-10-24T10:40:03.848855+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "EXTRACTION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:40:03.867417+00:00",
+          "ended_at": "2026-10-24T10:40:09.244400+00:00",
+          "outcome": "TRANSIENT_FAILURE",
+          "failure_code": "PROVIDER_REJECTED_REQUEST"
+        },
+        {
+          "step_name": "EXTRACTION",
+          "invocation_number": 2,
+          "invocation_kind": "AUTO_RETRY",
+          "started_at": "2026-10-24T10:40:09.266910+00:00",
+          "ended_at": "2026-10-24T10:40:14.416670+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "VALIDATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:40:14.455906+00:00",
+          "ended_at": "2026-10-24T10:40:14.477820+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "RECONCILIATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:40:14.494110+00:00",
+          "ended_at": "2026-10-24T10:40:14.502110+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        }
+      ],
+      "attempt_timing": {
+        "started_at": "2026-10-24T10:40:03.782406+00:00",
+        "terminal_at": "2026-10-24T10:40:14.517112+00:00",
+        "deadline_at": "2026-10-24T10:40:58.782406+00:00"
+      },
+      "status": "PASS"
+    },
+    {
+      "case": "FV-06-REVERSAL",
+      "repeat": 1,
+      "attempt_status": "COMPLETE",
+      "failure_code": null,
+      "returned_models": [
+        "zai-org/GLM-5.3-Flash"
+      ],
+      "response_ids": [
+        "1a6b9784c727476287e03dd3bdb6f8dc"
+      ],
+      "extraction_correct": true,
+      "source_validation_correct": true,
+      "uncertainty_correct": false,
+      "validated_uncertainty": {
+        "contradictions": [
+          {
+            "kind": "PAYMENT_CLAIM",
+            "sources": [
+              {
+                "evidence_version_id": "c8df8e76-4dcf-51e3-95a5-6eca329d3e0b",
+                "source_id": "PK-003-M1",
+                "start": 0,
+                "end": 56,
+                "quote": "We paid the remaining INR 60,000 today; reference CR-T2."
+              },
+              {
+                "evidence_version_id": "acc7e740-8e68-5eb2-b6a4-591132dc88e1",
+                "source_id": "PK-003-FV-06-R1",
+                "start": 0,
+                "end": 68,
+                "quote": "Fictional verified reversal of CR-T2; INR 60,000.00; invoice CR-312."
+              }
+            ]
+          }
+        ],
+        "unresolved": []
+      },
+      "actual_candidate_facts": {
+        "commitments": [],
+        "payment_claims": [
+          {
+            "source_id": "PK-003-M1",
+            "speaker": "Fictional client",
+            "amount_text": "60,000",
+            "currency_text": "INR",
+            "payment_date_text": "today",
+            "transaction_reference_text": "CR-T2"
+          }
+        ]
+      },
+      "expected_candidate_facts": {
+        "commitments": [],
+        "payment_claims": [
+          {
+            "source_id": "PK-003-M1",
+            "speaker": "Fictional client",
+            "amount_text": "60,000",
+            "currency_text": "INR",
+            "payment_date_text": "today",
+            "transaction_reference_text": "CR-T2"
+          }
+        ]
+      },
+      "deterministic_outcome_correct": true,
+      "latency_seconds": 9.031,
+      "action": "VERIFY_PAYMENT",
+      "result_present": true,
+      "progress": [
+        {
+          "step_name": "EVIDENCE_LOOKUP",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:40:15.134114+00:00",
+          "ended_at": "2026-10-24T10:40:15.143960+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "EXTRACTION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:40:15.161180+00:00",
+          "ended_at": "2026-10-24T10:40:23.584790+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "VALIDATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:40:23.616381+00:00",
+          "ended_at": "2026-10-24T10:40:23.628906+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "RECONCILIATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:40:23.650450+00:00",
+          "ended_at": "2026-10-24T10:40:23.668322+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        }
+      ],
+      "attempt_timing": {
+        "started_at": "2026-10-24T10:40:15.096625+00:00",
+        "terminal_at": "2026-10-24T10:40:23.690083+00:00",
+        "deadline_at": "2026-10-24T10:41:10.096625+00:00"
+      },
+      "status": "FAIL"
+    },
+    {
+      "case": "FV-07-CURRENCY",
+      "repeat": 1,
+      "attempt_status": "LIMITED",
+      "failure_code": null,
+      "returned_models": [
+        "zai-org/GLM-5.3-Flash"
+      ],
+      "response_ids": [
+        "e9e5746d3c93447599f6dbd11e5bbc54"
+      ],
+      "extraction_correct": true,
+      "source_validation_correct": true,
+      "uncertainty_correct": true,
+      "validated_uncertainty": {
+        "contradictions": [
+          {
+            "kind": "PAYMENT_CLAIM",
+            "sources": [
+              {
+                "evidence_version_id": "4aec3774-66a8-5565-b282-43c1f3791118",
+                "source_id": "PK-003-M1",
+                "start": 0,
+                "end": 56,
+                "quote": "We paid the remaining INR 60,000 today; reference CR-T2."
+              },
+              {
+                "evidence_version_id": "353e32c0-15ad-5d36-b453-dcd8ec291f49",
+                "source_id": "PK-003-L2",
+                "start": 0,
+                "end": 83,
+                "quote": "Fictional verified settled ledger transaction CR-T2; USD 60,000.00; invoice CR-312."
+              }
+            ]
+          }
+        ],
+        "unresolved": []
+      },
+      "actual_candidate_facts": {
+        "commitments": [],
+        "payment_claims": [
+          {
+            "source_id": "PK-003-M1",
+            "speaker": "Fictional client",
+            "amount_text": "60,000",
+            "currency_text": "INR",
+            "payment_date_text": "today",
+            "transaction_reference_text": "CR-T2"
+          }
+        ]
+      },
+      "expected_candidate_facts": {
+        "commitments": [],
+        "payment_claims": [
+          {
+            "source_id": "PK-003-M1",
+            "speaker": "Fictional client",
+            "amount_text": "60,000",
+            "currency_text": "INR",
+            "payment_date_text": "today",
+            "transaction_reference_text": "CR-T2"
+          }
+        ]
+      },
+      "deterministic_outcome_correct": true,
+      "latency_seconds": 5.86,
+      "action": "VERIFY_PAYMENT",
+      "result_present": true,
+      "progress": [
+        {
+          "step_name": "EVIDENCE_LOOKUP",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:40:24.638702+00:00",
+          "ended_at": "2026-10-24T10:40:24.658619+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "EXTRACTION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:40:24.679968+00:00",
+          "ended_at": "2026-10-24T10:40:29.636316+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "VALIDATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:40:29.677784+00:00",
+          "ended_at": "2026-10-24T10:40:29.700130+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "RECONCILIATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:40:29.711540+00:00",
+          "ended_at": "2026-10-24T10:40:29.732384+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        }
+      ],
+      "attempt_timing": {
+        "started_at": "2026-10-24T10:40:24.587709+00:00",
+        "terminal_at": "2026-10-24T10:40:29.757464+00:00",
+        "deadline_at": "2026-10-24T10:41:19.587709+00:00"
+      },
+      "status": "PASS"
+    },
+    {
+      "case": "FV-07-MISSING",
+      "repeat": 1,
+      "attempt_status": "LIMITED",
+      "failure_code": null,
+      "returned_models": [
+        "zai-org/GLM-5.3-Flash"
+      ],
+      "response_ids": [
+        "dbd761591c784e33b3d70065baab8f5b"
+      ],
+      "extraction_correct": true,
+      "source_validation_correct": true,
+      "uncertainty_correct": true,
+      "validated_uncertainty": {
+        "contradictions": [],
+        "unresolved": [
+          {
+            "field": "AMOUNT",
+            "sources": [
+              {
+                "evidence_version_id": "eac28f03-9f66-57c9-b332-e165dbe85ca6",
+                "source_id": "PK-003-L2",
+                "start": 0,
+                "end": 78,
+                "quote": "Fictional verified settled ledger transaction CR-T2; INR None; invoice CR-312."
+              }
+            ]
+          }
+        ]
+      },
+      "actual_candidate_facts": {
+        "commitments": [],
+        "payment_claims": [
+          {
+            "source_id": "PK-003-M1",
+            "speaker": "Fictional client",
+            "amount_text": "60,000",
+            "currency_text": "INR",
+            "payment_date_text": "today",
+            "transaction_reference_text": "CR-T2"
+          }
+        ]
+      },
+      "expected_candidate_facts": {
+        "commitments": [],
+        "payment_claims": [
+          {
+            "source_id": "PK-003-M1",
+            "speaker": "Fictional client",
+            "amount_text": "60,000",
+            "currency_text": "INR",
+            "payment_date_text": "today",
+            "transaction_reference_text": "CR-T2"
+          }
+        ]
+      },
+      "deterministic_outcome_correct": true,
+      "latency_seconds": 4.125,
+      "action": "VERIFY_PAYMENT",
+      "result_present": true,
+      "progress": [
+        {
+          "step_name": "EVIDENCE_LOOKUP",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:40:30.570423+00:00",
+          "ended_at": "2026-10-24T10:40:30.601620+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "EXTRACTION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:40:30.629163+00:00",
+          "ended_at": "2026-10-24T10:40:34.011962+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "VALIDATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:40:34.031856+00:00",
+          "ended_at": "2026-10-24T10:40:34.056209+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "RECONCILIATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:40:34.075390+00:00",
+          "ended_at": "2026-10-24T10:40:34.084161+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        }
+      ],
+      "attempt_timing": {
+        "started_at": "2026-10-24T10:40:30.508408+00:00",
+        "terminal_at": "2026-10-24T10:40:34.098298+00:00",
+        "deadline_at": "2026-10-24T10:41:25.508408+00:00"
+      },
+      "status": "PASS"
+    },
+    {
+      "case": "FV-07-NEGATIVE",
+      "repeat": 1,
+      "attempt_status": "LIMITED",
+      "failure_code": null,
+      "returned_models": [
+        "zai-org/GLM-5.3-Flash"
+      ],
+      "response_ids": [
+        "e336cc80f7964d39b64090f49b0681ad"
+      ],
+      "extraction_correct": true,
+      "source_validation_correct": true,
+      "uncertainty_correct": true,
+      "validated_uncertainty": {
+        "contradictions": [],
+        "unresolved": []
+      },
+      "actual_candidate_facts": {
+        "commitments": [],
+        "payment_claims": [
+          {
+            "source_id": "PK-003-M1",
+            "speaker": "Fictional client",
+            "amount_text": "60,000",
+            "currency_text": "INR",
+            "payment_date_text": "today",
+            "transaction_reference_text": "CR-T2"
+          }
+        ]
+      },
+      "expected_candidate_facts": {
+        "commitments": [],
+        "payment_claims": [
+          {
+            "source_id": "PK-003-M1",
+            "speaker": "Fictional client",
+            "amount_text": "60,000",
+            "currency_text": "INR",
+            "payment_date_text": "today",
+            "transaction_reference_text": "CR-T2"
+          }
+        ]
+      },
+      "deterministic_outcome_correct": true,
+      "latency_seconds": 4.297,
+      "action": "VERIFY_PAYMENT",
+      "result_present": true,
+      "progress": [
+        {
+          "step_name": "EVIDENCE_LOOKUP",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:40:34.852728+00:00",
+          "ended_at": "2026-10-24T10:40:34.861961+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "EXTRACTION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:40:34.885852+00:00",
+          "ended_at": "2026-10-24T10:40:38.462758+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "VALIDATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:40:38.505206+00:00",
+          "ended_at": "2026-10-24T10:40:38.516927+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "RECONCILIATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:40:38.527705+00:00",
+          "ended_at": "2026-10-24T10:40:38.550998+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        }
+      ],
+      "attempt_timing": {
+        "started_at": "2026-10-24T10:40:34.794453+00:00",
+        "terminal_at": "2026-10-24T10:40:38.573143+00:00",
+        "deadline_at": "2026-10-24T10:41:29.794453+00:00"
+      },
+      "status": "PASS"
+    },
+    {
+      "case": "FV-07-OVERPAYMENT",
+      "repeat": 1,
+      "attempt_status": "COMPLETE",
+      "failure_code": null,
+      "returned_models": [
+        "zai-org/GLM-5.3-Flash"
+      ],
+      "response_ids": [
+        "b8a79af9c64d4fd5baf5fea0ac60cdfa"
+      ],
+      "extraction_correct": true,
+      "source_validation_correct": true,
+      "uncertainty_correct": true,
+      "validated_uncertainty": {
+        "contradictions": [
+          {
+            "kind": "PAYMENT_CLAIM",
+            "sources": [
+              {
+                "evidence_version_id": "b402cde0-29ec-5031-88b0-a295490069f5",
+                "source_id": "PK-003-M1",
+                "start": 0,
+                "end": 56,
+                "quote": "We paid the remaining INR 60,000 today; reference CR-T2."
+              },
+              {
+                "evidence_version_id": "7c580545-e671-5895-9fee-540112bf4824",
+                "source_id": "PK-003-L2",
+                "start": 0,
+                "end": 83,
+                "quote": "Fictional verified settled ledger transaction CR-T2; INR 70,000.00; invoice CR-312."
+              }
+            ]
+          }
+        ],
+        "unresolved": []
+      },
+      "actual_candidate_facts": {
+        "commitments": [],
+        "payment_claims": [
+          {
+            "source_id": "PK-003-M1",
+            "speaker": "Fictional client",
+            "amount_text": "60,000",
+            "currency_text": "INR",
+            "payment_date_text": "today",
+            "transaction_reference_text": "CR-T2"
+          }
+        ]
+      },
+      "expected_candidate_facts": {
+        "commitments": [],
+        "payment_claims": [
+          {
+            "source_id": "PK-003-M1",
+            "speaker": "Fictional client",
+            "amount_text": "60,000",
+            "currency_text": "INR",
+            "payment_date_text": "today",
+            "transaction_reference_text": "CR-T2"
+          }
+        ]
+      },
+      "deterministic_outcome_correct": true,
+      "latency_seconds": 5.719,
+      "action": "VERIFY_PAYMENT",
+      "result_present": true,
+      "progress": [
+        {
+          "step_name": "EVIDENCE_LOOKUP",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:40:40.109180+00:00",
+          "ended_at": "2026-10-24T10:40:40.141617+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "EXTRACTION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:40:40.159458+00:00",
+          "ended_at": "2026-10-24T10:40:44.308930+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "VALIDATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:40:44.362484+00:00",
+          "ended_at": "2026-10-24T10:40:44.374484+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "RECONCILIATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:40:44.404485+00:00",
+          "ended_at": "2026-10-24T10:40:44.435300+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        }
+      ],
+      "attempt_timing": {
+        "started_at": "2026-10-24T10:40:40.032044+00:00",
+        "terminal_at": "2026-10-24T10:40:44.458786+00:00",
+        "deadline_at": "2026-10-24T10:41:35.032044+00:00"
+      },
+      "status": "PASS"
+    },
+    {
+      "case": "FV-07-PRECISION",
+      "repeat": 1,
+      "attempt_status": "LIMITED",
+      "failure_code": null,
+      "returned_models": [
+        "zai-org/GLM-5.3-Flash"
+      ],
+      "response_ids": [
+        "b2221281b6ac43929cb42b4cb4e4a3ac"
+      ],
+      "extraction_correct": true,
+      "source_validation_correct": true,
+      "uncertainty_correct": true,
+      "validated_uncertainty": {
+        "contradictions": [],
+        "unresolved": [
+          {
+            "field": "AMOUNT",
+            "sources": [
+              {
+                "evidence_version_id": "ca5ad05a-be8a-5031-b972-018c2a2f0523",
+                "source_id": "PK-003-L2",
+                "start": 0,
+                "end": 84,
+                "quote": "Fictional verified settled ledger transaction CR-T2; INR 60,000.001; invoice CR-312."
+              }
+            ]
+          }
+        ]
+      },
+      "actual_candidate_facts": {
+        "commitments": [],
+        "payment_claims": [
+          {
+            "source_id": "PK-003-M1",
+            "speaker": "Fictional client",
+            "amount_text": "60,000",
+            "currency_text": "INR",
+            "payment_date_text": "today",
+            "transaction_reference_text": "CR-T2"
+          }
+        ]
+      },
+      "expected_candidate_facts": {
+        "commitments": [],
+        "payment_claims": [
+          {
+            "source_id": "PK-003-M1",
+            "speaker": "Fictional client",
+            "amount_text": "60,000",
+            "currency_text": "INR",
+            "payment_date_text": "today",
+            "transaction_reference_text": "CR-T2"
+          }
+        ]
+      },
+      "deterministic_outcome_correct": true,
+      "latency_seconds": 4.484,
+      "action": "VERIFY_PAYMENT",
+      "result_present": true,
+      "progress": [
+        {
+          "step_name": "EVIDENCE_LOOKUP",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:40:45.150815+00:00",
+          "ended_at": "2026-10-24T10:40:45.163806+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "EXTRACTION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:40:45.187808+00:00",
+          "ended_at": "2026-10-24T10:40:48.983917+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "VALIDATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:40:49.036475+00:00",
+          "ended_at": "2026-10-24T10:40:49.058921+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "RECONCILIATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:40:49.083214+00:00",
+          "ended_at": "2026-10-24T10:40:49.091185+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        }
+      ],
+      "attempt_timing": {
+        "started_at": "2026-10-24T10:40:45.096216+00:00",
+        "terminal_at": "2026-10-24T10:40:49.103246+00:00",
+        "deadline_at": "2026-10-24T10:41:40.096216+00:00"
+      },
+      "status": "PASS"
+    },
+    {
+      "case": "FV-08-SOON",
+      "repeat": 1,
+      "attempt_status": "COMPLETE",
+      "failure_code": null,
+      "returned_models": [
+        "zai-org/GLM-5.3-Flash"
+      ],
+      "response_ids": [
+        "ae37395361334bf9ba1060063c76ce5e"
+      ],
+      "extraction_correct": true,
+      "source_validation_correct": true,
+      "uncertainty_correct": true,
+      "validated_uncertainty": {
+        "contradictions": [],
+        "unresolved": []
+      },
+      "actual_candidate_facts": {
+        "commitments": [
+          {
+            "source_id": "PK-002-M1",
+            "commitment_key": "PK-002-M1-C1",
+            "speaker": "Fictional client",
+            "amount_text": "50,000",
+            "currency_text": "INR",
+            "date_text": "soon",
+            "explicitly_replaces_source_id": null
+          }
+        ],
+        "payment_claims": []
+      },
+      "expected_candidate_facts": {
+        "commitments": [
+          {
+            "source_id": "PK-002-M1",
+            "commitment_key": "PK-002-M1-C1",
+            "speaker": "Fictional client",
+            "amount_text": "50,000",
+            "currency_text": "INR",
+            "date_text": "soon",
+            "explicitly_replaces_source_id": null
+          }
+        ],
+        "payment_claims": []
+      },
+      "deterministic_outcome_correct": true,
+      "latency_seconds": 4.453,
+      "action": "VERIFY_PAYMENT",
+      "result_present": true,
+      "progress": [
+        {
+          "step_name": "EVIDENCE_LOOKUP",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:40:50.054169+00:00",
+          "ended_at": "2026-10-24T10:40:50.087170+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "EXTRACTION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:40:50.100178+00:00",
+          "ended_at": "2026-10-24T10:40:53.597324+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "VALIDATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:40:53.665656+00:00",
+          "ended_at": "2026-10-24T10:40:53.694035+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "RECONCILIATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:40:53.724728+00:00",
+          "ended_at": "2026-10-24T10:40:53.754966+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        }
+      ],
+      "attempt_timing": {
+        "started_at": "2026-10-24T10:40:49.990214+00:00",
+        "terminal_at": "2026-10-24T10:40:53.772986+00:00",
+        "deadline_at": "2026-10-24T10:41:44.990214+00:00"
+      },
+      "status": "PASS"
+    },
+    {
+      "case": "FV-08-TOMORROW",
+      "repeat": 1,
+      "attempt_status": "COMPLETE",
+      "failure_code": null,
+      "returned_models": [
+        "zai-org/GLM-5.3-Flash"
+      ],
+      "response_ids": [
+        "893d5f90e00e43878e210b8d3546f584"
+      ],
+      "extraction_correct": true,
+      "source_validation_correct": true,
+      "uncertainty_correct": true,
+      "validated_uncertainty": {
+        "contradictions": [],
+        "unresolved": []
+      },
+      "actual_candidate_facts": {
+        "commitments": [
+          {
+            "source_id": "PK-002-M1",
+            "commitment_key": "PK-002-M1-C1",
+            "speaker": "Fictional client",
+            "amount_text": "50,000",
+            "currency_text": "INR",
+            "date_text": "tomorrow",
+            "explicitly_replaces_source_id": null
+          }
+        ],
+        "payment_claims": []
+      },
+      "expected_candidate_facts": {
+        "commitments": [
+          {
+            "source_id": "PK-002-M1",
+            "commitment_key": "PK-002-M1-C1",
+            "speaker": "Fictional client",
+            "amount_text": "50,000",
+            "currency_text": "INR",
+            "date_text": "tomorrow",
+            "explicitly_replaces_source_id": null
+          }
+        ],
+        "payment_claims": []
+      },
+      "deterministic_outcome_correct": true,
+      "latency_seconds": 3.797,
+      "action": "VERIFY_PAYMENT",
+      "result_present": true,
+      "progress": [
+        {
+          "step_name": "EVIDENCE_LOOKUP",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:40:54.642474+00:00",
+          "ended_at": "2026-10-24T10:40:54.658817+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "EXTRACTION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:40:54.677835+00:00",
+          "ended_at": "2026-10-24T10:40:57.582483+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "VALIDATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:40:57.613626+00:00",
+          "ended_at": "2026-10-24T10:40:57.625237+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "RECONCILIATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:40:57.637665+00:00",
+          "ended_at": "2026-10-24T10:40:57.659336+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        }
+      ],
+      "attempt_timing": {
+        "started_at": "2026-10-24T10:40:54.573486+00:00",
+        "terminal_at": "2026-10-24T10:40:57.729775+00:00",
+        "deadline_at": "2026-10-24T10:41:49.573486+00:00"
+      },
+      "status": "PASS"
+    },
+    {
+      "case": "FV-09-EXTRACTION",
+      "repeat": 1,
+      "attempt_status": "COMPLETE",
+      "failure_code": null,
+      "returned_models": [
+        "zai-org/GLM-5.3-Flash"
+      ],
+      "response_ids": [
+        "7b9547389b0949778c42f4fc762c079a"
+      ],
+      "extraction_correct": true,
+      "source_validation_correct": true,
+      "uncertainty_correct": true,
+      "validated_uncertainty": {
+        "contradictions": [],
+        "unresolved": []
+      },
+      "actual_candidate_facts": {
+        "commitments": [
+          {
+            "source_id": "PK-001-M1",
+            "commitment_key": "PK-001-M1-C1",
+            "speaker": "Fictional client",
+            "amount_text": "80,000",
+            "currency_text": "INR",
+            "date_text": "20 October 2026",
+            "explicitly_replaces_source_id": null
+          }
+        ],
+        "payment_claims": []
+      },
+      "expected_candidate_facts": {
+        "commitments": [
+          {
+            "source_id": "PK-001-M1",
+            "commitment_key": "PK-001-M1-C1",
+            "speaker": "Fictional client",
+            "amount_text": "80,000",
+            "currency_text": "INR",
+            "date_text": "20 October 2026",
+            "explicitly_replaces_source_id": null
+          }
+        ],
+        "payment_claims": []
+      },
+      "deterministic_outcome_correct": true,
+      "latency_seconds": 3.141,
+      "action": "FOLLOW_UP",
+      "result_present": true,
+      "progress": [
+        {
+          "step_name": "EVIDENCE_LOOKUP",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:40:58.213279+00:00",
+          "ended_at": "2026-10-24T10:40:58.225104+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "EXTRACTION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:40:58.230090+00:00",
+          "ended_at": "2026-10-24T10:41:01.062864+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "VALIDATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:41:01.084461+00:00",
+          "ended_at": "2026-10-24T10:41:01.096387+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "RECONCILIATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:41:01.106211+00:00",
+          "ended_at": "2026-10-24T10:41:01.115175+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        }
+      ],
+      "attempt_timing": {
+        "started_at": "2026-10-24T10:40:58.181361+00:00",
+        "terminal_at": "2026-10-24T10:41:01.123417+00:00",
+        "deadline_at": "2026-10-24T10:41:53.181361+00:00"
+      },
+      "status": "PASS"
+    },
+    {
+      "case": "FV-09-INTERRUPTION",
+      "repeat": 1,
+      "attempt_status": "COMPLETE",
+      "failure_code": null,
+      "returned_models": [
+        "zai-org/GLM-5.3-Flash"
+      ],
+      "response_ids": [
+        "a8854b6081c245e198702b40b7e394d1"
+      ],
+      "extraction_correct": true,
+      "source_validation_correct": true,
+      "uncertainty_correct": true,
+      "validated_uncertainty": {
+        "contradictions": [],
+        "unresolved": []
+      },
+      "actual_candidate_facts": {
+        "commitments": [
+          {
+            "source_id": "PK-001-M1",
+            "commitment_key": "PK-001-M1-C1",
+            "speaker": "Fictional client",
+            "amount_text": "80,000",
+            "currency_text": "INR",
+            "date_text": "20 October 2026",
+            "explicitly_replaces_source_id": null
+          }
+        ],
+        "payment_claims": []
+      },
+      "expected_candidate_facts": {
+        "commitments": [
+          {
+            "source_id": "PK-001-M1",
+            "commitment_key": "PK-001-M1-C1",
+            "speaker": "Fictional client",
+            "amount_text": "80,000",
+            "currency_text": "INR",
+            "date_text": "20 October 2026",
+            "explicitly_replaces_source_id": null
+          }
+        ],
+        "payment_claims": []
+      },
+      "deterministic_outcome_correct": true,
+      "latency_seconds": 2.781,
+      "action": "FOLLOW_UP",
+      "result_present": true,
+      "progress": [
+        {
+          "step_name": "EVIDENCE_LOOKUP",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:41:01.486980+00:00",
+          "ended_at": "2026-10-24T10:41:01.497138+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "EXTRACTION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:41:01.506809+00:00",
+          "ended_at": "2026-10-24T10:41:04.024725+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "VALIDATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:41:04.040035+00:00",
+          "ended_at": "2026-10-24T10:41:04.047565+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "RECONCILIATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:41:04.055856+00:00",
+          "ended_at": "2026-10-24T10:41:04.063637+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        }
+      ],
+      "attempt_timing": {
+        "started_at": "2026-10-24T10:41:01.449891+00:00",
+        "terminal_at": "2026-10-24T10:41:04.072188+00:00",
+        "deadline_at": "2026-10-24T10:41:56.449891+00:00"
+      },
+      "status": "PASS"
+    },
+    {
+      "case": "FV-09-RETRIEVAL",
+      "repeat": 1,
+      "attempt_status": "COMPLETE",
+      "failure_code": null,
+      "returned_models": [
+        "zai-org/GLM-5.3-Flash"
+      ],
+      "response_ids": [
+        "38b6beee145f45cd882b8bba33cd792b"
+      ],
+      "extraction_correct": true,
+      "source_validation_correct": true,
+      "uncertainty_correct": true,
+      "validated_uncertainty": {
+        "contradictions": [],
+        "unresolved": []
+      },
+      "actual_candidate_facts": {
+        "commitments": [
+          {
+            "source_id": "PK-001-M1",
+            "commitment_key": "PK-001-M1-C1",
+            "speaker": "Fictional client",
+            "amount_text": "80,000",
+            "currency_text": "INR",
+            "date_text": "20 October 2026",
+            "explicitly_replaces_source_id": null
+          }
+        ],
+        "payment_claims": []
+      },
+      "expected_candidate_facts": {
+        "commitments": [
+          {
+            "source_id": "PK-001-M1",
+            "commitment_key": "PK-001-M1-C1",
+            "speaker": "Fictional client",
+            "amount_text": "80,000",
+            "currency_text": "INR",
+            "date_text": "20 October 2026",
+            "explicitly_replaces_source_id": null
+          }
+        ],
+        "payment_claims": []
+      },
+      "deterministic_outcome_correct": true,
+      "latency_seconds": 3.781,
+      "action": "FOLLOW_UP",
+      "result_present": true,
+      "progress": [
+        {
+          "step_name": "EVIDENCE_LOOKUP",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:41:04.448500+00:00",
+          "ended_at": "2026-10-24T10:41:04.459055+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "EXTRACTION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:41:04.465794+00:00",
+          "ended_at": "2026-10-24T10:41:07.918659+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "VALIDATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:41:07.932351+00:00",
+          "ended_at": "2026-10-24T10:41:07.939878+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "RECONCILIATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:41:07.946290+00:00",
+          "ended_at": "2026-10-24T10:41:07.955734+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        }
+      ],
+      "attempt_timing": {
+        "started_at": "2026-10-24T10:41:04.408464+00:00",
+        "terminal_at": "2026-10-24T10:41:07.962488+00:00",
+        "deadline_at": "2026-10-24T10:41:59.408464+00:00"
+      },
+      "status": "PASS"
+    },
+    {
+      "case": "FV-09-RETRY",
+      "repeat": 1,
+      "attempt_status": "COMPLETE",
+      "failure_code": null,
+      "returned_models": [
+        "zai-org/GLM-5.3-Flash"
+      ],
+      "response_ids": [
+        "2b260b79ba314d10981f48db42781c95"
+      ],
+      "extraction_correct": true,
+      "source_validation_correct": true,
+      "uncertainty_correct": true,
+      "validated_uncertainty": {
+        "contradictions": [],
+        "unresolved": []
+      },
+      "actual_candidate_facts": {
+        "commitments": [
+          {
+            "source_id": "PK-001-M1",
+            "commitment_key": "PK-001-M1-C1",
+            "speaker": "Fictional client",
+            "amount_text": "80,000",
+            "currency_text": "INR",
+            "date_text": "20 October 2026",
+            "explicitly_replaces_source_id": null
+          }
+        ],
+        "payment_claims": []
+      },
+      "expected_candidate_facts": {
+        "commitments": [
+          {
+            "source_id": "PK-001-M1",
+            "commitment_key": "PK-001-M1-C1",
+            "speaker": "Fictional client",
+            "amount_text": "80,000",
+            "currency_text": "INR",
+            "date_text": "20 October 2026",
+            "explicitly_replaces_source_id": null
+          }
+        ],
+        "payment_claims": []
+      },
+      "deterministic_outcome_correct": true,
+      "latency_seconds": 2.609,
+      "action": "FOLLOW_UP",
+      "result_present": true,
+      "progress": [
+        {
+          "step_name": "EVIDENCE_LOOKUP",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:41:08.259667+00:00",
+          "ended_at": "2026-10-24T10:41:08.270253+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "EXTRACTION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:41:08.278250+00:00",
+          "ended_at": "2026-10-24T10:41:10.646292+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "VALIDATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:41:10.665892+00:00",
+          "ended_at": "2026-10-24T10:41:10.676515+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "RECONCILIATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:41:10.686007+00:00",
+          "ended_at": "2026-10-24T10:41:10.696473+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        }
+      ],
+      "attempt_timing": {
+        "started_at": "2026-10-24T10:41:08.232986+00:00",
+        "terminal_at": "2026-10-24T10:41:10.704634+00:00",
+        "deadline_at": "2026-10-24T10:42:03.232986+00:00"
+      },
+      "status": "PASS"
+    },
+    {
+      "case": "FV-10-EDIT",
+      "repeat": 1,
+      "attempt_status": "COMPLETE",
+      "failure_code": null,
+      "returned_models": [
+        "zai-org/GLM-5.3-Flash"
+      ],
+      "response_ids": [
+        "9d4933a27c4f4eddb720fe44df9de0b6"
+      ],
+      "extraction_correct": true,
+      "source_validation_correct": true,
+      "uncertainty_correct": true,
+      "validated_uncertainty": {
+        "contradictions": [],
+        "unresolved": []
+      },
+      "actual_candidate_facts": {
+        "commitments": [
+          {
+            "source_id": "PK-001-M1",
+            "commitment_key": "PK-001-M1-C1",
+            "speaker": "Fictional client",
+            "amount_text": "80,000",
+            "currency_text": "INR",
+            "date_text": "20 October 2026",
+            "explicitly_replaces_source_id": null
+          }
+        ],
+        "payment_claims": []
+      },
+      "expected_candidate_facts": {
+        "commitments": [
+          {
+            "source_id": "PK-001-M1",
+            "commitment_key": "PK-001-M1-C1",
+            "speaker": "Fictional client",
+            "amount_text": "80,000",
+            "currency_text": "INR",
+            "date_text": "20 October 2026",
+            "explicitly_replaces_source_id": null
+          }
+        ],
+        "payment_claims": []
+      },
+      "deterministic_outcome_correct": true,
+      "latency_seconds": 3.938,
+      "action": "FOLLOW_UP",
+      "result_present": true,
+      "progress": [
+        {
+          "step_name": "EVIDENCE_LOOKUP",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:41:11.238059+00:00",
+          "ended_at": "2026-10-24T10:41:11.247635+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "EXTRACTION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:41:11.255441+00:00",
+          "ended_at": "2026-10-24T10:41:14.778653+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "VALIDATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:41:14.795581+00:00",
+          "ended_at": "2026-10-24T10:41:14.804775+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "RECONCILIATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:41:14.812554+00:00",
+          "ended_at": "2026-10-24T10:41:14.820831+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        }
+      ],
+      "attempt_timing": {
+        "started_at": "2026-10-24T10:41:11.202273+00:00",
+        "terminal_at": "2026-10-24T10:41:14.831463+00:00",
+        "deadline_at": "2026-10-24T10:42:06.202273+00:00"
+      },
+      "status": "PASS"
+    },
+    {
+      "case": "FV-10-EVIDENCE",
+      "repeat": 1,
+      "attempt_status": "COMPLETE",
+      "failure_code": null,
+      "returned_models": [
+        "zai-org/GLM-5.3-Flash"
+      ],
+      "response_ids": [
+        "860001a33f80495b925bda6a2cdbdc33"
+      ],
+      "extraction_correct": true,
+      "source_validation_correct": true,
+      "uncertainty_correct": true,
+      "validated_uncertainty": {
+        "contradictions": [],
+        "unresolved": []
+      },
+      "actual_candidate_facts": {
+        "commitments": [
+          {
+            "source_id": "PK-001-M1",
+            "commitment_key": "PK-001-M1-C1",
+            "speaker": "Fictional client",
+            "amount_text": "80,000",
+            "currency_text": "INR",
+            "date_text": "20 October 2026",
+            "explicitly_replaces_source_id": null
+          }
+        ],
+        "payment_claims": []
+      },
+      "expected_candidate_facts": {
+        "commitments": [
+          {
+            "source_id": "PK-001-M1",
+            "commitment_key": "PK-001-M1-C1",
+            "speaker": "Fictional client",
+            "amount_text": "80,000",
+            "currency_text": "INR",
+            "date_text": "20 October 2026",
+            "explicitly_replaces_source_id": null
+          }
+        ],
+        "payment_claims": []
+      },
+      "deterministic_outcome_correct": true,
+      "latency_seconds": 3.094,
+      "action": "FOLLOW_UP",
+      "result_present": true,
+      "progress": [
+        {
+          "step_name": "EVIDENCE_LOOKUP",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:41:15.125270+00:00",
+          "ended_at": "2026-10-24T10:41:15.132053+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "EXTRACTION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:41:15.139809+00:00",
+          "ended_at": "2026-10-24T10:41:17.976179+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "VALIDATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:41:17.992503+00:00",
+          "ended_at": "2026-10-24T10:41:18.004502+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "RECONCILIATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:41:18.012562+00:00",
+          "ended_at": "2026-10-24T10:41:18.021252+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        }
+      ],
+      "attempt_timing": {
+        "started_at": "2026-10-24T10:41:15.092298+00:00",
+        "terminal_at": "2026-10-24T10:41:18.029788+00:00",
+        "deadline_at": "2026-10-24T10:42:10.092298+00:00"
+      },
+      "status": "PASS"
+    },
+    {
+      "case": "FV-10-RECIPIENT",
+      "repeat": 1,
+      "attempt_status": "COMPLETE",
+      "failure_code": null,
+      "returned_models": [
+        "zai-org/GLM-5.3-Flash"
+      ],
+      "response_ids": [
+        "deb625b07a364efda3637d0cfc23054c"
+      ],
+      "extraction_correct": true,
+      "source_validation_correct": true,
+      "uncertainty_correct": true,
+      "validated_uncertainty": {
+        "contradictions": [],
+        "unresolved": []
+      },
+      "actual_candidate_facts": {
+        "commitments": [
+          {
+            "source_id": "PK-001-M1",
+            "commitment_key": "PK-001-M1-C1",
+            "speaker": "Fictional client",
+            "amount_text": "80,000",
+            "currency_text": "INR",
+            "date_text": "20 October 2026",
+            "explicitly_replaces_source_id": null
+          }
+        ],
+        "payment_claims": []
+      },
+      "expected_candidate_facts": {
+        "commitments": [
+          {
+            "source_id": "PK-001-M1",
+            "commitment_key": "PK-001-M1-C1",
+            "speaker": "Fictional client",
+            "amount_text": "80,000",
+            "currency_text": "INR",
+            "date_text": "20 October 2026",
+            "explicitly_replaces_source_id": null
+          }
+        ],
+        "payment_claims": []
+      },
+      "deterministic_outcome_correct": true,
+      "latency_seconds": 2.89,
+      "action": "FOLLOW_UP",
+      "result_present": true,
+      "progress": [
+        {
+          "step_name": "EVIDENCE_LOOKUP",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:41:18.462994+00:00",
+          "ended_at": "2026-10-24T10:41:18.473392+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "EXTRACTION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:41:18.482252+00:00",
+          "ended_at": "2026-10-24T10:41:21.029371+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "VALIDATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:41:21.050138+00:00",
+          "ended_at": "2026-10-24T10:41:21.076104+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "RECONCILIATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:41:21.093895+00:00",
+          "ended_at": "2026-10-24T10:41:21.108811+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        }
+      ],
+      "attempt_timing": {
+        "started_at": "2026-10-24T10:41:18.429966+00:00",
+        "terminal_at": "2026-10-24T10:41:21.112226+00:00",
+        "deadline_at": "2026-10-24T10:42:13.429966+00:00"
+      },
+      "status": "PASS"
+    },
+    {
+      "case": "FV-10-REPEAT",
+      "repeat": 1,
+      "attempt_status": "COMPLETE",
+      "failure_code": null,
+      "returned_models": [
+        "zai-org/GLM-5.3-Flash"
+      ],
+      "response_ids": [
+        "1ca17eab6a674860808283d1bab7da7e"
+      ],
+      "extraction_correct": true,
+      "source_validation_correct": true,
+      "uncertainty_correct": true,
+      "validated_uncertainty": {
+        "contradictions": [],
+        "unresolved": []
+      },
+      "actual_candidate_facts": {
+        "commitments": [
+          {
+            "source_id": "PK-001-M1",
+            "commitment_key": "PK-001-M1-C1",
+            "speaker": "Fictional client",
+            "amount_text": "80,000",
+            "currency_text": "INR",
+            "date_text": "20 October 2026",
+            "explicitly_replaces_source_id": null
+          }
+        ],
+        "payment_claims": []
+      },
+      "expected_candidate_facts": {
+        "commitments": [
+          {
+            "source_id": "PK-001-M1",
+            "commitment_key": "PK-001-M1-C1",
+            "speaker": "Fictional client",
+            "amount_text": "80,000",
+            "currency_text": "INR",
+            "date_text": "20 October 2026",
+            "explicitly_replaces_source_id": null
+          }
+        ],
+        "payment_claims": []
+      },
+      "deterministic_outcome_correct": true,
+      "latency_seconds": 2.703,
+      "action": "FOLLOW_UP",
+      "result_present": true,
+      "progress": [
+        {
+          "step_name": "EVIDENCE_LOOKUP",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:41:21.593582+00:00",
+          "ended_at": "2026-10-24T10:41:21.602734+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "EXTRACTION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:41:21.619050+00:00",
+          "ended_at": "2026-10-24T10:41:23.996887+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "VALIDATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:41:24.009200+00:00",
+          "ended_at": "2026-10-24T10:41:24.018544+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "RECONCILIATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:41:24.026547+00:00",
+          "ended_at": "2026-10-24T10:41:24.039618+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        }
+      ],
+      "attempt_timing": {
+        "started_at": "2026-10-24T10:41:21.561619+00:00",
+        "terminal_at": "2026-10-24T10:41:24.042872+00:00",
+        "deadline_at": "2026-10-24T10:42:16.561619+00:00"
+      },
+      "status": "PASS"
+    },
+    {
+      "case": "FV-11-AMOUNT",
+      "repeat": 1,
+      "attempt_status": "COMPLETE",
+      "failure_code": null,
+      "returned_models": [
+        "zai-org/GLM-5.3-Flash"
+      ],
+      "response_ids": [
+        "c281eb8d5afd491d9a01b0cfb62aba47"
+      ],
+      "extraction_correct": true,
+      "source_validation_correct": true,
+      "uncertainty_correct": true,
+      "validated_uncertainty": {
+        "contradictions": [],
+        "unresolved": []
+      },
+      "actual_candidate_facts": {
+        "commitments": [
+          {
+            "source_id": "PK-001-M1",
+            "commitment_key": "PK-001-M1-C1",
+            "speaker": "Fictional client",
+            "amount_text": "80,000",
+            "currency_text": "INR",
+            "date_text": "20 October 2026",
+            "explicitly_replaces_source_id": null
+          }
+        ],
+        "payment_claims": []
+      },
+      "expected_candidate_facts": {
+        "commitments": [
+          {
+            "source_id": "PK-001-M1",
+            "commitment_key": "PK-001-M1-C1",
+            "speaker": "Fictional client",
+            "amount_text": "80,000",
+            "currency_text": "INR",
+            "date_text": "20 October 2026",
+            "explicitly_replaces_source_id": null
+          }
+        ],
+        "payment_claims": []
+      },
+      "deterministic_outcome_correct": true,
+      "latency_seconds": 3.109,
+      "action": "FOLLOW_UP",
+      "result_present": true,
+      "progress": [
+        {
+          "step_name": "EVIDENCE_LOOKUP",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:41:24.428366+00:00",
+          "ended_at": "2026-10-24T10:41:24.435412+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "EXTRACTION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:41:24.446679+00:00",
+          "ended_at": "2026-10-24T10:41:27.278444+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "VALIDATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:41:27.295955+00:00",
+          "ended_at": "2026-10-24T10:41:27.304966+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "RECONCILIATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:41:27.315960+00:00",
+          "ended_at": "2026-10-24T10:41:27.326960+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        }
+      ],
+      "attempt_timing": {
+        "started_at": "2026-10-24T10:41:24.392953+00:00",
+        "terminal_at": "2026-10-24T10:41:27.336966+00:00",
+        "deadline_at": "2026-10-24T10:42:19.392953+00:00"
+      },
+      "status": "PASS"
+    },
+    {
+      "case": "FV-11-FEE",
+      "repeat": 1,
+      "attempt_status": "COMPLETE",
+      "failure_code": null,
+      "returned_models": [
+        "zai-org/GLM-5.3-Flash"
+      ],
+      "response_ids": [
+        "0f26dfedf8c34f2caf2ffc520dcf4306"
+      ],
+      "extraction_correct": true,
+      "source_validation_correct": true,
+      "uncertainty_correct": true,
+      "validated_uncertainty": {
+        "contradictions": [],
+        "unresolved": []
+      },
+      "actual_candidate_facts": {
+        "commitments": [
+          {
+            "source_id": "PK-001-M1",
+            "commitment_key": "PK-001-M1-C1",
+            "speaker": "Fictional client",
+            "amount_text": "80,000",
+            "currency_text": "INR",
+            "date_text": "20 October 2026",
+            "explicitly_replaces_source_id": null
+          }
+        ],
+        "payment_claims": []
+      },
+      "expected_candidate_facts": {
+        "commitments": [
+          {
+            "source_id": "PK-001-M1",
+            "commitment_key": "PK-001-M1-C1",
+            "speaker": "Fictional client",
+            "amount_text": "80,000",
+            "currency_text": "INR",
+            "date_text": "20 October 2026",
+            "explicitly_replaces_source_id": null
+          }
+        ],
+        "payment_claims": []
+      },
+      "deterministic_outcome_correct": true,
+      "latency_seconds": 3.282,
+      "action": "FOLLOW_UP",
+      "result_present": true,
+      "progress": [
+        {
+          "step_name": "EVIDENCE_LOOKUP",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:41:27.745035+00:00",
+          "ended_at": "2026-10-24T10:41:27.757305+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "EXTRACTION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:41:27.765274+00:00",
+          "ended_at": "2026-10-24T10:41:30.757216+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "VALIDATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:41:30.773041+00:00",
+          "ended_at": "2026-10-24T10:41:30.780623+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "RECONCILIATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:41:30.788436+00:00",
+          "ended_at": "2026-10-24T10:41:30.796249+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        }
+      ],
+      "attempt_timing": {
+        "started_at": "2026-10-24T10:41:27.703936+00:00",
+        "terminal_at": "2026-10-24T10:41:30.804815+00:00",
+        "deadline_at": "2026-10-24T10:42:22.703936+00:00"
+      },
+      "status": "PASS"
+    },
+    {
+      "case": "FV-11-NEUTRAL",
+      "repeat": 1,
+      "attempt_status": "COMPLETE",
+      "failure_code": null,
+      "returned_models": [
+        "zai-org/GLM-5.3-Flash"
+      ],
+      "response_ids": [
+        "234afee88c9443338b966d9888c3798f"
+      ],
+      "extraction_correct": true,
+      "source_validation_correct": true,
+      "uncertainty_correct": true,
+      "validated_uncertainty": {
+        "contradictions": [],
+        "unresolved": []
+      },
+      "actual_candidate_facts": {
+        "commitments": [
+          {
+            "source_id": "PK-001-M1",
+            "commitment_key": "PK-001-M1-C1",
+            "speaker": "Fictional client",
+            "amount_text": "80,000",
+            "currency_text": "INR",
+            "date_text": "20 October 2026",
+            "explicitly_replaces_source_id": null
+          }
+        ],
+        "payment_claims": []
+      },
+      "expected_candidate_facts": {
+        "commitments": [
+          {
+            "source_id": "PK-001-M1",
+            "commitment_key": "PK-001-M1-C1",
+            "speaker": "Fictional client",
+            "amount_text": "80,000",
+            "currency_text": "INR",
+            "date_text": "20 October 2026",
+            "explicitly_replaces_source_id": null
+          }
+        ],
+        "payment_claims": []
+      },
+      "deterministic_outcome_correct": true,
+      "latency_seconds": 3.938,
+      "action": "FOLLOW_UP",
+      "result_present": true,
+      "progress": [
+        {
+          "step_name": "EVIDENCE_LOOKUP",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:41:31.174768+00:00",
+          "ended_at": "2026-10-24T10:41:31.186361+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "EXTRACTION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:41:31.194394+00:00",
+          "ended_at": "2026-10-24T10:41:34.857823+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "VALIDATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:41:34.878503+00:00",
+          "ended_at": "2026-10-24T10:41:34.889040+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "RECONCILIATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:41:34.898824+00:00",
+          "ended_at": "2026-10-24T10:41:34.912125+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        }
+      ],
+      "attempt_timing": {
+        "started_at": "2026-10-24T10:41:31.147304+00:00",
+        "terminal_at": "2026-10-24T10:41:34.921568+00:00",
+        "deadline_at": "2026-10-24T10:42:26.147304+00:00"
+      },
+      "status": "PASS"
+    },
+    {
+      "case": "FV-11-PLACEHOLDER",
+      "repeat": 1,
+      "attempt_status": "COMPLETE",
+      "failure_code": null,
+      "returned_models": [
+        "zai-org/GLM-5.3-Flash"
+      ],
+      "response_ids": [
+        "a7f5151962d4462d832fd49fc674e480"
+      ],
+      "extraction_correct": true,
+      "source_validation_correct": true,
+      "uncertainty_correct": true,
+      "validated_uncertainty": {
+        "contradictions": [],
+        "unresolved": []
+      },
+      "actual_candidate_facts": {
+        "commitments": [
+          {
+            "source_id": "PK-001-M1",
+            "commitment_key": "PK-001-M1-C1",
+            "speaker": "Fictional client",
+            "amount_text": "80,000",
+            "currency_text": "INR",
+            "date_text": "20 October 2026",
+            "explicitly_replaces_source_id": null
+          }
+        ],
+        "payment_claims": []
+      },
+      "expected_candidate_facts": {
+        "commitments": [
+          {
+            "source_id": "PK-001-M1",
+            "commitment_key": "PK-001-M1-C1",
+            "speaker": "Fictional client",
+            "amount_text": "80,000",
+            "currency_text": "INR",
+            "date_text": "20 October 2026",
+            "explicitly_replaces_source_id": null
+          }
+        ],
+        "payment_claims": []
+      },
+      "deterministic_outcome_correct": true,
+      "latency_seconds": 4.156,
+      "action": "FOLLOW_UP",
+      "result_present": true,
+      "progress": [
+        {
+          "step_name": "EVIDENCE_LOOKUP",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:41:35.365136+00:00",
+          "ended_at": "2026-10-24T10:41:35.379352+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "EXTRACTION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:41:35.388224+00:00",
+          "ended_at": "2026-10-24T10:41:39.258123+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "VALIDATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:41:39.276918+00:00",
+          "ended_at": "2026-10-24T10:41:39.285913+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "RECONCILIATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:41:39.294281+00:00",
+          "ended_at": "2026-10-24T10:41:39.303822+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        }
+      ],
+      "attempt_timing": {
+        "started_at": "2026-10-24T10:41:35.327825+00:00",
+        "terminal_at": "2026-10-24T10:41:39.314074+00:00",
+        "deadline_at": "2026-10-24T10:42:30.327825+00:00"
+      },
+      "status": "PASS"
+    },
+    {
+      "case": "FV-12",
+      "repeat": 1,
+      "attempt_status": "COMPLETE",
+      "failure_code": null,
+      "returned_models": [
+        "zai-org/GLM-5.3-Flash"
+      ],
+      "response_ids": [
+        "69b4381c41214371bb63712bb7d06d25"
+      ],
+      "extraction_correct": true,
+      "source_validation_correct": true,
+      "uncertainty_correct": true,
+      "validated_uncertainty": {
+        "contradictions": [],
+        "unresolved": []
+      },
+      "actual_candidate_facts": {
+        "commitments": [
+          {
+            "source_id": "PK-001-M1",
+            "commitment_key": "PK-001-M1-C1",
+            "speaker": "Fictional client",
+            "amount_text": "80,000",
+            "currency_text": "INR",
+            "date_text": "20 October 2026",
+            "explicitly_replaces_source_id": null
+          }
+        ],
+        "payment_claims": []
+      },
+      "expected_candidate_facts": {
+        "commitments": [
+          {
+            "source_id": "PK-001-M1",
+            "commitment_key": "PK-001-M1-C1",
+            "speaker": "Fictional client",
+            "amount_text": "80,000",
+            "currency_text": "INR",
+            "date_text": "20 October 2026",
+            "explicitly_replaces_source_id": null
+          }
+        ],
+        "payment_claims": []
+      },
+      "deterministic_outcome_correct": true,
+      "latency_seconds": 3.704,
+      "action": "FOLLOW_UP",
+      "result_present": true,
+      "progress": [
+        {
+          "step_name": "EVIDENCE_LOOKUP",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:41:39.715148+00:00",
+          "ended_at": "2026-10-24T10:41:39.726149+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "EXTRACTION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:41:39.733142+00:00",
+          "ended_at": "2026-10-24T10:41:43.155554+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "VALIDATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:41:43.179181+00:00",
+          "ended_at": "2026-10-24T10:41:43.189772+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "RECONCILIATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:41:43.200398+00:00",
+          "ended_at": "2026-10-24T10:41:43.212090+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        }
+      ],
+      "attempt_timing": {
+        "started_at": "2026-10-24T10:41:39.680604+00:00",
+        "terminal_at": "2026-10-24T10:41:43.221637+00:00",
+        "deadline_at": "2026-10-24T10:42:34.680604+00:00"
+      },
+      "status": "PASS"
+    },
+    {
+      "case": "FV-13",
+      "repeat": 1,
+      "attempt_status": "COMPLETE",
+      "failure_code": null,
+      "returned_models": [
+        "zai-org/GLM-5.3-Flash"
+      ],
+      "response_ids": [
+        "0844359db824491ab2caf11fa80bec28"
+      ],
+      "extraction_correct": true,
+      "source_validation_correct": true,
+      "uncertainty_correct": true,
+      "validated_uncertainty": {
+        "contradictions": [],
+        "unresolved": [
+          {
+            "field": "PAYMENT_REFERENCE",
+            "sources": [
+              {
+                "evidence_version_id": "78ffcb1a-efcb-5655-82f8-2b1a4ff2099c",
+                "source_id": "PK-003-M1",
+                "start": 0,
+                "end": 51,
+                "quote": "We paid the remaining INR 60,000 on 22 October 2026"
+              }
+            ]
+          }
+        ]
+      },
+      "actual_candidate_facts": {
+        "commitments": [],
+        "payment_claims": [
+          {
+            "source_id": "PK-003-M1",
+            "speaker": "Fictional client",
+            "amount_text": "60,000",
+            "currency_text": "INR",
+            "payment_date_text": "22 October 2026",
+            "transaction_reference_text": null
+          }
+        ]
+      },
+      "expected_candidate_facts": {
+        "commitments": [],
+        "payment_claims": [
+          {
+            "source_id": "PK-003-M1",
+            "speaker": "Fictional client",
+            "amount_text": "60,000",
+            "currency_text": "INR",
+            "payment_date_text": "22 October 2026",
+            "transaction_reference_text": null
+          }
+        ]
+      },
+      "deterministic_outcome_correct": true,
+      "latency_seconds": 4.125,
+      "action": "VERIFY_PAYMENT",
+      "result_present": true,
+      "progress": [
+        {
+          "step_name": "EVIDENCE_LOOKUP",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:41:43.590391+00:00",
+          "ended_at": "2026-10-24T10:41:43.602117+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "EXTRACTION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:41:43.609893+00:00",
+          "ended_at": "2026-10-24T10:41:47.431002+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "VALIDATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:41:47.454915+00:00",
+          "ended_at": "2026-10-24T10:41:47.462421+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "RECONCILIATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:41:47.476626+00:00",
+          "ended_at": "2026-10-24T10:41:47.491424+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        }
+      ],
+      "attempt_timing": {
+        "started_at": "2026-10-24T10:41:43.554484+00:00",
+        "terminal_at": "2026-10-24T10:41:47.501180+00:00",
+        "deadline_at": "2026-10-24T10:42:38.554484+00:00"
+      },
+      "status": "PASS"
+    },
+    {
+      "case": "FV-14-INVOICE",
+      "repeat": 1,
+      "attempt_status": "LIMITED",
+      "failure_code": null,
+      "returned_models": [
+        "zai-org/GLM-5.3-Flash"
+      ],
+      "response_ids": [
+        "5be787a0048b46c897b243b9beaf45eb"
+      ],
+      "extraction_correct": true,
+      "source_validation_correct": true,
+      "uncertainty_correct": true,
+      "validated_uncertainty": {
+        "contradictions": [
+          {
+            "kind": "INVOICE_FACT",
+            "sources": [
+              {
+                "evidence_version_id": "d28f314c-a9e1-5ae5-bb8c-a350ec934d65",
+                "source_id": "PK-001-FV-14-I1",
+                "start": 0,
+                "end": 90,
+                "quote": "Fictional invoice NS-104; client Northstar Analytics; INR 125,000.00; due 10 October 2026."
+              },
+              {
+                "evidence_version_id": "440d1c7a-702f-57f1-9877-d52fc8ecc2dc",
+                "source_id": "PK-001-I1",
+                "start": 0,
+                "end": 90,
+                "quote": "Fictional invoice NS-104; client Northstar Analytics; INR 120,000.00; due 10 October 2026."
+              }
+            ]
+          }
+        ],
+        "unresolved": []
+      },
+      "actual_candidate_facts": {
+        "commitments": [
+          {
+            "source_id": "PK-001-M1",
+            "commitment_key": "PK-001-M1-C1",
+            "speaker": "Fictional client",
+            "amount_text": "80,000",
+            "currency_text": "INR",
+            "date_text": "20 October 2026",
+            "explicitly_replaces_source_id": null
+          }
+        ],
+        "payment_claims": []
+      },
+      "expected_candidate_facts": {
+        "commitments": [
+          {
+            "source_id": "PK-001-M1",
+            "commitment_key": "PK-001-M1-C1",
+            "speaker": "Fictional client",
+            "amount_text": "80,000",
+            "currency_text": "INR",
+            "date_text": "20 October 2026",
+            "explicitly_replaces_source_id": null
+          }
+        ],
+        "payment_claims": []
+      },
+      "deterministic_outcome_correct": true,
+      "latency_seconds": 13.015,
+      "action": "VERIFY_PAYMENT",
+      "result_present": true,
+      "progress": [
+        {
+          "step_name": "EVIDENCE_LOOKUP",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:41:48.032596+00:00",
+          "ended_at": "2026-10-24T10:41:48.043836+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "EXTRACTION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:41:48.053587+00:00",
+          "ended_at": "2026-10-24T10:42:00.771022+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "VALIDATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:42:00.788267+00:00",
+          "ended_at": "2026-10-24T10:42:00.798291+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "RECONCILIATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:42:00.806023+00:00",
+          "ended_at": "2026-10-24T10:42:00.815045+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        }
+      ],
+      "attempt_timing": {
+        "started_at": "2026-10-24T10:41:47.995391+00:00",
+        "terminal_at": "2026-10-24T10:42:00.823862+00:00",
+        "deadline_at": "2026-10-24T10:42:42.995391+00:00"
+      },
+      "status": "PASS"
+    },
+    {
+      "case": "FV-14-PAYMENT",
+      "repeat": 1,
+      "attempt_status": "LIMITED",
+      "failure_code": null,
+      "returned_models": [
+        "zai-org/GLM-5.3-Flash"
+      ],
+      "response_ids": [
+        "61d0c93a3acd4cfaa8fa3ea2fd233903"
+      ],
+      "extraction_correct": true,
+      "source_validation_correct": true,
+      "uncertainty_correct": true,
+      "validated_uncertainty": {
+        "contradictions": [
+          {
+            "kind": "OTHER_CANDIDATE",
+            "sources": [
+              {
+                "evidence_version_id": "29f3d564-14f9-54e0-9ef8-3c9fd5ec6b5c",
+                "source_id": "PK-001-FV-14-L1",
+                "start": 0,
+                "end": 83,
+                "quote": "Fictional verified settled ledger transaction NS-T1; INR 45,000.00; invoice NS-104."
+              },
+              {
+                "evidence_version_id": "b119cda0-76c1-50fe-85f8-24c0a7dfe78d",
+                "source_id": "PK-001-L1",
+                "start": 0,
+                "end": 83,
+                "quote": "Fictional verified settled ledger transaction NS-T1; INR 40,000.00; invoice NS-104."
+              }
+            ]
+          }
+        ],
+        "unresolved": []
+      },
+      "actual_candidate_facts": {
+        "commitments": [
+          {
+            "source_id": "PK-001-M1",
+            "commitment_key": "PK-001-M1-C1",
+            "speaker": "Fictional client",
+            "amount_text": "80,000",
+            "currency_text": "INR",
+            "date_text": "20 October 2026",
+            "explicitly_replaces_source_id": null
+          }
+        ],
+        "payment_claims": []
+      },
+      "expected_candidate_facts": {
+        "commitments": [
+          {
+            "source_id": "PK-001-M1",
+            "commitment_key": "PK-001-M1-C1",
+            "speaker": "Fictional client",
+            "amount_text": "80,000",
+            "currency_text": "INR",
+            "date_text": "20 October 2026",
+            "explicitly_replaces_source_id": null
+          }
+        ],
+        "payment_claims": []
+      },
+      "deterministic_outcome_correct": true,
+      "latency_seconds": 7.297,
+      "action": "VERIFY_PAYMENT",
+      "result_present": true,
+      "progress": [
+        {
+          "step_name": "EVIDENCE_LOOKUP",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:42:01.221638+00:00",
+          "ended_at": "2026-10-24T10:42:01.233115+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "EXTRACTION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:42:01.242473+00:00",
+          "ended_at": "2026-10-24T10:42:08.240951+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "VALIDATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:42:08.261694+00:00",
+          "ended_at": "2026-10-24T10:42:08.273206+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "RECONCILIATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:42:08.284061+00:00",
+          "ended_at": "2026-10-24T10:42:08.295130+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        }
+      ],
+      "attempt_timing": {
+        "started_at": "2026-10-24T10:42:01.183989+00:00",
+        "terminal_at": "2026-10-24T10:42:08.304601+00:00",
+        "deadline_at": "2026-10-24T10:42:56.183989+00:00"
+      },
+      "status": "PASS"
+    },
+    {
+      "case": "FV-15-TIE",
+      "repeat": 1,
+      "attempt_status": "COMPLETE",
+      "failure_code": null,
+      "returned_models": [
+        "zai-org/GLM-5.3-Flash"
+      ],
+      "response_ids": [
+        "c4f7afffa73a4fc2b23393bd4f97554c"
+      ],
+      "extraction_correct": true,
+      "source_validation_correct": true,
+      "uncertainty_correct": true,
+      "validated_uncertainty": {
+        "contradictions": [],
+        "unresolved": []
+      },
+      "actual_candidate_facts": {
+        "commitments": [
+          {
+            "source_id": "PK-001-M1",
+            "commitment_key": "PK-001-M1-C1",
+            "speaker": "Fictional client",
+            "amount_text": "80,000",
+            "currency_text": "INR",
+            "date_text": "20 October 2026",
+            "explicitly_replaces_source_id": null
+          }
+        ],
+        "payment_claims": []
+      },
+      "expected_candidate_facts": {
+        "commitments": [
+          {
+            "source_id": "PK-001-M1",
+            "commitment_key": "PK-001-M1-C1",
+            "speaker": "Fictional client",
+            "amount_text": "80,000",
+            "currency_text": "INR",
+            "date_text": "20 October 2026",
+            "explicitly_replaces_source_id": null
+          }
+        ],
+        "payment_claims": []
+      },
+      "deterministic_outcome_correct": true,
+      "latency_seconds": 3.719,
+      "action": "FOLLOW_UP",
+      "result_present": true,
+      "progress": [
+        {
+          "step_name": "EVIDENCE_LOOKUP",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:42:08.696408+00:00",
+          "ended_at": "2026-10-24T10:42:08.707633+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "EXTRACTION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:42:08.715790+00:00",
+          "ended_at": "2026-10-24T10:42:12.149563+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "VALIDATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:42:12.166997+00:00",
+          "ended_at": "2026-10-24T10:42:12.181056+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "RECONCILIATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:42:12.189808+00:00",
+          "ended_at": "2026-10-24T10:42:12.198137+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        }
+      ],
+      "attempt_timing": {
+        "started_at": "2026-10-24T10:42:08.660867+00:00",
+        "terminal_at": "2026-10-24T10:42:12.210438+00:00",
+        "deadline_at": "2026-10-24T10:43:03.660867+00:00"
+      },
+      "status": "PASS"
+    },
+    {
+      "case": "FV-15-UNDATED",
+      "repeat": 1,
+      "attempt_status": "COMPLETE",
+      "failure_code": null,
+      "returned_models": [
+        "zai-org/GLM-5.3-Flash"
+      ],
+      "response_ids": [
+        "6e36a54eb5c14c988aadb945ceb40549"
+      ],
+      "extraction_correct": true,
+      "source_validation_correct": true,
+      "uncertainty_correct": true,
+      "validated_uncertainty": {
+        "contradictions": [],
+        "unresolved": []
+      },
+      "actual_candidate_facts": {
+        "commitments": [
+          {
+            "source_id": "PK-001-M1",
+            "commitment_key": "PK-001-M1-C1",
+            "speaker": "Fictional client",
+            "amount_text": "80,000",
+            "currency_text": "INR",
+            "date_text": "20 October 2026",
+            "explicitly_replaces_source_id": null
+          }
+        ],
+        "payment_claims": []
+      },
+      "expected_candidate_facts": {
+        "commitments": [
+          {
+            "source_id": "PK-001-M1",
+            "commitment_key": "PK-001-M1-C1",
+            "speaker": "Fictional client",
+            "amount_text": "80,000",
+            "currency_text": "INR",
+            "date_text": "20 October 2026",
+            "explicitly_replaces_source_id": null
+          }
+        ],
+        "payment_claims": []
+      },
+      "deterministic_outcome_correct": true,
+      "latency_seconds": 4.578,
+      "action": "FOLLOW_UP",
+      "result_present": true,
+      "progress": [
+        {
+          "step_name": "EVIDENCE_LOOKUP",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:42:12.660796+00:00",
+          "ended_at": "2026-10-24T10:42:12.669386+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "EXTRACTION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:42:12.679272+00:00",
+          "ended_at": "2026-10-24T10:42:16.943522+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "VALIDATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:42:16.964234+00:00",
+          "ended_at": "2026-10-24T10:42:16.977027+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "RECONCILIATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:42:16.984605+00:00",
+          "ended_at": "2026-10-24T10:42:16.996441+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        }
+      ],
+      "attempt_timing": {
+        "started_at": "2026-10-24T10:42:12.619489+00:00",
+        "terminal_at": "2026-10-24T10:42:17.010531+00:00",
+        "deadline_at": "2026-10-24T10:43:07.619489+00:00"
+      },
+      "status": "PASS"
+    },
+    {
+      "case": "FV-16-LINKED",
+      "repeat": 1,
+      "attempt_status": "COMPLETE",
+      "failure_code": null,
+      "returned_models": [
+        "zai-org/GLM-5.3-Flash"
+      ],
+      "response_ids": [
+        "9d892329554c45dfba0e64a1a321d582"
+      ],
+      "extraction_correct": true,
+      "source_validation_correct": true,
+      "uncertainty_correct": true,
+      "validated_uncertainty": {
+        "contradictions": [],
+        "unresolved": []
+      },
+      "actual_candidate_facts": {
+        "commitments": [
+          {
+            "source_id": "PK-002-M1",
+            "commitment_key": "PK-002-M1-C1",
+            "speaker": "Fictional client",
+            "amount_text": "20,000",
+            "currency_text": "INR",
+            "date_text": "25 October 2026",
+            "explicitly_replaces_source_id": null
+          }
+        ],
+        "payment_claims": []
+      },
+      "expected_candidate_facts": {
+        "commitments": [
+          {
+            "source_id": "PK-002-M1",
+            "commitment_key": "PK-002-M1-C1",
+            "speaker": "Fictional client",
+            "amount_text": "20,000",
+            "currency_text": "INR",
+            "date_text": "25 October 2026",
+            "explicitly_replaces_source_id": null
+          }
+        ],
+        "payment_claims": []
+      },
+      "deterministic_outcome_correct": true,
+      "latency_seconds": 8.875,
+      "action": "FOLLOW_UP",
+      "result_present": true,
+      "progress": [
+        {
+          "step_name": "EVIDENCE_LOOKUP",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:42:17.430569+00:00",
+          "ended_at": "2026-10-24T10:42:17.445483+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "EXTRACTION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:42:17.454675+00:00",
+          "ended_at": "2026-10-24T10:42:21.555416+00:00",
+          "outcome": "TRANSIENT_FAILURE",
+          "failure_code": "PROVIDER_REJECTED_REQUEST"
+        },
+        {
+          "step_name": "EXTRACTION",
+          "invocation_number": 2,
+          "invocation_kind": "AUTO_RETRY",
+          "started_at": "2026-10-24T10:42:21.562952+00:00",
+          "ended_at": "2026-10-24T10:42:26.026977+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "VALIDATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:42:26.047426+00:00",
+          "ended_at": "2026-10-24T10:42:26.058191+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "RECONCILIATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:42:26.067216+00:00",
+          "ended_at": "2026-10-24T10:42:26.076657+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        }
+      ],
+      "attempt_timing": {
+        "started_at": "2026-10-24T10:42:17.398129+00:00",
+        "terminal_at": "2026-10-24T10:42:26.088336+00:00",
+        "deadline_at": "2026-10-24T10:43:12.398129+00:00"
+      },
+      "status": "PASS"
+    },
+    {
+      "case": "FV-16-UNLINKED",
+      "repeat": 1,
+      "attempt_status": "COMPLETE",
+      "failure_code": null,
+      "returned_models": [
+        "zai-org/GLM-5.3-Flash"
+      ],
+      "response_ids": [
+        "13f0e3fe5b8749b9a9feb3d386a0e51b"
+      ],
+      "extraction_correct": true,
+      "source_validation_correct": true,
+      "uncertainty_correct": true,
+      "validated_uncertainty": {
+        "contradictions": [],
+        "unresolved": []
+      },
+      "actual_candidate_facts": {
+        "commitments": [
+          {
+            "source_id": "PK-002-M1",
+            "commitment_key": "PK-002-M1-C1",
+            "speaker": "Fictional client",
+            "amount_text": "20,000",
+            "currency_text": "INR",
+            "date_text": "25 October 2026",
+            "explicitly_replaces_source_id": null
+          }
+        ],
+        "payment_claims": []
+      },
+      "expected_candidate_facts": {
+        "commitments": [
+          {
+            "source_id": "PK-002-M1",
+            "commitment_key": "PK-002-M1-C1",
+            "speaker": "Fictional client",
+            "amount_text": "20,000",
+            "currency_text": "INR",
+            "date_text": "25 October 2026",
+            "explicitly_replaces_source_id": null
+          }
+        ],
+        "payment_claims": []
+      },
+      "deterministic_outcome_correct": true,
+      "latency_seconds": 3.766,
+      "action": "VERIFY_PAYMENT",
+      "result_present": true,
+      "progress": [
+        {
+          "step_name": "EVIDENCE_LOOKUP",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:42:26.561145+00:00",
+          "ended_at": "2026-10-24T10:42:26.573820+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "EXTRACTION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:42:26.585545+00:00",
+          "ended_at": "2026-10-24T10:42:30.058056+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "VALIDATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:42:30.073426+00:00",
+          "ended_at": "2026-10-24T10:42:30.080671+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "RECONCILIATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:42:30.088435+00:00",
+          "ended_at": "2026-10-24T10:42:30.095441+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        }
+      ],
+      "attempt_timing": {
+        "started_at": "2026-10-24T10:42:26.524140+00:00",
+        "terminal_at": "2026-10-24T10:42:30.103551+00:00",
+        "deadline_at": "2026-10-24T10:43:21.524140+00:00"
+      },
+      "status": "PASS"
+    },
+    {
+      "case": "FV-17-EVIDENCE",
+      "repeat": 1,
+      "attempt_status": "COMPLETE",
+      "failure_code": null,
+      "returned_models": [
+        "zai-org/GLM-5.3-Flash"
+      ],
+      "response_ids": [
+        "d74a150de3194c538a706d7cc01465dd"
+      ],
+      "extraction_correct": true,
+      "source_validation_correct": true,
+      "uncertainty_correct": true,
+      "validated_uncertainty": {
+        "contradictions": [],
+        "unresolved": []
+      },
+      "actual_candidate_facts": {
+        "commitments": [
+          {
+            "source_id": "PK-001-M1",
+            "commitment_key": "PK-001-M1-C1",
+            "speaker": "Fictional client",
+            "amount_text": "80,000",
+            "currency_text": "INR",
+            "date_text": "20 October 2026",
+            "explicitly_replaces_source_id": null
+          }
+        ],
+        "payment_claims": []
+      },
+      "expected_candidate_facts": {
+        "commitments": [
+          {
+            "source_id": "PK-001-M1",
+            "commitment_key": "PK-001-M1-C1",
+            "speaker": "Fictional client",
+            "amount_text": "80,000",
+            "currency_text": "INR",
+            "date_text": "20 October 2026",
+            "explicitly_replaces_source_id": null
+          }
+        ],
+        "payment_claims": []
+      },
+      "deterministic_outcome_correct": true,
+      "latency_seconds": 2.969,
+      "action": "FOLLOW_UP",
+      "result_present": true,
+      "progress": [
+        {
+          "step_name": "EVIDENCE_LOOKUP",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:42:30.431943+00:00",
+          "ended_at": "2026-10-24T10:42:30.440942+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "EXTRACTION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:42:30.447568+00:00",
+          "ended_at": "2026-10-24T10:42:33.125444+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "VALIDATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:42:33.148556+00:00",
+          "ended_at": "2026-10-24T10:42:33.157990+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "RECONCILIATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:42:33.169770+00:00",
+          "ended_at": "2026-10-24T10:42:33.185645+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        }
+      ],
+      "attempt_timing": {
+        "started_at": "2026-10-24T10:42:30.402252+00:00",
+        "terminal_at": "2026-10-24T10:42:33.200184+00:00",
+        "deadline_at": "2026-10-24T10:43:25.402252+00:00"
+      },
+      "status": "PASS"
+    },
+    {
+      "case": "FV-17-EVIDENCE-RUN-START",
+      "repeat": 1,
+      "attempt_status": "COMPLETE",
+      "failure_code": null,
+      "returned_models": [
+        "zai-org/GLM-5.3-Flash"
+      ],
+      "response_ids": [
+        "923d80d8b1084c6c9175034baef41441"
+      ],
+      "extraction_correct": true,
+      "source_validation_correct": true,
+      "uncertainty_correct": true,
+      "validated_uncertainty": {
+        "contradictions": [],
+        "unresolved": []
+      },
+      "actual_candidate_facts": {
+        "commitments": [
+          {
+            "source_id": "PK-001-M1",
+            "commitment_key": "PK-001-M1-C1",
+            "speaker": "Fictional client",
+            "amount_text": "80,000",
+            "currency_text": "INR",
+            "date_text": "20 October 2026",
+            "explicitly_replaces_source_id": null
+          }
+        ],
+        "payment_claims": []
+      },
+      "expected_candidate_facts": {
+        "commitments": [
+          {
+            "source_id": "PK-001-M1",
+            "commitment_key": "PK-001-M1-C1",
+            "speaker": "Fictional client",
+            "amount_text": "80,000",
+            "currency_text": "INR",
+            "date_text": "20 October 2026",
+            "explicitly_replaces_source_id": null
+          }
+        ],
+        "payment_claims": []
+      },
+      "deterministic_outcome_correct": true,
+      "latency_seconds": 3.016,
+      "action": "FOLLOW_UP",
+      "result_present": true,
+      "progress": [
+        {
+          "step_name": "EVIDENCE_LOOKUP",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:42:33.698975+00:00",
+          "ended_at": "2026-10-24T10:42:33.710991+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "EXTRACTION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:42:33.718976+00:00",
+          "ended_at": "2026-10-24T10:42:36.399367+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "VALIDATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:42:36.417923+00:00",
+          "ended_at": "2026-10-24T10:42:36.427248+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "RECONCILIATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:42:36.435831+00:00",
+          "ended_at": "2026-10-24T10:42:36.442991+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        }
+      ],
+      "attempt_timing": {
+        "started_at": "2026-10-24T10:42:33.654456+00:00",
+        "terminal_at": "2026-10-24T10:42:36.453365+00:00",
+        "deadline_at": "2026-10-24T10:43:28.654456+00:00"
+      },
+      "status": "PASS"
+    },
+    {
+      "case": "FV-17-SUPERSEDED",
+      "repeat": 1,
+      "attempt_status": "COMPLETE",
+      "failure_code": null,
+      "returned_models": [
+        "zai-org/GLM-5.3-Flash"
+      ],
+      "response_ids": [
+        "42fc0bb2ab774976a36d25f82e50b140"
+      ],
+      "extraction_correct": true,
+      "source_validation_correct": true,
+      "uncertainty_correct": true,
+      "validated_uncertainty": {
+        "contradictions": [],
+        "unresolved": []
+      },
+      "actual_candidate_facts": {
+        "commitments": [
+          {
+            "source_id": "PK-001-M1",
+            "commitment_key": "PK-001-M1-C1",
+            "speaker": "Fictional client",
+            "amount_text": "80,000",
+            "currency_text": "INR",
+            "date_text": "20 October 2026",
+            "explicitly_replaces_source_id": null
+          }
+        ],
+        "payment_claims": []
+      },
+      "expected_candidate_facts": {
+        "commitments": [
+          {
+            "source_id": "PK-001-M1",
+            "commitment_key": "PK-001-M1-C1",
+            "speaker": "Fictional client",
+            "amount_text": "80,000",
+            "currency_text": "INR",
+            "date_text": "20 October 2026",
+            "explicitly_replaces_source_id": null
+          }
+        ],
+        "payment_claims": []
+      },
+      "deterministic_outcome_correct": true,
+      "latency_seconds": 2.656,
+      "action": "FOLLOW_UP",
+      "result_present": true,
+      "progress": [
+        {
+          "step_name": "EVIDENCE_LOOKUP",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:42:36.880895+00:00",
+          "ended_at": "2026-10-24T10:42:36.895251+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "EXTRACTION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:42:36.903249+00:00",
+          "ended_at": "2026-10-24T10:42:39.266401+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "VALIDATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:42:39.284037+00:00",
+          "ended_at": "2026-10-24T10:42:39.292423+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "RECONCILIATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:42:39.302467+00:00",
+          "ended_at": "2026-10-24T10:42:39.312201+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        }
+      ],
+      "attempt_timing": {
+        "started_at": "2026-10-24T10:42:36.842305+00:00",
+        "terminal_at": "2026-10-24T10:42:39.322233+00:00",
+        "deadline_at": "2026-10-24T10:43:31.842305+00:00"
+      },
+      "status": "PASS"
+    },
+    {
+      "case": "FV-17-UNCHANGED",
+      "repeat": 1,
+      "attempt_status": "COMPLETE",
+      "failure_code": null,
+      "returned_models": [
+        "zai-org/GLM-5.3-Flash"
+      ],
+      "response_ids": [
+        "371fa10d33c440c4aa8d7e4217fd08ec"
+      ],
+      "extraction_correct": true,
+      "source_validation_correct": true,
+      "uncertainty_correct": true,
+      "validated_uncertainty": {
+        "contradictions": [],
+        "unresolved": []
+      },
+      "actual_candidate_facts": {
+        "commitments": [
+          {
+            "source_id": "PK-001-M1",
+            "commitment_key": "PK-001-M1-C1",
+            "speaker": "Fictional client",
+            "amount_text": "80,000",
+            "currency_text": "INR",
+            "date_text": "20 October 2026",
+            "explicitly_replaces_source_id": null
+          }
+        ],
+        "payment_claims": []
+      },
+      "expected_candidate_facts": {
+        "commitments": [
+          {
+            "source_id": "PK-001-M1",
+            "commitment_key": "PK-001-M1-C1",
+            "speaker": "Fictional client",
+            "amount_text": "80,000",
+            "currency_text": "INR",
+            "date_text": "20 October 2026",
+            "explicitly_replaces_source_id": null
+          }
+        ],
+        "payment_claims": []
+      },
+      "deterministic_outcome_correct": true,
+      "latency_seconds": 3.0,
+      "action": "FOLLOW_UP",
+      "result_present": true,
+      "progress": [
+        {
+          "step_name": "EVIDENCE_LOOKUP",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:42:39.715838+00:00",
+          "ended_at": "2026-10-24T10:42:39.724496+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "EXTRACTION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:42:39.733305+00:00",
+          "ended_at": "2026-10-24T10:42:42.437907+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "VALIDATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:42:42.463601+00:00",
+          "ended_at": "2026-10-24T10:42:42.466101+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "RECONCILIATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:42:42.481367+00:00",
+          "ended_at": "2026-10-24T10:42:42.494050+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        }
+      ],
+      "attempt_timing": {
+        "started_at": "2026-10-24T10:42:39.678004+00:00",
+        "terminal_at": "2026-10-24T10:42:42.503570+00:00",
+        "deadline_at": "2026-10-24T10:43:34.678004+00:00"
+      },
+      "status": "PASS"
+    },
+    {
+      "case": "FV-18-A",
+      "repeat": 1,
+      "attempt_status": "COMPLETE",
+      "failure_code": null,
+      "returned_models": [
+        "zai-org/GLM-5.3-Flash"
+      ],
+      "response_ids": [
+        "4331eda054fe49d689ae73dd68827dfd"
+      ],
+      "extraction_correct": true,
+      "source_validation_correct": true,
+      "uncertainty_correct": true,
+      "validated_uncertainty": {
+        "contradictions": [],
+        "unresolved": []
+      },
+      "actual_candidate_facts": {
+        "commitments": [
+          {
+            "source_id": "PK-002-M1",
+            "commitment_key": "PK-002-M1-C1",
+            "speaker": "Fictional client",
+            "amount_text": "50,000",
+            "currency_text": "INR",
+            "date_text": "26 October 2026",
+            "explicitly_replaces_source_id": null
+          }
+        ],
+        "payment_claims": []
+      },
+      "expected_candidate_facts": {
+        "commitments": [
+          {
+            "source_id": "PK-002-M1",
+            "commitment_key": "PK-002-M1-C1",
+            "speaker": "Fictional client",
+            "amount_text": "50,000",
+            "currency_text": "INR",
+            "date_text": "26 October 2026",
+            "explicitly_replaces_source_id": null
+          }
+        ],
+        "payment_claims": []
+      },
+      "deterministic_outcome_correct": true,
+      "latency_seconds": 2.938,
+      "action": "WAIT",
+      "result_present": true,
+      "progress": [
+        {
+          "step_name": "EVIDENCE_LOOKUP",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:42:42.904859+00:00",
+          "ended_at": "2026-10-24T10:42:42.915205+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "EXTRACTION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:42:42.924314+00:00",
+          "ended_at": "2026-10-24T10:42:45.578413+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "VALIDATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:42:45.595122+00:00",
+          "ended_at": "2026-10-24T10:42:45.605073+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "RECONCILIATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:42:45.613581+00:00",
+          "ended_at": "2026-10-24T10:42:45.621526+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        }
+      ],
+      "attempt_timing": {
+        "started_at": "2026-10-24T10:42:42.865344+00:00",
+        "terminal_at": "2026-10-24T10:42:45.632606+00:00",
+        "deadline_at": "2026-10-24T10:43:37.865344+00:00"
+      },
+      "status": "PASS"
+    },
+    {
+      "case": "FV-18-A-CLOCK-1",
+      "repeat": 1,
+      "attempt_status": "COMPLETE",
+      "failure_code": null,
+      "returned_models": [
+        "zai-org/GLM-5.3-Flash"
+      ],
+      "response_ids": [
+        "a51897aa8be34109ba2aaf64930df50c"
+      ],
+      "extraction_correct": true,
+      "source_validation_correct": true,
+      "uncertainty_correct": true,
+      "validated_uncertainty": {
+        "contradictions": [],
+        "unresolved": []
+      },
+      "actual_candidate_facts": {
+        "commitments": [
+          {
+            "source_id": "PK-002-M1",
+            "commitment_key": "PK-002-M1-C1",
+            "speaker": "Fictional client",
+            "amount_text": "50,000",
+            "currency_text": "INR",
+            "date_text": "26 October 2026",
+            "explicitly_replaces_source_id": null
+          }
+        ],
+        "payment_claims": []
+      },
+      "expected_candidate_facts": {
+        "commitments": [
+          {
+            "source_id": "PK-002-M1",
+            "commitment_key": "PK-002-M1-C1",
+            "speaker": "Fictional client",
+            "amount_text": "50,000",
+            "currency_text": "INR",
+            "date_text": "26 October 2026",
+            "explicitly_replaces_source_id": null
+          }
+        ],
+        "payment_claims": []
+      },
+      "deterministic_outcome_correct": true,
+      "latency_seconds": 3.062,
+      "action": "WAIT",
+      "result_present": true,
+      "progress": [
+        {
+          "step_name": "EVIDENCE_LOOKUP",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:42:46.085961+00:00",
+          "ended_at": "2026-10-24T10:42:46.094419+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "EXTRACTION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:42:46.102663+00:00",
+          "ended_at": "2026-10-24T10:42:48.841624+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "VALIDATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:42:48.860877+00:00",
+          "ended_at": "2026-10-24T10:42:48.869870+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "RECONCILIATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:42:48.877913+00:00",
+          "ended_at": "2026-10-24T10:42:48.886900+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        }
+      ],
+      "attempt_timing": {
+        "started_at": "2026-10-24T10:42:46.043586+00:00",
+        "terminal_at": "2026-10-24T10:42:48.895904+00:00",
+        "deadline_at": "2026-10-24T10:43:41.043586+00:00"
+      },
+      "status": "PASS"
+    },
+    {
+      "case": "FV-18-A-CLOCK-2",
+      "repeat": 1,
+      "attempt_status": "COMPLETE",
+      "failure_code": null,
+      "returned_models": [
+        "zai-org/GLM-5.3-Flash"
+      ],
+      "response_ids": [
+        "e40b7ee6426d4da69872b04fce4f44ba"
+      ],
+      "extraction_correct": true,
+      "source_validation_correct": true,
+      "uncertainty_correct": true,
+      "validated_uncertainty": {
+        "contradictions": [],
+        "unresolved": []
+      },
+      "actual_candidate_facts": {
+        "commitments": [
+          {
+            "source_id": "PK-002-M1",
+            "commitment_key": "PK-002-M1-C1",
+            "speaker": "Fictional client",
+            "amount_text": "50,000",
+            "currency_text": "INR",
+            "date_text": "26 October 2026",
+            "explicitly_replaces_source_id": null
+          }
+        ],
+        "payment_claims": []
+      },
+      "expected_candidate_facts": {
+        "commitments": [
+          {
+            "source_id": "PK-002-M1",
+            "commitment_key": "PK-002-M1-C1",
+            "speaker": "Fictional client",
+            "amount_text": "50,000",
+            "currency_text": "INR",
+            "date_text": "26 October 2026",
+            "explicitly_replaces_source_id": null
+          }
+        ],
+        "payment_claims": []
+      },
+      "deterministic_outcome_correct": true,
+      "latency_seconds": 3.609,
+      "action": "FOLLOW_UP",
+      "result_present": true,
+      "progress": [
+        {
+          "step_name": "EVIDENCE_LOOKUP",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:42:49.380553+00:00",
+          "ended_at": "2026-10-24T10:42:49.391401+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "EXTRACTION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:42:49.399624+00:00",
+          "ended_at": "2026-10-24T10:42:52.668717+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "VALIDATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:42:52.684962+00:00",
+          "ended_at": "2026-10-24T10:42:52.692205+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "RECONCILIATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:42:52.700743+00:00",
+          "ended_at": "2026-10-24T10:42:52.708440+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        }
+      ],
+      "attempt_timing": {
+        "started_at": "2026-10-24T10:42:49.345314+00:00",
+        "terminal_at": "2026-10-24T10:42:52.715547+00:00",
+        "deadline_at": "2026-10-24T10:43:44.345314+00:00"
+      },
+      "status": "PASS"
+    },
+    {
+      "case": "FV-18-B",
+      "repeat": 1,
+      "attempt_status": "INCOMPLETE",
+      "failure_code": "PROVIDER_REJECTED_REQUEST",
+      "returned_models": [],
+      "response_ids": [],
+      "extraction_correct": null,
+      "source_validation_correct": null,
+      "uncertainty_correct": null,
+      "validated_uncertainty": null,
+      "actual_candidate_facts": null,
+      "expected_candidate_facts": {
+        "commitments": [
+          {
+            "source_id": "PK-002-M1",
+            "commitment_key": "PK-002-M1-C1",
+            "speaker": "Fictional client",
+            "amount_text": "50,000",
+            "currency_text": "INR",
+            "date_text": "24 October 2026",
+            "explicitly_replaces_source_id": null
+          }
+        ],
+        "payment_claims": []
+      },
+      "deterministic_outcome_correct": null,
+      "latency_seconds": 7.922,
+      "action": null,
+      "result_present": false,
+      "progress": [
+        {
+          "step_name": "EVIDENCE_LOOKUP",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:42:53.094582+00:00",
+          "ended_at": "2026-10-24T10:42:53.103838+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "EXTRACTION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:42:53.113188+00:00",
+          "ended_at": "2026-10-24T10:42:57.393527+00:00",
+          "outcome": "TRANSIENT_FAILURE",
+          "failure_code": "PROVIDER_REJECTED_REQUEST"
+        },
+        {
+          "step_name": "EXTRACTION",
+          "invocation_number": 2,
+          "invocation_kind": "AUTO_RETRY",
+          "started_at": "2026-10-24T10:42:57.403238+00:00",
+          "ended_at": "2026-10-24T10:43:00.797545+00:00",
+          "outcome": "TRANSIENT_FAILURE",
+          "failure_code": "PROVIDER_REJECTED_REQUEST"
+        }
+      ],
+      "attempt_timing": {
+        "started_at": "2026-10-24T10:42:53.066045+00:00",
+        "terminal_at": "2026-10-24T10:43:00.805559+00:00",
+        "deadline_at": "2026-10-24T10:43:48.066045+00:00"
+      },
+      "status": "INCOMPLETE_PROVIDER"
+    },
+    {
+      "case": "FV-18-B-CLOCK-1",
+      "repeat": 1,
+      "attempt_status": "COMPLETE",
+      "failure_code": null,
+      "returned_models": [
+        "zai-org/GLM-5.3-Flash"
+      ],
+      "response_ids": [
+        "c709c39c342641d8a0ee525bc9957c0b"
+      ],
+      "extraction_correct": true,
+      "source_validation_correct": true,
+      "uncertainty_correct": true,
+      "validated_uncertainty": {
+        "contradictions": [],
+        "unresolved": []
+      },
+      "actual_candidate_facts": {
+        "commitments": [
+          {
+            "source_id": "PK-002-M1",
+            "commitment_key": "PK-002-M1-C1",
+            "speaker": "Fictional client",
+            "amount_text": "50,000",
+            "currency_text": "INR",
+            "date_text": "24 October 2026",
+            "explicitly_replaces_source_id": null
+          }
+        ],
+        "payment_claims": []
+      },
+      "expected_candidate_facts": {
+        "commitments": [
+          {
+            "source_id": "PK-002-M1",
+            "commitment_key": "PK-002-M1-C1",
+            "speaker": "Fictional client",
+            "amount_text": "50,000",
+            "currency_text": "INR",
+            "date_text": "24 October 2026",
+            "explicitly_replaces_source_id": null
+          }
+        ],
+        "payment_claims": []
+      },
+      "deterministic_outcome_correct": true,
+      "latency_seconds": 6.703,
+      "action": "WAIT",
+      "result_present": true,
+      "progress": [
+        {
+          "step_name": "EVIDENCE_LOOKUP",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:43:01.308054+00:00",
+          "ended_at": "2026-10-24T10:43:01.319198+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "EXTRACTION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:43:01.329788+00:00",
+          "ended_at": "2026-10-24T10:43:07.598082+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "VALIDATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:43:07.674623+00:00",
+          "ended_at": "2026-10-24T10:43:07.690621+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "RECONCILIATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:43:07.702422+00:00",
+          "ended_at": "2026-10-24T10:43:07.721248+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        }
+      ],
+      "attempt_timing": {
+        "started_at": "2026-10-24T10:43:01.262481+00:00",
+        "terminal_at": "2026-10-24T10:43:07.731352+00:00",
+        "deadline_at": "2026-10-24T10:43:56.262481+00:00"
+      },
+      "status": "PASS"
+    },
+    {
+      "case": "FV-18-B-CLOCK-2",
+      "repeat": 1,
+      "attempt_status": "COMPLETE",
+      "failure_code": null,
+      "returned_models": [
+        "zai-org/GLM-5.3-Flash"
+      ],
+      "response_ids": [
+        "26728497602f410b9c3c31b666c62ad8"
+      ],
+      "extraction_correct": true,
+      "source_validation_correct": true,
+      "uncertainty_correct": true,
+      "validated_uncertainty": {
+        "contradictions": [],
+        "unresolved": []
+      },
+      "actual_candidate_facts": {
+        "commitments": [
+          {
+            "source_id": "PK-002-M1",
+            "commitment_key": "PK-002-M1-C1",
+            "speaker": "Fictional client",
+            "amount_text": "50,000",
+            "currency_text": "INR",
+            "date_text": "24 October 2026",
+            "explicitly_replaces_source_id": null
+          }
+        ],
+        "payment_claims": []
+      },
+      "expected_candidate_facts": {
+        "commitments": [
+          {
+            "source_id": "PK-002-M1",
+            "commitment_key": "PK-002-M1-C1",
+            "speaker": "Fictional client",
+            "amount_text": "50,000",
+            "currency_text": "INR",
+            "date_text": "24 October 2026",
+            "explicitly_replaces_source_id": null
+          }
+        ],
+        "payment_claims": []
+      },
+      "deterministic_outcome_correct": true,
+      "latency_seconds": 3.891,
+      "action": "FOLLOW_UP",
+      "result_present": true,
+      "progress": [
+        {
+          "step_name": "EVIDENCE_LOOKUP",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:43:08.260397+00:00",
+          "ended_at": "2026-10-24T10:43:08.278135+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "EXTRACTION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:43:08.282377+00:00",
+          "ended_at": "2026-10-24T10:43:11.776293+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "VALIDATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:43:11.801294+00:00",
+          "ended_at": "2026-10-24T10:43:11.816303+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "RECONCILIATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:43:11.827303+00:00",
+          "ended_at": "2026-10-24T10:43:11.838302+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        }
+      ],
+      "attempt_timing": {
+        "started_at": "2026-10-24T10:43:08.225344+00:00",
+        "terminal_at": "2026-10-24T10:43:11.850321+00:00",
+        "deadline_at": "2026-10-24T10:44:03.225344+00:00"
+      },
+      "status": "PASS"
+    },
+    {
+      "case": "baseline:PK-001",
+      "repeat": 2,
+      "attempt_status": "COMPLETE",
+      "failure_code": null,
+      "returned_models": [
+        "zai-org/GLM-5.3-Flash"
+      ],
+      "response_ids": [
+        "91f3464a4fa74c2993bbf0c717dc88e4"
+      ],
+      "extraction_correct": true,
+      "source_validation_correct": true,
+      "uncertainty_correct": true,
+      "validated_uncertainty": {
+        "contradictions": [],
+        "unresolved": []
+      },
+      "actual_candidate_facts": {
+        "commitments": [
+          {
+            "source_id": "PK-001-M1",
+            "commitment_key": "PK-001-M1-C1",
+            "speaker": "Fictional client",
+            "amount_text": "80,000",
+            "currency_text": "INR",
+            "date_text": "20 October 2026",
+            "explicitly_replaces_source_id": null
+          }
+        ],
+        "payment_claims": []
+      },
+      "expected_candidate_facts": {
+        "commitments": [
+          {
+            "source_id": "PK-001-M1",
+            "commitment_key": "PK-001-M1-C1",
+            "speaker": "Fictional client",
+            "amount_text": "80,000",
+            "currency_text": "INR",
+            "date_text": "20 October 2026",
+            "explicitly_replaces_source_id": null
+          }
+        ],
+        "payment_claims": []
+      },
+      "deterministic_outcome_correct": true,
+      "latency_seconds": 2.765,
+      "action": "FOLLOW_UP",
+      "result_present": true,
+      "progress": [
+        {
+          "step_name": "EVIDENCE_LOOKUP",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:43:12.258433+00:00",
+          "ended_at": "2026-10-24T10:43:12.268482+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "EXTRACTION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:43:12.278552+00:00",
+          "ended_at": "2026-10-24T10:43:14.745960+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "VALIDATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:43:14.766679+00:00",
+          "ended_at": "2026-10-24T10:43:14.778756+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "RECONCILIATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:43:14.788749+00:00",
+          "ended_at": "2026-10-24T10:43:14.800178+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        }
+      ],
+      "attempt_timing": {
+        "started_at": "2026-10-24T10:43:12.218681+00:00",
+        "terminal_at": "2026-10-24T10:43:14.811424+00:00",
+        "deadline_at": "2026-10-24T10:44:07.218681+00:00"
+      },
+      "status": "PASS"
+    },
+    {
+      "case": "baseline:PK-002",
+      "repeat": 2,
+      "attempt_status": "COMPLETE",
+      "failure_code": null,
+      "returned_models": [
+        "zai-org/GLM-5.3-Flash"
+      ],
+      "response_ids": [
+        "e0234a80947f40e9854e5106bc607ec6"
+      ],
+      "extraction_correct": true,
+      "source_validation_correct": true,
+      "uncertainty_correct": true,
+      "validated_uncertainty": {
+        "contradictions": [],
+        "unresolved": []
+      },
+      "actual_candidate_facts": {
+        "commitments": [
+          {
+            "source_id": "PK-002-M1",
+            "commitment_key": "PK-002-M1-C1",
+            "speaker": "Fictional client",
+            "amount_text": "50,000",
+            "currency_text": "INR",
+            "date_text": "25 October 2026",
+            "explicitly_replaces_source_id": null
+          }
+        ],
+        "payment_claims": []
+      },
+      "expected_candidate_facts": {
+        "commitments": [
+          {
+            "source_id": "PK-002-M1",
+            "commitment_key": "PK-002-M1-C1",
+            "speaker": "Fictional client",
+            "amount_text": "50,000",
+            "currency_text": "INR",
+            "date_text": "25 October 2026",
+            "explicitly_replaces_source_id": null
+          }
+        ],
+        "payment_claims": []
+      },
+      "deterministic_outcome_correct": true,
+      "latency_seconds": 11.594,
+      "action": "WAIT",
+      "result_present": true,
+      "progress": [
+        {
+          "step_name": "EVIDENCE_LOOKUP",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:43:15.281470+00:00",
+          "ended_at": "2026-10-24T10:43:15.290557+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "EXTRACTION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:43:15.299033+00:00",
+          "ended_at": "2026-10-24T10:43:26.604944+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "VALIDATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:43:26.624499+00:00",
+          "ended_at": "2026-10-24T10:43:26.634630+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        },
+        {
+          "step_name": "RECONCILIATION",
+          "invocation_number": 1,
+          "invocation_kind": "INITIAL",
+          "started_at": "2026-10-24T10:43:26.643139+00:00",
+          "ended_at": "2026-10-24T10:43:26.651424+00:00",
+          "outcome": "SUCCEEDED",
+          "failure_code": null
+        }
+      ],
+      "attempt_timing": {
+        "started_at": "2026-10-24T10:43:15.242529+00:00",
+        "terminal_at": "2026-10-24T10:43:26.662464+00:00",
+        "deadline_at": "2026-10-24T10:44:10.242529+00:00"
+      },
+      "status": "PASS"
+    }
+  ],
+  "requested_runs": 153,
+  "unexecuted_runs": 100,
+  "instrumented_transport": true,
+  "execution_basis": "Independent fresh-copy case invocations; repeat is the predetermined repetition index. Prompt-4 final report, pre-oracle-fix adapter-v5 report and interrupted adapter-v3 report remain preserved unchanged. This fresh planned qualification uses clarified categories and frozen versioned acceptance criteria; no prior failed results are regraded or replaced.",
+  "coverage": {
+    "planned_entries": 51,
+    "covered_entries": 49,
+    "missing_entries": [
+      "FV-06-REVERSAL",
+      "FV-18-B"
+    ],
+    "planned_runs": 153,
+    "completed_runs": 53,
+    "unexecuted_runs": 100
+  },
+  "quality": {
+    "returned_runs": 52,
+    "correct_runs": 51,
+    "incorrect_runs": 1
+  },
+  "availability": {
+    "incomplete_provider_runs": 1
+  },
+  "safety": {
+    "unsafe_runs": 0,
+    "blocking_runs": 1,
+    "invalid_run_identities": false
+  },
+  "interrupted_at": "2026-10-24T10:43:26.830590+00:00",
+  "interruption_reason": "KNOWN_QUALITY_FAILURE: returned PAYMENT_CLAIM compares a later reversal lifecycle record rather than active factual financial disagreement. Authorized stop after current call; no provider outage."
+}

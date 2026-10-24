@@ -1,14 +1,14 @@
 # Implementation and Validation Guide
 
-**Status**: Planned commands for the future authorized implementation. This repository currently contains design artifacts; application files, lockfiles, scripts, tests and databases described below do not yet exist. None of the product commands/evaluations below were executed while writing this plan.
+**Status**: Gates I-IV are owner-approved and published; Gate IV is `0454551`. Gate V engineering and technical verification are complete. T060 qualifies under frozen criteria after 153 attempts (152 correct returns, one provider gap, zero unexecuted). The required five-owner study remains UNEXECUTED; formal Gate V / Release 0.1 acceptance is blocked. The owner approved publishing the fictional test build while retaining that acceptance block. Earlier failures remain preserved.
 
 ## Prerequisites and phase authorization
 
 Follow the separate human gates in [plan.md](plan.md). Generate tasks before implementation; get explicit authorization for each implementation phase. Use Windows 11, Node 24, npm.cmd, uv and a managed Python 3.12 environment. Do not use the currently installed Python 3.10 as the application interpreter. Provider credentials/account access are required only for LIVE mode; keep them server-side and out of source control/logs.
 
-During Phase I, create backend/frontend manifests, scripts and ignore rules for `.runtime/`, virtual environments, credentials and generated build output. Resolve/test compatible dependencies and commit uv.lock/package-lock.json. Subsequent setup uses frozen lockfiles. No Git repository/branch was created by planning.
+Phase I created backend/frontend manifests, test configuration and ignore rules for `.runtime/`, virtual environments, credentials and generated build output, with resolved uv.lock/package-lock.json. Subsequent setup uses frozen lockfiles. Repository setup was separately owner-authorized after planning: private Natarajan92/promisekeeper, feature branch 001-payment-case-mvp.
 
-## Future setup (PowerShell, repository root)
+## Setup (PowerShell, repository root)
 
 These variables direct tool data into the workspace. They do not repurpose system HOME variables or change PowerShell execution policy.
 
@@ -23,14 +23,13 @@ $env:PK_DB_PATH = Join-Path $repoPath '.runtime\promisekeeper.sqlite'
 uv python install 3.12
 uv sync --project backend --frozen
 npm.cmd --prefix frontend ci
-npm.cmd --prefix frontend exec -- playwright install chromium
 ```
 
 Initial lockfile generation belongs to authorized Phase I; `--frozen`/`ci` intentionally fail if manifests/locks are missing or inconsistent. Record Python, SQLite, Node, dependency and catalogue versions in the validation report. Add tzdata for Windows and verify Asia/Kolkata resolves. Do not present planned compatibility as a successful install.
 
 ## Start an explicitly fictional demonstration
 
-Planned CLI surface: `python -m promisekeeper.cli` provides `init-demo`, `serve`, `evaluate`, `measure`, and `report` commands. These names/flags are part of the implementation plan, not existing executables.
+`python -m promisekeeper.cli` provides `init-demo`, `serve`, `evaluate --suite live`, `evaluate --suite fixtures` and `measure --suite responsiveness|preservation`. No generic `report` command is implemented. Optional `init-demo --variant <registered-id>` creates a fresh approved variant copy; it never modifies another copy.
 
 ```powershell
 $env:PK_AGENT_MODE = 'STUB'
@@ -39,11 +38,13 @@ npm.cmd --prefix frontend run build
 uv run --project backend python -m promisekeeper.cli serve --host 127.0.0.1 --port 8000 --workers 1
 ```
 
-Open `http://127.0.0.1:8000`. The root page lists retained copies through GET /api/v1/demonstrations and restores the browser's selected_demonstration_id when it still exists. Otherwise it opens the sole copy, shows a chooser for multiple copies, or offers explicit creation if none exist. Select the copy returned by init-demo when several exist; creation never resets another copy. Expect fictional/STUB/REFERENCE labels and exactly PK-001, PK-002, PK-003 at 23 October 2026 10:00 IST in a baseline copy. Reload and restart serve without init-demo to verify the selected copy and history are preserved. A failed listing shows a recoverable error rather than silently creating a workspace. The server acquires its process lock and records old running attempts incomplete before readiness. A second process must fail safely without changing the first process's state.
+The built case workspace is served at `http://127.0.0.1:8000`; use `/docs` or `/api/v1/demonstrations` to inspect the API. Each copy contains exactly PK-001, PK-002 and PK-003; a baseline REFERENCE copy starts at 23 October 2026 10:00 IST. Restart `serve` without `init-demo` to preserve copies/history. The server acquires its process lock and records old running attempts incomplete before readiness. A second process fails without changing the owning process's state. Case/evidence/history/scenario/investigation routes require `?demonstration_id=<selected-copy-id>`. Mutations require JSON, `X-PromiseKeeper-Request: 1`, and a strict version-1 operation envelope.
+
+The root page lists retained copies, restores a valid browser selection, selects a sole copy, shows a chooser for multiple copies, or requires explicit creation for an empty list. Listing errors preserve the saved preference and show recovery. Automated Chrome/API journeys exercised these states, reload and backend restart; representative-owner usability acceptance remains unexecuted.
 
 For frontend development, use `npm.cmd --prefix frontend run dev -- --host 127.0.0.1` in another terminal; proxy `/api` to port 8000 and allow only that explicit loopback development origin. Avoid backend auto-reload/multiple workers while testing ownership/recovery.
 
-For LIVE acceptance, set PK_AGENT_MODE=LIVE, PK_OPENAI_MODEL=gpt-5.6-terra and OPENAI_API_KEY through local environment/secret configuration without printing or committing it. Restart the backend; verify the LIVE label. Missing credentials, unavailable account/model or refusal must produce truthful capability/incomplete behavior, not silently switch to STUB. Record requested/returned model and prompt/schema versions. No live provider call was performed during planning.
+For LIVE acceptance, copy the repository's `.env.example` to the Git-ignored `.env`, fill in `NEBIUS_API_KEY`, set `PK_NEBIUS_MODEL` to the explicitly selected Nebius model, and choose `PK_AGENT_MODE=LIVE` for live application runs. The backend loads this file; existing process environment variables take precedence. Keep credentials out of frontend/VITE variables. Nebius replaced the original OpenAI provider at the owner's direction; see ADR-006. Restart the backend and verify the LIVE label. Missing credentials, unavailable account/model or refusal must produce truthful capability/incomplete behavior, without switching providers, models or STUB silently. Record requested/returned model, response identity and prompt/schema/adapter versions. An explicit `evaluate --suite live` command performs real provider calls independently of the application's STUB setting and reports actual acceptance results.
 
 ## Baseline and update walkthrough
 
@@ -73,7 +74,7 @@ Gate II implements GET /api/v1/cases/{id}/scenario-events/{event_id}/preview and
 - Kill the backend after start commit; after approval commit before response; during result save; and during draft work. Restart without reseeding. Reconcile operation IDs, preserve last committed state, never duplicate an approval/closure or accept a late callback.
 - Race evidence update/start/approve/close commands with real temporary SQLite connections. Assert serialized eligibility and source snapshots; repeated same ID replays, changed payload with same ID conflicts. Race starts on different cases: only the one that reserves the global slot may persist RUNNING/invalidate approval. Save a newer draft edit and verify approval of the older exact version remains blocked.
 
-## Planned automated commands
+## Available automated commands
 
 ```powershell
 uv run --project backend pytest backend/tests/domain backend/tests/contract backend/tests/integration
@@ -81,17 +82,21 @@ npm.cmd --prefix frontend run typecheck
 npm.cmd --prefix frontend run test:unit -- --run
 npm.cmd --prefix frontend run build
 npm.cmd --prefix frontend run test:e2e
-uv run --project backend python -m promisekeeper.cli evaluate --suite fixtures --report reports/fixture-evaluation.json
 ```
 
-The e2e script must launch the real local API and a separate temporary database with a scripted Investigator, block external networking, and cover complete UI/API/data flows. Unit fake time does not prove actual 60-second UI behavior; include real-time forced-failure e2e measurements. Add JSON schema and strict extra-field/source-span cases for [the Investigator contract](contracts/investigator-output.schema.json). Do not use a production or existing demonstration database in automated tests.
+The e2e script uses installed Chrome, the real local API and a separate temporary database with a scripted Investigator. Its Python child is restricted to loopback networking. It covers complete UI/API/data flows. Unit fake time does not prove actual 60-second UI behavior; real-time forced-failure measurements remain a release requirement. Contract tests cover strict extra-field/source-span cases for [the Investigator contract](contracts/investigator-output.schema.json). Do not use a retained demonstration database in automated tests.
 
-With live access configured during Phase III/V:
+With live access configured during Phase III:
 
 ```powershell
-uv run --project backend python -m promisekeeper.cli evaluate --suite live --catalogue release-0.1 --repeats 3 --report reports/live-evaluation.json
-uv run --project backend python -m promisekeeper.cli measure --suite responsiveness --trials-per-case 10 --report reports/responsiveness.json
-uv run --project backend python -m promisekeeper.cli measure --suite preservation --cycles 10 --report reports/preservation.json
+uv run --project backend python -m promisekeeper.cli evaluate --suite live --catalogue release-0.1 --repeats 3 --output reports/live-evaluation-new.json
+```
+
+The following measurement commands are available for Gate V. They require LIVE mode and the frozen Nebius model, use fresh isolated copies and refuse an existing output path:
+
+```powershell
+uv run --project backend python -m promisekeeper.cli measure --suite responsiveness --trials-per-case 10 --report reports/responsiveness-new.json
+uv run --project backend python -m promisekeeper.cli measure --suite preservation --cycles 10 --report reports/preservation-new.json
 ```
 
 Live evaluation covers baseline/update and named variants, checks provenance/unknown handling/injection resistance and compares financial/action truth with deterministic expected outcomes. Three repeats assess observed variability; they do not prove universal model reproducibility. Record failures, latency and returned model identity. Responsiveness uses a declared environment and LIVE mode; a STUB report must be separately labeled and cannot stand in for live latency acceptance.
@@ -103,3 +108,7 @@ Run the five-owner evaluations for NFR-001/SC-001–SC-003/SC-007 using equivale
 Release requires recorded passes for AC-01–AC-27, all named financial/failure variants, and every NFR. Evidence/approval/history checks require 100% pass. Record all SC measurements; disclose unmet SC-002/SC-007 learning targets. Preserve failed/skipped/unexecuted labels. A passing offline fixture suite or walkthrough alone is insufficient for live-agent, human usability or production-readiness claims.
 
 Each phase report names scope, changed artifacts, commands actually executed, actual outcomes, unresolved/unexecuted checks, constitution check and proposed next phase. Stop for human review. Cutoff is 26 October 2026 10:00 IST; report any P0 shortfall and obtain an explicit scope decision rather than waive safety/tests or declare an unvalidated release passed.
+
+## Personal user testing
+
+Follow [the hands-on guide](../../docs/user-testing/README.md), [fourteen manual cases](../../docs/user-testing/test-cases.md) and [canonical sample records](../../docs/user-testing/sample-data.json). Start in STUB/REFERENCE with a separate owner-user-tests.sqlite file; no API key is needed. For business-owner demonstration language see [the pitch and demo script](../../docs/user-testing/small-business-pitch.md). The fictional-only/no-send limits remain visible. Frozen LIVE qualification is recorded separately; the required five-owner study remains unexecuted.

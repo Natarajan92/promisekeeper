@@ -4,7 +4,7 @@
 
 **Input**: `specs/001-payment-case-mvp/spec.md`, including all three accepted clarifications, the four approved analysis remedies, and FV-01 through FV-18.
 
-**Status**: Planning/design artifacts only. No implementation phase, installation, or product acceptance is authorized by this command.
+**Status**: Gates I-IV are owner-approved and published; Gate IV is `0454551`. Gate V engineering and technical verification are complete. T060 qualifies under frozen criteria after 153 attempts (152 correct returns, one provider gap, zero unexecuted). The required five-owner study remains UNEXECUTED; formal Gate V / Release 0.1 acceptance is blocked. The owner approved publishing the fictional test build while retaining that acceptance block. Earlier failures remain preserved.
 
 ## Summary
 
@@ -18,7 +18,7 @@ Bind commitments to immutable catalogue anchors scoped to copy/source version, i
 
 **Language/Version**: Python 3.12; TypeScript with Node 24 for UI tooling. Select and record supported patch/compiler versions during authorized setup.
 
-**Primary Dependencies**: FastAPI/Uvicorn, strict Pydantic 2, uv, OpenAI Python SDK Responses adapter, tzdata; React/Vite; pytest, Vitest, Playwright. Resolve compatible versions and commit uv.lock/package-lock.json during setup; do not invent exact pins. Provider candidate: gpt-5.6-terra, reasoning effort none, subject to account access and measured acceptance. See [research.md](research.md).
+**Primary Dependencies**: FastAPI/Uvicorn, strict Pydantic 2, uv, OpenAI Python SDK for Nebius Chat Completions/JSON-schema adapter, tzdata; React/Vite; pytest, Vitest, Playwright. Resolve compatible versions and commit uv.lock/package-lock.json during setup; do not invent exact pins. Provider amendment approved on 24 October 2026: Nebius Token Factory via its OpenAI-compatible Chat Completions/JSON-schema interface; PK_NEBIUS_MODEL candidate subject to account access and measured acceptance (ADR-006). The previous OpenAI provider/model choice is superseded. See [research.md](research.md).
 
 **Storage**: One local SQLite file under ignored `.runtime/`, isolated demonstration-copy IDs, explicit transactions, immutable evidence/results/drafts, operation receipts, append-only case history. Standard-library sqlite3; DELETE journal, synchronous EXTRA, foreign keys per connection. No ORM, broker, cloud database, or distributed queue.
 
@@ -28,7 +28,7 @@ Bind commitments to immutable catalogue anchors scoped to copy/source version, i
 
 **Project Type**: Local Python web service and React application; no production deployment.
 
-**Performance Goals**: NFR-002: at least 29/30 saved case opens within 3 seconds; at least 29/30 start acknowledgements within 2 seconds; every attempt visibly completed/limited/incomplete within 60 seconds. Backend overall deadline 55 seconds, provider calls at most 20 seconds each, no SDK retries, UI watchdog at 60 seconds. Targets are unmeasured.
+**Performance Goals**: NFR-002: at least 29/30 saved case opens within 3 seconds; at least 29/30 start acknowledgements within 2 seconds; every attempt visibly completed/limited/incomplete within 60 seconds. Backend overall deadline 55 seconds, provider calls at most 20 seconds each, no SDK retries, UI watchdog at 60 seconds. Final measurements meet the timing limits: HTTP 30/30 fast opens/starts; browser 30/30 fast opens and 29/30 fast starts, all visible terminal results within 10.414 seconds. See `reports/runtime-validation.md` from the repository root.
 
 **Constraints**: One agent role and one sequential Investigator execution slot; at most one automatic retry per failed step. Approved fictional input only; no arbitrary uploads, authentication, financial edits, sending, unattended contact, or automatic closure. Exact INR paise and Asia/Kolkata boundaries. Deadline: 26 October 2026, 10:00 IST.
 
@@ -92,7 +92,7 @@ backend/
     domain/                         # Pure money, dates, rules, eligibility
     contracts/                      # Strict Pydantic boundary models
     tools/                          # Read-only snapshot lookup
-    agents/                         # Investigator protocol, OpenAI/scripted adapters
+    agents/                         # Investigator protocol, Nebius/scripted adapters
     orchestration/                  # Attempts, deadlines, retries, output fencing
     persistence/                    # SQLite migrations/repositories, ownership
     application/                    # Commands, queries, receipts, draft templates
@@ -141,7 +141,7 @@ Every phase is P0-essential; no phase covers the whole application. Detailed dep
 
 ## Verification and Release Limits
 
-[quickstart.md](quickstart.md) defines future setup/run/validation commands. Application files do not exist in this planning delivery, so those commands and product acceptance remain unexecuted. Account access, resolved dependency compatibility and actual model latency/quality are phase gates; failure cannot silently change provider or weaken a target.
+[quickstart.md](quickstart.md) distinguishes available setup/run/check commands from later release measurements. Gates I–II are implemented and owner-approved; Gate III implementation is undergoing live acceptance as recorded in [its report](../../reports/phase-iii.md). Later-gate product acceptance remains unexecuted. Account access, resolved dependency compatibility and actual model latency/quality are phase gates; failure cannot silently change provider or weaken a target.
 
 Reject non-loopback Host/non-allowlisted browser Origin, require JSON plus a custom same-origin mutation header, and disable wildcard CORS. This is a fictional demo boundary, not authentication or production readiness. Keep secrets backend-only and redact diagnostics. Retain demonstration history until explicit deletion; never reset on restart. Real-data release requires access/retention/deletion policy first.
 
