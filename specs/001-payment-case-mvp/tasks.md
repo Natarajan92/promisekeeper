@@ -4,7 +4,7 @@
 **Created**: 2026-10-23
 **Feature context**: `001-payment-case-mvp`; no Git branch is created by this command.
 **Prerequisites**: [spec.md](spec.md), [plan.md](plan.md), [research.md](research.md), [data-model.md](data-model.md), [API/tool contracts](contracts/api.md), [Investigator schema](contracts/investigator-output.schema.json), [UI contract](contracts/ui.md), and [quickstart.md](quickstart.md).
-**Status**: Gate I (T001–T020) is complete under the owner's authorization and awaits review; see [the Gate I report](../../reports/phase-i.md). Task markers record executed work only. Gates II–V and release acceptance remain unauthorized/unexecuted.
+**Status**: Gate I (T001–T020) is complete and was reviewed and approved by the owner on 24 October 2026; see [the Gate I report](../../reports/phase-i.md). Task markers record executed work only. Gates II–V and release acceptance remain unauthorized/unexecuted.
 **Tests**: Required by the feature's acceptance criteria and constitution X. Write the targeted contract/domain/component tests before their implementation, then record actual outcomes. For new behavior, establish a meaningful functional failure first; a missing tool/import is not acceptance evidence. Existing cross-flow regressions may already pass and must not be deliberately broken.
 **Organization**: Task phases group work by story; implementation Gates I–V preserve the approved plan's separate human reviews. Shared mechanisms belong in foundations or the earliest story; later stories reuse them.
 **Scope**: US1–US5 are P0-essential. US6/AC-28/FR-024 are deferred P1 with zero active tasks. A read-only US1 demonstration is an early increment, not the completed Release 0.1 MVP.
