@@ -11,15 +11,26 @@ async function open(page:Page,id:string){await page.addInitScript(copy=>localSto
 async function noSideways(page:Page){expect(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth+1)).toBe(true);}
 
 test('P1 busy owner: one morning review gives a briefing and a ready follow-up draft',async({page,request})=>{
+  await page.setViewportSize({width:1280,height:800});
   const copy=await createCopy(request);await open(page,copy.id);
   await shot(page,'p1-first-run');
   await page.getByRole('button',{name:'Start morning review'}).click();
-  await expect(page.locator('.briefing-text')).toBeVisible({timeout:30_000});
+  await expect(page.getByText('Review complete. Choose a case to see its recommendation.')).toBeVisible({timeout:30_000});
+  await expect(page.locator('.briefing-text')).not.toBeVisible();
+  await page.getByText('Read saved briefing',{exact:true}).click();
   await expect(page.locator('.briefing-text')).toContainText('Northstar Analytics');
   await shot(page,'p1-briefing');
   await page.getByRole('button',{name:/Northstar Analytics.*draft ready/}).click();
   await expect(page.getByRole('heading',{name:'Follow up on the overdue balance'})).toBeVisible();
+  await expect(page.getByRole('heading',{name:'Northstar Analytics',exact:true})).toBeFocused();
+  await expect(page.locator('.findings .financial-summary')).toBeInViewport({ratio:1});
+  await expect(page.getByRole('button',{name:'Review suggested message'})).toBeInViewport({ratio:1});
+  await expect(page.getByRole('region',{name:'How your AI team worked on this case'})).toHaveCount(0);
+  await page.screenshot({path:`${shots}owner-phase1-desktop.png`});
+  let writes=0;page.on('request',request=>{if(request.method()==='POST')writes++;});
+  await page.getByText('Developer insights',{exact:true}).click();
   await expect(page.getByRole('region',{name:'How your AI team worked on this case'})).toContainText('Tone reviewer');
+  expect(writes).toBe(0);
   await shot(page,'p1-findings-trace');
   await page.getByRole('button',{name:'Review',exact:true}).click();
   await expect(page.getByLabel('Draft text')).toHaveValue(/Thank you for keeping us informed/);
@@ -46,7 +57,7 @@ test('P3 returning owner: new evidence makes the old result historical and the s
   await page.getByRole('button',{name:/PK-001.*Northstar Analytics/}).click();
   await shot(page,'p3-stale');
   await page.getByRole('button',{name:'Start morning review'}).click();
-  await expect(page.locator('.briefing-text')).toBeVisible({timeout:30_000});
+  await expect(page.getByText('Review complete. Choose a case to see its recommendation.')).toBeVisible({timeout:30_000});
   await expect(page.getByRole('button',{name:/Northstar Analytics.*investigated now/})).toBeVisible();
   await page.getByRole('button',{name:'History',exact:true}).click();
   await shot(page,'p3-history');
@@ -74,11 +85,12 @@ test('P5 sceptical owner: unsafe edits are blocked, feedback is saved and the tr
   await investigate(request,copy.id,northstar.id);await open(page,copy.id);
   await page.getByRole('button',{name:/PK-001.*Northstar Analytics/}).click();
   await page.getByRole('button',{name:'Findings',exact:true}).click();
+  await page.getByText('Developer insights',{exact:true}).click();
   await expect(page.getByText('→ Safety check: personal note')).toBeVisible();
   await page.getByRole('button',{name:'Needs work'}).click();
   await page.getByLabel('What should be better? (optional)').fill('Please mention the earlier promise date.');
   await page.getByRole('button',{name:'Send feedback'}).click();
-  await expect(page.getByText(/Saved locally|Saved\. Thanks/)).toBeVisible();
+  await expect(page.getByText(/Feedback saved/)).toBeVisible();
   await page.getByRole('button',{name:'Review',exact:true}).click();
   const text=await page.getByLabel('Draft text').inputValue();
   await page.getByLabel('Draft text').fill(text.replace('Thank you for keeping us informed about the project.','A late fee of INR 500 applies.'));
@@ -100,7 +112,12 @@ test('P6 small laptop, keyboard and large text: the morning review is reachable 
   for(let i=0;i<40&&!(await start.evaluate(el=>el===document.activeElement));i++)await page.keyboard.press('Tab');
   await expect(start).toBeFocused();
   await page.keyboard.press('Enter');
-  await expect(page.locator('.briefing-text')).toBeVisible({timeout:30_000});
+  await expect(page.getByText('Review complete. Choose a case to see its recommendation.')).toBeVisible({timeout:30_000});
   await noSideways(page);
   await shot(page,'p6-mobile-zoom');
+  await page.getByRole('button',{name:/Northstar Analytics.*investigated now/}).click();
+  await expect(page.getByRole('heading',{name:'Northstar Analytics',exact:true})).toBeFocused();
+  await noSideways(page);
+  await page.locator('.findings .financial-summary').scrollIntoViewIfNeeded();
+  await page.screenshot({path:`${shots}owner-phase1-mobile-zoom.png`});
 });

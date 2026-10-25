@@ -1,5 +1,10 @@
 # Implementation Plan: PromiseKeeper MVP Release 0.1
 
+> Subsequent scope decision (25 October 2026): the owner accepted UX Phase 1 and
+> authorized US6 / AC-28 / FR-024 under [owner experience Phase 2](../003-owner-experience/phase2-spec.md).
+> Deferred statements below describe this original MVP task set; new implementation
+> and evidence belong to the separate Phase 2 artifacts. Optional conversation remains deferred.
+
 **Branch**: `001-payment-case-mvp` (feature branch for the owner-authorized implementation) | **Date**: 2026-10-23 | **Spec**: [spec.md](spec.md)
 
 **Input**: `specs/001-payment-case-mvp/spec.md`, including all three accepted clarifications, the four approved analysis remedies, and FV-01 through FV-18.

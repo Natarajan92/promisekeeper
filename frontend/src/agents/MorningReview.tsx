@@ -31,7 +31,7 @@ export function MorningReview({api, did, onOpenCase, onDone, maxWaitMs = MAX_POL
         setMessage('Still working. Your cases stay available; choose Check again in a moment.');
         return;
       }
-      if (current.status === 'FAILED') setMessage(`Morning review stopped: ${words(current.failure_code ?? 'unknown')}. Saved cases are unchanged.`);
+      if (current.status === 'FAILED') setMessage(`Morning review stopped: ${words(current.failure_code ?? 'unknown')}. Completed case results remain saved. Check each case before retrying.`);
       onDone();
     } catch (error) {
       if (mounted.current) setMessage(`Could not check the morning review: ${error instanceof Error ? error.message : 'try again.'}`);
@@ -70,7 +70,7 @@ export function MorningReview({api, did, onOpenCase, onDone, maxWaitMs = MAX_POL
         <h2 id="morning-heading">Morning review</h2>
         <p className="subtle">Your AI supervisor checks every open case, investigates the ones that need it and briefs you. Nothing is sent or approved without you.</p>
       </div>
-      <button className="primary" disabled={running} onClick={() => void start()}>{running ? 'Reviewing your cases…' : 'Start morning review'}</button>
+      <button className={review?.status==='COMPLETE'?undefined:'primary'} disabled={running} onClick={() => void start()}>{running ? 'Reviewing your cases…' : 'Start morning review'}</button>
     </div>
     {message && <p className="notice" role="status">{message}</p>}
     {review?.status === 'RUNNING' && !working && <button onClick={() => void follow(review)}>Check again</button>}
@@ -78,10 +78,7 @@ export function MorningReview({api, did, onOpenCase, onDone, maxWaitMs = MAX_POL
       <li key={`${row.at}-${index}`}><strong>{AGENT_LABEL[row.agent]}</strong> {OUTCOME_LABEL[row.outcome]}{row.note ? `: ${row.note}` : ''}</li>)}</ol>}
     {review?.briefing && review.status !== 'RUNNING' && <div className="briefing">
       {review.started_by === 'AUTONOMOUS' && <p className="autonomy-label">Started automatically by your AI supervisor because cases were due.</p>}
-      <p className="briefing-text">{review.briefing}</p>
-      <p className="subtle">{review.briefing_source === 'AGENT'
-        ? "Written by the Briefing agent. Each amount and date was checked against that case's facts; spelled-out amounts are not allowed."
-        : 'Plain summary written by code (the Briefing agent was unavailable or not trusted for this run).'}</p>
+      <p className="briefing-status">{review.status==='COMPLETE'?'Review complete. Choose a case to see its recommendation.':'Review stopped. Check saved case outcomes before retrying.'}</p>
       <ul className="briefing-cases">{review.outcomes.map(outcome => <li key={outcome.case_id}>
         <button onClick={() => onOpenCase(outcome.case_id)}>
           <strong>{outcome.client}</strong>
@@ -90,6 +87,12 @@ export function MorningReview({api, did, onOpenCase, onDone, maxWaitMs = MAX_POL
         </button>
         {outcome.reason && <p className="subtle">{outcome.reason}</p>}
       </li>)}</ul>
+      <details className="saved-briefing"><summary>Read saved briefing</summary>
+        <p className="briefing-text">{review.briefing}</p>
+        <p className="subtle">{review.briefing_source === 'AGENT'
+          ? "Written by the Briefing agent. Each amount and date was checked against that case's facts; spelled-out amounts are not allowed."
+          : 'Plain summary written by code (the Briefing agent was unavailable or not trusted for this run).'}</p>
+      </details>
       {steps.length > 0 && <details className="agent-disclosure"><summary>See what the supervisor did</summary><ol className="morning-steps">{steps.map((row, index) =>
         <li key={`${row.at}-${index}`}><strong>{AGENT_LABEL[row.agent]}</strong> {OUTCOME_LABEL[row.outcome]}{row.note ? `: ${row.note}` : ''}</li>)}</ol></details>}
     </div>}

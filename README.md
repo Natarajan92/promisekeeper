@@ -38,6 +38,8 @@ flowchart LR
 
 **Why it is built this way.** In a finance product the AI reads and writes words; code owns every amount, date and action; the owner approves. The agents talk through a typed hand-off protocol (a note can never skip the safety check), every step is recorded with time and tokens in a visible trace, provider outages trip a circuit breaker and fall back to the standard template, and the owner's draft approval resumes the paused LangGraph run, even after a restart.
 
+The owner accepted UX Phases 1 and 2, including read-only comparison of saved investigations and guidance to verify Cedar's payment in external bank/accounting records. [Phase 3](specs/003-owner-experience/phase3-spec.md) completes the presentation with a consistent casebook layout, readable saved-copy and history labels, and a rehearsed fictional STUB demonstration. Its [verification report](reports/owner-experience-phase-iii.md) records the implementation, browser checks and limits of the automated rehearsal. The owner authorized publishing and merging the UX work on 25 October 2026; formal human acceptance remains pending.
+
 ## Try it in three commands
 
 ```powershell
@@ -52,7 +54,7 @@ For real models, set `PK_AGENT_MODE=LIVE` and `NEBIUS_API_KEY` in `.env`. Option
 
 ## Status, honestly
 
-- Release 0.1 (Gates I–V) is published. The single-extractor pipeline qualified with 152 of 153 correct LIVE results under frozen criteria.
+- The fictional engineering build is published; formal Gate V / Release 0.1 acceptance remains pending the actual five-owner study. Historical single-extractor qualification recorded 152 correct returns from 153 attempts, with one provider availability gap, under frozen criteria. That evidence does not qualify the new agents.
 - The multi-agent upgrade (branch `002-multi-agent-upgrade`) passes its offline tests: backend, frontend, browser, and six simulated persona walkthroughs ([report](reports/persona-walkthroughs.md)). **The new agents have not yet been measured on live models.** Run `evaluate --suite agents` and `--suite hinglish` in LIVE mode to measure them ([upgrade report](reports/multi-agent-upgrade.md)).
 - The five-owner usability study has not been run. All data is fictional; there is no authentication and no sending capability.
 
