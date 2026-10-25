@@ -131,10 +131,16 @@ def _server(settings, dbpath):
             process.wait(timeout=5)
 
 
+RELEASE_CASE_IDS = ('PK-001', 'PK-002', 'PK-003')
+# Ten release-case versions (nine seeded plus the staged PK-003 update) and six from the demo cases PK-004..006.
+SAVED_EVIDENCE_VERSIONS = 16
+
+
 def _seed(client):
     did = client.request('/demonstrations', command(catalogue_version='release-0.1', variant_id=None, clock_mode='REFERENCE'))['demonstration_id']
     cases = client.request(f'/demonstrations/{did}/cases')['cases']
-    return did, {row['catalogue_case_id']: row['id'] for row in cases}
+    # Release measurements stay scoped to the three release-0.1 acceptance cases; later demo cases are not measured here.
+    return did, {row['catalogue_case_id']: row['id'] for row in cases if row['catalogue_case_id'] in RELEASE_CASE_IDS}
 
 
 def _case(client, did, cid):
@@ -296,7 +302,7 @@ def _preservation(settings, path, report, dbpath):
         row['prior_immutable_rows_preserved'] = (_prior_immutable_rows_preserved(previous, before)
             and _prior_immutable_rows_preserved(previous, after))
         row['prior_immutable_hash'] = _digest(previous)
-        row['expected_counts_correct'] = (len(after['evidence_versions']) == 10 and len(after['investigations']) == cycle + 1
+        row['expected_counts_correct'] = (len(after['evidence_versions']) == SAVED_EVIDENCE_VERSIONS and len(after['investigations']) == cycle + 1
             and len(after['investigation_results']) == cycle + 1 and len(after['draft_reviews']) == cycle
             and sum(event['event_type'] == 'CASE_CLOSED' for event in after['case_events']) == 1)
         row['passed'] = (approved and closure and attempt['terminal_within_60s'] and attempt['duplicate_receipt_correct']

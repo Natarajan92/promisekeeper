@@ -25,7 +25,8 @@ def assert_expected(fixture,at):
     return result
 
 
-@pytest.mark.parametrize("cid,action,balance",[("PK-001","FOLLOW_UP",8000000),("PK-002","WAIT",5000000),("PK-003","VERIFY_PAYMENT",6000000)])
+@pytest.mark.parametrize("cid,action,balance",[("PK-001","FOLLOW_UP",8000000),("PK-002","WAIT",5000000),("PK-003","VERIFY_PAYMENT",6000000),
+                                               ("PK-004","FOLLOW_UP",6000000),("PK-005","VERIFY_PAYMENT",4500000),("PK-006","CLOSE",0)])
 def test_baseline_business_facts_and_action_are_literal_acceptance_expectations(cid,action,balance):
     demo=fresh_copy();fixture=demo.cases[cid]
     result=assert_expected(fixture,demo.evaluation_at)

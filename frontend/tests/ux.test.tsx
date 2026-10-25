@@ -68,6 +68,7 @@ it('refreshes a waiting overview at its review time even when a different case i
   });
   try {
     await act(async()=>{render(<App api={api}/>);});
+    fireEvent.click(screen.getByRole('button',{name:/Show all \d+ cases/}));
     const evidence=screen.getByRole('button',{name:'Evidence'});evidence.focus();
     expect(within(screen.getByRole('button',{name:/Waiting client/})).getByText('Wait until the review date')).toBeInTheDocument();
     await act(async()=>{await vi.advanceTimersByTimeAsync(1_000);});

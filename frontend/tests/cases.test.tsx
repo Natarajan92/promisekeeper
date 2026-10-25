@@ -87,6 +87,7 @@ it('discards a delayed source reply after navigating away and back within the sa
   render(<App api={api}/>);
   await screen.findByRole('heading',{name:'Studio North'});
   fireEvent.click(screen.getByRole('button',{name:/^Inspect exact source version: message-1/}));
+  fireEvent.click(screen.getByRole('button',{name:/Show all \d+ cases/}));
   fireEvent.click(screen.getByRole('button',{name:/PK-002.*Second Studio/}));
   await screen.findByRole('heading',{name:'Second Studio'});
   fireEvent.click(screen.getByRole('button',{name:/PK-001.*Studio North/}));
@@ -109,6 +110,7 @@ it('does not append a delayed history page under another case', async () => {
   await screen.findByRole('heading',{name:'Studio North'});
   fireEvent.click(screen.getByRole('button',{name:'History'}));
   fireEvent.click(await screen.findByRole('button',{name:'Load more history'}));
+  fireEvent.click(screen.getByRole('button',{name:/Show all \d+ cases/}));
   fireEvent.click(screen.getByRole('button',{name:/PK-002.*Second Studio/}));
   await screen.findByRole('heading',{name:'Second Studio'});
   fireEvent.click(screen.getByRole('button',{name:'History'}));

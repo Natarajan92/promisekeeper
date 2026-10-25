@@ -266,7 +266,7 @@ def test_http_rejects_arbitrary_real_data_and_does_not_echo_rejected_payload_or_
         did = created.json()['demonstration_id']
         rows = client.get(f'/api/v1/demonstrations/{did}/cases').json()['cases']
         cid = rows[0]['id']
-        assert len(rows) == 3
+        assert len(rows) == 6
         response = client.get(f'/api/v1/cases/{cid}/scenario-events/{SENTINEL}/preview', params={'demonstration_id': did})
         assert response.status_code == 422 and SENTINEL not in response.text
         def fail(con):

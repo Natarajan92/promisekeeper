@@ -176,3 +176,18 @@ footer{font-size:.75rem;background:var(--paper);padding:20px max(24px,3.5vw)}
   .comparison-values,.comparison-selectors{grid-template-columns:minmax(0,1fr)}.comparison-side{padding:16px}.evidence-record{padding:16px}.record-heading{align-items:flex-start}
   .source-dialog{padding:16px}.source-dialog header{flex-wrap:wrap}.history-list>li{padding-left:16px}.confirmation-panel{padding:16px}.draft-review>h2{font-size:1.2rem;line-height:1.25}
 }
+/* Morning review strip: one row of case cards in the supervisor's order, scrolled sideways. */
+.briefing-strip{display:flex;align-items:stretch;gap:.4rem;min-width:0}
+.briefing-strip .briefing-cases{display:flex;flex:1;min-width:0;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;padding:.2rem .1rem .7rem;margin-top:.5rem}
+.briefing-strip .briefing-cases>li{flex:0 0 clamp(15rem,27%,21rem);scroll-snap-align:start;display:flex;flex-direction:column}
+.briefing-strip .briefing-cases>li>button{flex:1}
+.strip-nav{align-self:center;padding:.4rem .7rem;font-size:1.3rem;line-height:1}
+.briefing-rank{font-size:.72rem!important;font-weight:bold;text-transform:uppercase;letter-spacing:.04em;color:var(--blue)!important}
+.supervisor-reason{color:var(--ink)}
+.case-filter-note{font-size:.78rem;color:var(--muted);margin:0 0 .2rem}
+.case-filter{margin-bottom:.6rem}
+@media(max-width:720px){.briefing-strip .briefing-cases{grid-template-columns:none}.briefing-strip .briefing-cases>li{flex-basis:min(80vw,19rem)}.strip-nav{display:none}}
+@media(prefers-reduced-motion:reduce){.briefing-strip .briefing-cases{scroll-behavior:auto}}
+.attention-badge{font-size:.72rem!important;font-weight:bold;padding:.05rem .45rem;border-radius:3px;border:1px solid}
+.attention-badge.urgent{color:var(--amber)!important;border-color:#d9b46a;background:#fff5df}
+.attention-badge.can-wait{color:var(--muted)!important;border-color:var(--line)}

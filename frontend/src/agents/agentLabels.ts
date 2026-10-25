@@ -9,7 +9,7 @@ export const AGENT_LABEL: Record<AgentName, string> = {
 export const AGENT_ROLE: Record<AgentName, string> = {
   INTAKE: 'Reads the saved evidence', EXTRACTOR: 'AI: finds promises and payment claims', RULES_ENGINE: 'Code: money, dates and the one next step',
   MEMORY: 'Recalls this client’s payment history', COMMUNICATOR: 'AI: writes one friendly note', SAFETY_CHECK: 'Code: blocks amounts, fees and instructions',
-  TONE_REVIEWER: 'AI: checks the note is polite and fair', OWNER: 'You decide; nothing is sent', SUPERVISOR: 'Decides which cases need work',
+  TONE_REVIEWER: 'AI: checks the note is polite and fair', OWNER: 'You decide; nothing is sent', SUPERVISOR: 'AI: plans which case to work on next',
   BRIEFING: 'AI: summarises your cases',
 };
 

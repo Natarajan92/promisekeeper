@@ -93,7 +93,7 @@ def test_token_rates_parse_per_model(tmp_path):
 
 def test_agent_roster_marks_unconfigured_providers_unavailable(tmp_path):
     stub = {a["role"]: a for a in load_settings({}, workspace=tmp_path).safe_summary()["agents"]}
-    assert set(stub) == {"Extractor", "Communicator", "Tone Reviewer", "Briefing", "Memory"}
+    assert set(stub) == {"Supervisor", "Extractor", "Communicator", "Tone Reviewer", "Briefing", "Memory"}
     assert all(a["available"] and a["provider"] == "SCRIPTED" for a in stub.values())
     live = {a["role"]: a for a in load_settings({"PK_AGENT_MODE": "LIVE", "NEBIUS_API_KEY": "k", "PK_REVIEWER_PROVIDER": "FIREWORKS"},
                                                workspace=tmp_path).safe_summary()["agents"]}
@@ -114,3 +114,15 @@ def test_export_tracing_sets_only_langsmith_environment(monkeypatch, tmp_path):
     export_tracing(load_settings({"LANGSMITH_PROJECT": "pk-demo", "NEBIUS_API_KEY": "nb"}, workspace=tmp_path))
     assert os.environ["LANGSMITH_PROJECT"] == "pk-demo"
     assert os.environ.get("NEBIUS_API_KEY") != "nb"
+
+
+def test_supervisor_model_is_separate_and_validated(tmp_path):
+    base = {"PK_AGENT_MODE": "LIVE", "NEBIUS_API_KEY": "k"}
+    same = {a["role"]: a for a in load_settings(base, workspace=tmp_path).safe_summary()["agents"]}
+    assert same["Supervisor"]["model"] == same["Extractor"]["model"]
+    small = load_settings(base | {"PK_SUPERVISOR_MODEL": "small/decision-model"}, workspace=tmp_path)
+    roster = {a["role"]: a for a in small.safe_summary()["agents"]}
+    assert roster["Supervisor"]["model"] == "small/decision-model" and roster["Extractor"]["model"] != "small/decision-model"
+    assert roster["Supervisor"]["can_change"] == ["which case is investigated next"]
+    with pytest.raises(ValueError):
+        load_settings(base | {"PK_SUPERVISOR_MODEL": "bad model name"}, workspace=tmp_path)

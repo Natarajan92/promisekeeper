@@ -3,11 +3,12 @@
 import argparse
 import json
 import os
+import re
 from uuid import uuid4
 
 from promisekeeper.application.cases import create_demonstration
 from promisekeeper.application.operations import CommandError
-from promisekeeper.config import load_settings
+from promisekeeper.config import MODEL_PATTERN, load_settings
 from promisekeeper.persistence.ownership import OwnershipError
 from promisekeeper.persistence.sqlite import Database
 
@@ -17,10 +18,12 @@ def export_tracing(settings):
     os.environ.update(settings.tracing)
 
 
-def run_agent_suite(settings, suite, *, repeats):
+def run_agent_suite(settings, suite, *, repeats, models=None):
     """Offline in STUB (proves the harness only); real provider calls in LIVE."""
     from promisekeeper.agents.roster import build_agents
     from promisekeeper.application import agent_evaluation as evaluation
+    if suite == 'supervisor':
+        return run_supervisor_suite(settings, repeats=repeats, models=models)
     if suite == 'agents':
         agents = build_agents(settings)
         judge = evaluation.ScriptedJudge() if settings.agent_mode == 'STUB' else (
@@ -32,6 +35,26 @@ def run_agent_suite(settings, suite, *, repeats):
         classifier = evaluation.ScriptedHinglishClassifier() if settings.agent_mode == 'STUB' else evaluation.LiveHinglishClassifier(settings)
         report = evaluation.evaluate_hinglish(classifier)
     report['langsmith_uploaded'] = evaluation.upload_to_langsmith(report, f'promisekeeper-{suite}')
+    return report
+
+
+def run_supervisor_suite(settings, *, repeats, models=None):
+    """Compare planning-supervisor models side by side on the same scenarios (LIVE), or prove the harness (STUB)."""
+    from dataclasses import replace
+    from promisekeeper.agents.supervisor import NebiusSupervisor, ScriptedSupervisor
+    from promisekeeper.application import agent_evaluation as evaluation
+    if settings.agent_mode == 'STUB':
+        report = evaluation.evaluate_supervisor(ScriptedSupervisor(), repeats=1)
+    else:
+        if not settings.api_key:
+            raise ValueError('LIVE supervisor evaluation requires the Nebius key')
+        names = models or [settings.supervisor_model or settings.model]
+        if any(not re.fullmatch(MODEL_PATTERN, name) for name in names):
+            raise ValueError('Model configuration is invalid')
+        runs = [evaluation.evaluate_supervisor(NebiusSupervisor(replace(settings, supervisor_model=name)), repeats=repeats) for name in names]
+        report = dict(runs[0], models=names, comparison=[dict(model=run['model'], metrics=run['metrics'], items=run['items']) for run in runs],
+                      metrics={run['model']: run['metrics'] for run in runs})
+    report['langsmith_uploaded'] = evaluation.upload_to_langsmith(report, 'promisekeeper-supervisor')
     return report
 
 
@@ -47,10 +70,11 @@ def main(argv=None):
     serve.add_argument("--port", type=int, default=8000)
     serve.add_argument("--workers", type=int, default=1, choices=[1])
     evaluate = sub.add_parser('evaluate')
-    evaluate.add_argument('--suite', required=True, choices=['live', 'fixtures', 'agents', 'hinglish'])
+    evaluate.add_argument('--suite', required=True, choices=['live', 'fixtures', 'agents', 'hinglish', 'supervisor'])
     evaluate.add_argument('--catalogue', required=True, choices=['release-0.1'])
     evaluate.add_argument('--repeats', type=int, default=3)
     evaluate.add_argument('--output', default=None)
+    evaluate.add_argument('--models', default=None, help='supervisor suite: comma-separated models to compare (LIVE)')
     measure = sub.add_parser('measure')
     measure.add_argument('--suite', required=True, choices=['responsiveness', 'preservation'])
     measure.add_argument('--trials-per-case', type=int, default=10, choices=[10])
@@ -66,8 +90,9 @@ def main(argv=None):
                 parser.exit(1, 'Scripted catalogue evaluation did not pass. See the report.\n')
             return
         settings = load_settings()
-        if args.command == 'evaluate' and args.suite in {'agents', 'hinglish'}:
-            report = run_agent_suite(settings, args.suite, repeats=args.repeats)
+        if args.command == 'evaluate' and args.suite in {'agents', 'hinglish', 'supervisor'}:
+            models = [name.strip() for name in args.models.split(',') if name.strip()] if args.models else None
+            report = run_agent_suite(settings, args.suite, repeats=args.repeats, models=models)
             output = args.output or f'reports/{args.suite}-evaluation.json'
             with open(output, 'w', encoding='utf-8') as handle:
                 json.dump(report, handle, indent=2, ensure_ascii=False)

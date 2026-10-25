@@ -41,8 +41,10 @@ def test_morning_review_investigates_all_new_cases_and_briefs(tmp_path):
         did = demo(db)
         result = review(db, did)
         assert result['status'] == 'COMPLETE' and result['briefing_source'] == 'AGENT'
-        assert [o['outcome'] for o in result['outcomes']] == ['INVESTIGATED'] * 3
-        assert [o['action'] for o in result['outcomes']] == ['FOLLOW_UP', 'WAIT', 'VERIFY_PAYMENT']
+        assert [o['outcome'] for o in result['outcomes']] == ['INVESTIGATED'] * 6
+        # Without a planning supervisor the review takes due cases in rule (catalogue) order.
+        assert [o['action'] for o in result['outcomes']] == ['FOLLOW_UP', 'WAIT', 'VERIFY_PAYMENT', 'FOLLOW_UP', 'VERIFY_PAYMENT', 'CLOSE']
+        assert [o['priority'] for o in result['outcomes']] == [1, 2, 3, 4, 5, 6]
         for outcome in result['outcomes']:
             assert outcome['client'] in result['briefing']
         agents_seen = [row['agent'] for row in result['agent_activity']]
@@ -55,7 +57,7 @@ def test_second_morning_review_skips_current_cases(tmp_path):
         review(db, did)
         before = investigation_count(db, did)
         again = review(db, did)
-        assert [o['outcome'] for o in again['outcomes']] == ['SKIPPED'] * 3
+        assert [o['outcome'] for o in again['outcomes']] == ['SKIPPED'] * 6
         assert all(o['reason'] for o in again['outcomes'])
         assert investigation_count(db, did) == before
 
@@ -115,7 +117,8 @@ def test_morning_review_api(tmp_path):
         started = client.post(url, json=dict(schema_version='1', operation_id=str(uuid4())), headers=headers)
         assert started.status_code == 202
         view = client.get(f"/api/v1/morning-reviews/{started.json()['id']}", params={'demonstration_id': did}).json()
-        assert view['status'] == 'COMPLETE' and len(view['outcomes']) == 3
+        assert view['status'] == 'COMPLETE' and len(view['outcomes']) == 6
+        assert all(o['supervisor_reason'] for o in view['outcomes'] if o['outcome'] == 'INVESTIGATED')
         latest = client.get(f'{url}/latest').json()
         assert latest['morning_review']['id'] == started.json()['id']
         assert client.get(f'/api/v1/morning-reviews/{uuid4()}', params={'demonstration_id': did}).status_code == 404

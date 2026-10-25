@@ -39,8 +39,12 @@ Release 0.1 MUST retain its original one-Investigator baseline. The owner-approv
 multi-agent upgrade of 24 October 2026, recorded in ADR-010, permits exactly these
 bounded LLM responsibilities on that upgrade and its descendant UX increments:
 Investigator/Promise Extractor, personal-note Communicator, Tone Reviewer, and Briefing
-writer. Evidence intake, payment rules, safety validation, case selection/supervision,
-persistence and approval eligibility MUST remain deterministic or human-operated.
+writer. The owner-approved amendment of 25 October 2026, recorded in ADR-011, adds a
+planning Morning Supervisor that may only order due investigations, optionally re-check
+a case whose saved recommendation is current, and decide when to finish, from structured
+facts and under code validation with deterministic fallback. Evidence intake, payment
+rules, safety validation, which cases are due, closed or running, persistence and approval
+eligibility MUST remain deterministic or human-operated.
 Client memory MUST provide context only and MUST NOT determine financial authority.
 
 Each LLM role MUST have an explicit typed boundary, bounded execution and safe failure

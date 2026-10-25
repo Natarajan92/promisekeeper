@@ -8,7 +8,7 @@ Every morning the owner asks: *what happened with this invoice, what can I trust
 
 ```mermaid
 flowchart LR
-  SUP[Morning supervisor<br/>picks cases that need work] -->|each due case| IN
+  SUP[Planning supervisor<br/>LLM picks the next case, re-plans<br/>code validates each choice] -->|next case| IN
   SUP -->|case outcomes| BRF[Briefing agent<br/>numbers checked against facts]
   BRF --> OWN([You])
   subgraph CASE[Case graph, one per invoice]
@@ -34,7 +34,7 @@ flowchart LR
 | Safety check | Deterministic code | No: blocks numbers, fees, payment claims, instructions |
 | Tone reviewer | LLM (Nebius or Fireworks) | No: accepts or asks for a revision |
 | Briefing writer | LLM (Nebius) | No: falls back to a plain summary if it states an unsupported number |
-| Morning supervisor | LangGraph supervisor | Starts investigations; never sends, approves or closes |
+| Planning supervisor | LLM (Nebius, own model setting) + code guardrails | Chooses which due case to investigate next or when to finish; never sends, approves or closes |
 
 **Why it is built this way.** In a finance product the AI reads and writes words; code owns every amount, date and action; the owner approves. The agents talk through a typed hand-off protocol (a note can never skip the safety check), every step is recorded with time and tokens in a visible trace, provider outages trip a circuit breaker and fall back to the standard template, and the owner's draft approval resumes the paused LangGraph run, even after a restart.
 
@@ -50,12 +50,15 @@ uv run --project backend python -m promisekeeper.cli serve --host 127.0.0.1 --po
 
 Build the UI once (`npm.cmd --prefix frontend ci; npm.cmd --prefix frontend run build`), open `http://127.0.0.1:8000`, and choose **Start morning review**. Then open a case to see the recommendation, the AI team trace and the draft.
 
-For real models, set `PK_AGENT_MODE=LIVE` and `NEBIUS_API_KEY` in `.env`. Optional: `PK_REVIEWER_PROVIDER=FIREWORKS` with `FIREWORKS_API_KEY` (an independent tone reviewer), `LANGSMITH_TRACING=true` with `LANGSMITH_API_KEY` (traces and owner feedback in LangSmith), `MEM0_API_KEY` (hosted client memory), `PK_AUTONOMOUS_REVIEW_MINUTES=30` (the supervisor starts reviews on its own), and `PK_TOKEN_RATES` (cost in the trace). See [.env.example](.env.example).
+The demo has six fictional cases: follow-ups, a promise still in date, two unverified payment claims and a settled invoice. Two customers write in Hinglish. The case overview shows the cases that need attention first; choose **Show all** for the rest.
+
+For real models, set `PK_AGENT_MODE=LIVE` and `NEBIUS_API_KEY` in `.env`. Optional: `PK_SUPERVISOR_MODEL` (a separate, possibly smaller, model for the planning supervisor), `PK_REVIEWER_PROVIDER=FIREWORKS` with `FIREWORKS_API_KEY` (an independent tone reviewer), `LANGSMITH_TRACING=true` with `LANGSMITH_API_KEY` (traces and owner feedback in LangSmith), `MEM0_API_KEY` (hosted client memory), `PK_AUTONOMOUS_REVIEW_MINUTES=30` (the supervisor starts reviews on its own), and `PK_TOKEN_RATES` (cost in the trace). See [.env.example](.env.example).
 
 ## Status, honestly
 
 - The fictional engineering build is published; formal Gate V / Release 0.1 acceptance remains pending the actual five-owner study. Historical single-extractor qualification recorded 152 correct returns from 153 attempts, with one provider availability gap, under frozen criteria. That evidence does not qualify the new agents.
 - The multi-agent upgrade (branch `002-multi-agent-upgrade`) passes its offline tests: backend, frontend, browser, and six simulated persona walkthroughs ([report](reports/persona-walkthroughs.md)). **The new agents have not yet been measured on live models.** Run `evaluate --suite agents` and `--suite hinglish` in LIVE mode to measure them ([upgrade report](reports/multi-agent-upgrade.md)).
+- The planning supervisor ([ADR-011](specs/001-payment-case-mvp/research.md)) passes its offline scenario suite, which proves the harness and guardrails only. **It has not been measured on live models.** Compare candidate models with `evaluate --suite supervisor --catalogue release-0.1 --models <large>,<small>` in LIVE mode ([report](reports/dynamic-supervisor.md)).
 - The five-owner usability study has not been run. All data is fictional; there is no authentication and no sending capability.
 
 To try the product by hand, use the [hands-on guide](docs/user-testing/README.md), the [test cases](docs/user-testing/test-cases.md) and the [fictional sample data](docs/user-testing/sample-data.json). The [small-business explanation](docs/user-testing/small-business-pitch.md) has a short pitch and honest answers about current limits.

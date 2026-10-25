@@ -2,7 +2,7 @@ import {mkdirSync,writeFileSync} from 'node:fs';
 import {fileURLToPath} from 'node:url';
 import {test,expect} from './support/test';
 import {createCopy} from './support/scenarioEvents';
-import {caseView,history} from './support/fixtures';
+import {caseView,history,showAllCases} from './support/fixtures';
 
 test('Phase 3 STUB rehearsal: morning briefing, exact approval, Cedar comparison, closure and saved fallback',async({page,request})=>{
   test.setTimeout(120_000); // Complete multi-case route plus visual checks; product deadlines are unchanged.
@@ -73,7 +73,7 @@ test('Phase 3 STUB rehearsal: morning briefing, exact approval, Cedar comparison
   await expect(page.locator('.case-heading')).toContainText('CLOSED');checkpoint('Owner explicitly confirmed closure');
 
   const savedHistory=await history(request,copy.id,cedar);writes.length=0;page.on('request',watch);
-  await page.reload();await page.getByRole('button',{name:/PK-003.*Cedar Retail Labs/}).click();await page.getByRole('button',{name:'Findings',exact:true}).click();
+  await page.reload();await showAllCases(page);await page.getByRole('button',{name:/PK-003.*Cedar Retail Labs/}).click();await page.getByRole('button',{name:'Findings',exact:true}).click();
   await expect(page.getByRole('heading',{name:'Review case closure',exact:true})).toBeVisible();expect(await history(request,copy.id,cedar)).toEqual(savedHistory);
   expect(writes).toEqual([]);checkpoint('Labelled saved-result fallback reopened without an investigation');
   await page.getByRole('button',{name:/PK-001.*Northstar Analytics/}).click();await page.getByRole('button',{name:'Findings',exact:true}).click();

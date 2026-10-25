@@ -66,12 +66,12 @@ def test_overview_clears_expired_wait_and_preserves_unknown_money(tmp_path):
         assert limited['balance'] is None and limited['balance_label'] == 'UNKNOWN_REMAINDER'
 
 
-def test_discovery_is_read_only_three_cases_and_exact_raw_sources_survive_restart(tmp_path):
+def test_discovery_is_read_only_six_cases_and_exact_raw_sources_survive_restart(tmp_path):
     path = tmp_path / "cases.sqlite"
     with TestClient(app_for(path), base_url="http://127.0.0.1:8000") as client:
         assert client.get("/api/v1/demonstrations").json() == {"schema_version": "1", "demonstrations": []}
         did, cases = new_demo(client)
-        assert [c["catalogue_case_id"] for c in cases] == ["PK-001", "PK-002", "PK-003"]
+        assert [c["catalogue_case_id"] for c in cases] == ["PK-001", "PK-002", "PK-003", "PK-004", "PK-005", "PK-006"]
         assert cases[0]['due_text']=='10 October 2026'
         assert cases[0]['due_at']=='2026-10-10T18:30:00+00:00'
         view = client.get(f"/api/v1/cases/{cases[0]['id']}", params={"demonstration_id": did}).json()

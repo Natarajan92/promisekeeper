@@ -7,9 +7,9 @@ from promisekeeper.fixtures.catalogue import apply_event, fresh_copy, variant_de
 
 
 @pytest.mark.parametrize("variant",variant_ids())
-def test_catalogue_variants_keep_exact_three_cases_and_owned_immutable_source_links(variant):
+def test_catalogue_variants_keep_exact_six_cases_and_owned_immutable_source_links(variant):
     demo=fresh_copy(variant)
-    assert set(demo.cases)=={"PK-001","PK-002","PK-003"}
+    assert set(demo.cases)=={"PK-001","PK-002","PK-003","PK-004","PK-005","PK-006"}
     for case in demo.cases.values():
         evidence=case.evidence
         sources=[item.source for item in (*evidence.invoices,*evidence.payments,*evidence.messages,*evidence.attributions)]

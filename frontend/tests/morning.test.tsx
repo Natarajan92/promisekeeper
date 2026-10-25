@@ -70,3 +70,26 @@ it('offers to check again instead of staying disabled when a review runs long', 
   const again = await screen.findByRole('button', {name: 'Check again'}, {timeout: 4000});
   expect(again).toBeEnabled();
 });
+
+it('shows the supervisor plan order, its reasons and a sideways strip with controls', async () => {
+  const planned: MorningReviewView = {...complete,
+    outcomes: [
+      {...complete.outcomes[0], priority: 1, supervisor_reason: 'Largest open balance still waiting (INR 80,000.00), overdue 12 days.'},
+      {case_id: 'c3', client: 'Saffron Foods', invoice_id: 'SF-221', outcome: 'INVESTIGATED', action: 'FOLLOW_UP', reason: null, balance_text: 'INR 60,000.00', review_at_text: null, draft_ready: true,
+        priority: 2, supervisor_reason: 'Saffron Foods next: overdue 17 days.'},
+      complete.outcomes[1]],
+    agent_activity: [...complete.agent_activity,
+      {agent: 'SUPERVISOR', event: 'Investigate Saffron Foods next', outcome: 'FALLBACK', note: 'Planner choice not used because it named a case that is not waiting in this review. Taken in rule order.',
+        model: null, input_tokens: null, output_tokens: null, latency_ms: 5, at: '2026-10-24T10:00:02Z', case_id: 'c3', investigation_id: null, morning_review_id: 'm1'}]};
+  render(<MorningReview api={fake({latestMorningReview: async () => ({schema_version: '1', morning_review: planned})})} did={did} onOpenCase={() => {}} onDone={() => {}}/>);
+  expect(await screen.findByText('Checked #1 by your supervisor')).toBeVisible();
+  expect(screen.getByText('Checked #2 by your supervisor')).toBeVisible();
+  expect(screen.getAllByText(/^Checked #\d by your supervisor$/)).toHaveLength(2);
+  expect(screen.getByText(/Saffron Foods next: overdue 17 days/)).toBeVisible();
+  expect(screen.getByRole('list', {name: 'Morning review cases'}).children).toHaveLength(3);
+  expect(screen.getByRole('button', {name: 'Next cases'})).toBeVisible();
+  expect(screen.getByRole('button', {name: 'Previous cases'})).toBeVisible();
+  fireEvent.click(screen.getByText('See what the supervisor did'));
+  expect(screen.getByText(/Investigate Saffron Foods next \(rule order\)/)).toBeVisible();
+  expect(screen.queryByText(/used the standard template/)).not.toBeInTheDocument();
+});

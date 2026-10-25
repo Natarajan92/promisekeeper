@@ -1,20 +1,28 @@
 import { useEffect, useRef, useState } from 'react';
 import type { ApiClient } from '../api/client';
-import type { MorningReviewView } from '../api/types';
+import type { AgentActivity, CaseOutcome, CaseSummary, MorningReviewView } from '../api/types';
 import { words } from '../components/format';
+import { attentionOrder, needsAttention, statusLabel } from '../cases/caseStatus';
 import { AGENT_LABEL, OUTCOME_LABEL } from './agentLabels';
 
 const POLL_MS = 1200;
 const MAX_POLL_MS = 120_000;
+// Supervisor steps name the decision; a supervisor fallback means rule order, not the draft template.
+function stepLabel(row: AgentActivity) {
+  if (row.agent !== 'SUPERVISOR') return OUTCOME_LABEL[row.outcome];
+  return row.outcome === 'FALLBACK' ? `${row.event} (rule order)` : row.event;
+}
 const OUTCOME_TEXT = {INVESTIGATED: 'investigated now', SKIPPED: 'no change needed', FAILED: 'needs your retry'} as const;
 
-export function MorningReview({api, did, onOpenCase, onDone, maxWaitMs = MAX_POLL_MS}:
-  {api: ApiClient; did: string; onOpenCase: (caseId: string) => void; onDone: () => void; maxWaitMs?: number}) {
+export function MorningReview({api, did, onOpenCase, onDone, maxWaitMs = MAX_POLL_MS, cases, evaluationAt, onPlan}:
+  {api: ApiClient; did: string; onOpenCase: (caseId: string) => void; onDone: () => void; maxWaitMs?: number;
+   cases?: CaseSummary[]; evaluationAt?: string; onPlan?: (plan: Record<string, number>) => void}) {
   const [review, setReview] = useState<MorningReviewView | null>(null);
   const [busy, setBusy] = useState(false);
   const [following, setFollowing] = useState(false);
   const [message, setMessage] = useState('');
   const mounted = useRef(true);
+  const strip = useRef<HTMLUListElement>(null);
   async function follow(initial: MorningReviewView) {
     setFollowing(true); setMessage('');
     let current = initial;
@@ -64,29 +72,60 @@ export function MorningReview({api, did, onOpenCase, onDone, maxWaitMs = MAX_POL
   const working = busy || following;
   const running = working || review?.status === 'RUNNING';
   const steps = (review?.agent_activity ?? []).filter(row => row.outcome !== 'STARTED');
+  const planned = (review?.outcomes ?? []).some(outcome => outcome.priority);
+  const plan = Object.fromEntries((review?.status === 'RUNNING' ? [] : review?.outcomes ?? [])
+    .filter(outcome => outcome.priority).map(outcome => [outcome.case_id, outcome.priority as number]));
+  const planKey = JSON.stringify(plan);
+  // The case overview orders its cards by the same plan, so both views list cases identically.
+  useEffect(() => { onPlan?.(plan); }, [planKey]);
+  // Cards show each case's current status (not the snapshot saved at review time), in the overview's order.
+  const current = new Map((cases ?? []).map(item => [item.id, item]));
+  const known = (review?.outcomes ?? []).filter(outcome => current.has(outcome.case_id));
+  const byCase = new Map(known.map(outcome => [outcome.case_id, outcome]));
+  const cards: CaseOutcome[] = [
+    ...attentionOrder(known.map(outcome => current.get(outcome.case_id) as CaseSummary), evaluationAt, plan).map(item => byCase.get(item.id) as CaseOutcome),
+    ...(review?.outcomes ?? []).filter(outcome => !current.has(outcome.case_id))];
+  function scrollStrip(direction: number) {
+    const list = strip.current;
+    if (!list) return;
+    const card = list.querySelector('li');
+    list.scrollBy({left: direction * ((card?.getBoundingClientRect().width ?? 260) + 10), behavior: 'smooth'});
+  }
   return <section className="morning-review" aria-labelledby="morning-heading">
     <div className="morning-head">
       <div>
         <h2 id="morning-heading">Morning review</h2>
-        <p className="subtle">Your AI supervisor checks every open case, investigates the ones that need it and briefs you. Nothing is sent or approved without you.</p>
+        <p className="subtle">Your AI supervisor plans which cases to investigate first, re-plans after every result and briefs you. Code checks each of its choices. Nothing is sent or approved without you.</p>
       </div>
       <button className={review?.status==='COMPLETE'?undefined:'primary'} disabled={running} onClick={() => void start()}>{running ? 'Reviewing your cases…' : 'Start morning review'}</button>
     </div>
     {message && <p className="notice" role="status">{message}</p>}
     {review?.status === 'RUNNING' && !working && <button onClick={() => void follow(review)}>Check again</button>}
     {running && steps.length > 0 && <ol className="morning-steps" aria-live="polite">{steps.map((row, index) =>
-      <li key={`${row.at}-${index}`}><strong>{AGENT_LABEL[row.agent]}</strong> {OUTCOME_LABEL[row.outcome]}{row.note ? `: ${row.note}` : ''}</li>)}</ol>}
+      <li key={`${row.at}-${index}`}><strong>{AGENT_LABEL[row.agent]}</strong> {stepLabel(row)}{row.note ? `: ${row.note}` : ''}</li>)}</ol>}
     {review?.briefing && review.status !== 'RUNNING' && <div className="briefing">
       {review.started_by === 'AUTONOMOUS' && <p className="autonomy-label">Started automatically by your AI supervisor because cases were due.</p>}
       <p className="briefing-status">{review.status==='COMPLETE'?'Review complete. Choose a case to see its recommendation.':'Review stopped. Check saved case outcomes before retrying.'}</p>
-      <ul className="briefing-cases">{review.outcomes.map(outcome => <li key={outcome.case_id}>
-        <button onClick={() => onOpenCase(outcome.case_id)}>
-          <strong>{outcome.client}</strong>
-          <span>{outcome.action ? words(outcome.action) : 'No current recommendation'}{outcome.draft_ready && outcome.action === 'FOLLOW_UP' ? ' · draft ready for review' : ''}</span>
-          <span className={`briefing-outcome outcome-${outcome.outcome.toLowerCase()}`}>{OUTCOME_TEXT[outcome.outcome]}</span>
-        </button>
-        {outcome.reason && <p className="subtle">{outcome.reason}</p>}
-      </li>)}</ul>
+      {planned && <p className="subtle">Cases that need your attention come first, in the same order as the Case overview. “Checked #N” is the order your AI supervisor investigated them. Scroll sideways to see every case.</p>}
+      <div className="briefing-strip">
+        <button className="strip-nav" aria-label="Previous cases" onClick={() => scrollStrip(-1)}>‹</button>
+        <ul className="briefing-cases" ref={strip} aria-label="Morning review cases">{cards.map(outcome => {
+          const now = current.get(outcome.case_id);
+          const label = now ? statusLabel(now, evaluationAt) : outcome.action ? words(outcome.action) : 'No current recommendation';
+          const urgent = now ? needsAttention(now, evaluationAt) : null;
+          return <li key={outcome.case_id}>
+          <button onClick={() => onOpenCase(outcome.case_id)}>
+            {urgent !== null && <span className={`attention-badge ${urgent ? 'urgent' : 'can-wait'}`}>{urgent ? 'Needs attention' : 'Can wait'}</span>}
+            <strong>{outcome.client}</strong>
+            <span>{label}{outcome.draft_ready && label === words('FOLLOW_UP') ? ' · draft ready for review' : ''}</span>
+            {!!outcome.priority && <span className="briefing-rank">Checked #{outcome.priority} by your supervisor</span>}
+            <span className={`briefing-outcome outcome-${outcome.outcome.toLowerCase()}`}>{OUTCOME_TEXT[outcome.outcome]}</span>
+          </button>
+          {outcome.supervisor_reason && <p className="supervisor-reason"><strong>Why now:</strong> {outcome.supervisor_reason}</p>}
+          {outcome.reason && <p className="subtle">{outcome.reason}</p>}
+        </li>;})}</ul>
+        <button className="strip-nav" aria-label="Next cases" onClick={() => scrollStrip(1)}>›</button>
+      </div>
       <details className="saved-briefing"><summary>Read saved briefing</summary>
         <p className="briefing-text">{review.briefing}</p>
         <p className="subtle">{review.briefing_source === 'AGENT'
@@ -94,7 +133,7 @@ export function MorningReview({api, did, onOpenCase, onDone, maxWaitMs = MAX_POL
           : 'Plain summary written by code (the Briefing agent was unavailable or not trusted for this run).'}</p>
       </details>
       {steps.length > 0 && <details className="agent-disclosure"><summary>See what the supervisor did</summary><ol className="morning-steps">{steps.map((row, index) =>
-        <li key={`${row.at}-${index}`}><strong>{AGENT_LABEL[row.agent]}</strong> {OUTCOME_LABEL[row.outcome]}{row.note ? `: ${row.note}` : ''}</li>)}</ol></details>}
+        <li key={`${row.at}-${index}`}><strong>{AGENT_LABEL[row.agent]}</strong> {stepLabel(row)}{row.note ? `: ${row.note}` : ''}</li>)}</ol></details>}
     </div>}
   </section>;
 }

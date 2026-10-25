@@ -16,6 +16,8 @@ from promisekeeper.domain.evidence import (
     CommitmentCandidate, Extraction, Invoice, Message, Payment, commitment_id,
 )
 
+CASE_IDS = ("PK-001", "PK-002", "PK-003", "PK-004", "PK-005", "PK-006")
+
 
 @dataclass(frozen=True, slots=True)
 class FixtureCase:
@@ -155,8 +157,8 @@ def fresh_copy(variant_id=None):
     baseline = _read("baseline.json")
     definitions = variant_definition(variant_id) if variant_id is not None else None
     raw_cases = {case["id"]: case for case in baseline["cases"]}
-    if set(raw_cases) != {"PK-001", "PK-002", "PK-003"}:
-        raise ValueError("Catalogue must seed exactly three cases")
+    if set(raw_cases) != set(CASE_IDS):
+        raise ValueError("Catalogue must seed exactly the registered cases")
     evaluation_at = datetime.fromisoformat(baseline["reference_at"])
     applied = []
     if definitions:
