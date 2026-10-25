@@ -115,3 +115,9 @@ it('labels legacy findings and requests reinvestigation without adding fields to
   expect(within(screen.getByRole('dialog')).getByRole('heading',{name:'message-1 / version 1'})).toBeInTheDocument();
   expect(JSON.stringify(result)).toBe(original);
 });
+
+it('shows the AI team trace right after the next step, before case actions', () => {
+  render(<FindingsView result={saved as any} view={{...view,freshness:'CURRENT'} as any} onSource={()=>{}} team={<p>AI TEAM TRACE</p>} actions={<h3>Case actions</h3>}/>);
+  const team=screen.getByText('AI TEAM TRACE');
+  expect(team.compareDocumentPosition(screen.getByRole('heading',{name:'Case actions'}))&Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+});

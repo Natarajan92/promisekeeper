@@ -37,11 +37,24 @@ def create_app(settings=None, *, static_dir=None):
     async def lifespan(app):
         with Database(settings.db_path) as db:
             app.state.db = db
-            yield
+            scheduler = None
+            if settings.autonomous_review_minutes:
+                from promisekeeper.orchestration.autonomy import AutonomyScheduler
+                scheduler = AutonomyScheduler(db, app.state.agents, interval_seconds=settings.autonomous_review_minutes * 60)
+                scheduler.start()
+            try:
+                yield
+            finally:
+                if scheduler:
+                    scheduler.stop()
 
     app = FastAPI(title="PromiseKeeper", version="1", lifespan=lifespan)
     app.state.db = None
     app.state.settings = settings
+    from promisekeeper.agents.roster import build_agents
+    from promisekeeper.application.provider_usage import usage_recorder
+    app.state.agents = build_agents(settings, usage_sink=usage_recorder(
+        Path(__file__).resolve().parents[4] / '.runtime' / 'application-provider-usage.jsonl'))
 
     @app.middleware("http")
     async def local_request(request: Request, call_next):
@@ -99,8 +112,8 @@ def create_app(settings=None, *, static_dir=None):
         return dict(schema_version="1", ready=app.state.db.ready, catalogue_version="release-0.1",
                     agent_mode=settings.agent_mode, configuration=settings.safe_summary())
 
-    from promisekeeper.api import cases, demonstrations, operations, scenarios, investigations, reviews, history, decisions
-    for router in (operations.router, demonstrations.router, cases.router, scenarios.router, investigations.router, reviews.router, history.router, decisions.router):
+    from promisekeeper.api import cases, demonstrations, operations, scenarios, investigations, reviews, history, decisions, feedback, morning_reviews
+    for router in (operations.router, demonstrations.router, cases.router, scenarios.router, investigations.router, reviews.router, history.router, decisions.router, feedback.router, morning_reviews.router):
         app.include_router(router, prefix="/api/v1")
     dist = Path(static_dir) if static_dir else Path(__file__).resolve().parents[4] / "frontend" / "dist"
     if dist.is_dir():

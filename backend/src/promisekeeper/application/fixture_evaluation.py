@@ -6,7 +6,6 @@ finding inventory is loaded independently of the product finding derivation.
 from copy import deepcopy
 from datetime import datetime
 import json
-import hashlib
 from pathlib import Path
 import tempfile
 import time
@@ -23,6 +22,7 @@ from promisekeeper.application.start_investigation import start_investigation
 from promisekeeper.fixtures.catalogue import fresh_copy, apply_event
 from promisekeeper.orchestration.investigate import investigate, get_investigation
 from promisekeeper.persistence.sqlite import Database
+from promisekeeper.application.inventory_pin import pinned_inventory_bytes
 
 FINANCIAL_INVENTORY_HASH = 'f8b7c6949682569f69f70a6e3fdcda797b27fdd40dd4417186128f8c832fbe9f'
 FINANCIAL_INVENTORY_PATH = Path(__file__).resolve().parents[3] / 'tests' / 'evaluations' / 'expected_financial.json'
@@ -30,9 +30,7 @@ FINANCIAL_INVENTORY_PATH = Path(__file__).resolve().parents[3] / 'tests' / 'eval
 
 def load_financial_inventory(entries):
     """Pinned literals authored independently from approved financial sources."""
-    raw = FINANCIAL_INVENTORY_PATH.read_bytes()
-    if hashlib.sha256(raw).hexdigest() != FINANCIAL_INVENTORY_HASH:
-        raise ValueError('Expected financial inventory bytes differ from reviewed pin')
+    raw = pinned_inventory_bytes(FINANCIAL_INVENTORY_PATH, FINANCIAL_INVENTORY_HASH, 'Expected financial')
     inventory = json.loads(raw)
     if (inventory['inventory_version'] != 'gate-v-financial-1' or inventory['catalogue_version'] != 'release-0.1'
             or len(entries) != 51 or set(inventory['entries']) != {entry['id'] for entry in entries}):

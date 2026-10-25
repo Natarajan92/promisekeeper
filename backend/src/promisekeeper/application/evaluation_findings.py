@@ -10,8 +10,10 @@ from pathlib import Path
 import re
 from uuid import UUID
 
+from promisekeeper.application.inventory_pin import pinned_inventory_bytes
+
 INVENTORY_VERSION = 'gate-iii-findings-1'
-INVENTORY_HASH = '78867b575bc69b0f1ee8ce4783ecd9264d1678deb8d6fb6a0c0469e97bad3632'
+INVENTORY_HASH = 'd708804f8d755a5c6f17d2833521a27d936908307c75cf23fdb64ea300772567'
 CANONICAL_MANIFEST_HASH = '17bcb26aa33ae4bab8fd37abf7e2260cda1089d47eaedc9bc67e7b89f38e1f81'
 FINDINGS_PROFILE = 'deterministic-1'
 INVENTORY_PATH = Path(__file__).resolve().parents[3]/'tests'/'evaluations'/'expected_findings.json'
@@ -25,9 +27,7 @@ def _hash(value):
 
 
 def load_inventory(definitions):
-    raw=INVENTORY_PATH.read_bytes()
-    if hashlib.sha256(raw).hexdigest()!=INVENTORY_HASH:
-        raise ValueError('Expected finding inventory bytes differ from reviewed pin')
+    raw=pinned_inventory_bytes(INVENTORY_PATH,INVENTORY_HASH,'Expected finding')
     inventory=json.loads(raw)
     ids=[e['id'] for e in definitions]
     if (inventory['inventory_version']!=INVENTORY_VERSION or inventory['catalogue_version']!='release-0.1'

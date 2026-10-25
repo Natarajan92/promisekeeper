@@ -27,7 +27,7 @@ test('keyboard-only evidence, investigation, exact review, history and lifecycle
   const copy=await createCopy(request);await open(page,copy.id);
   await page.keyboard.press('Tab');await expect(page.getByRole('link',{name:'Skip to case workspace'})).toBeFocused();
   await page.keyboard.press('Enter');
-  const sourceName=/Open source PK-001-I1/;
+  const sourceName=/^Inspect exact source version: PK-001-I1/;
   await keyControl(page,'button',sourceName);await expect(page.getByRole('dialog')).toBeVisible();
   await page.keyboard.press('Escape');await expect(page.getByRole('dialog')).not.toBeVisible();
   await expect(page.getByRole('button',{name:sourceName}).first()).toBeFocused();

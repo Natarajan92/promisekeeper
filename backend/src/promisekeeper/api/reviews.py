@@ -5,6 +5,7 @@ from promisekeeper.contracts.reviews import SaveDraft,ReviewDraft,RetryDraft,Dra
 from promisekeeper.application.reviews import save_draft,review_draft
 from promisekeeper.application.draft_retry import retry_draft,get_attempt
 from promisekeeper.orchestration.drafts import generate_draft
+from promisekeeper.orchestration.case_graph import resume_owner_review
 
 router=APIRouter()
 
@@ -13,8 +14,14 @@ def save(case_id:Id,demonstration_id:Id,body:SaveDraft,request:Request):
     return save_draft(request.app.state.db,demonstration_id,case_id,body.model_dump())
 
 @router.post('/cases/{case_id}/draft-reviews',response_model=DraftReviewed|DeletedDraftOperation)
-def review(case_id:Id,demonstration_id:Id,body:ReviewDraft,request:Request):
-    return review_draft(request.app.state.db,demonstration_id,case_id,body.model_dump())
+def review(case_id:Id,demonstration_id:Id,body:ReviewDraft,request:Request,background_tasks:BackgroundTasks):
+    response=review_draft(request.app.state.db,demonstration_id,case_id,body.model_dump())
+    decided=response.get('draft_review')
+    if decided:
+        # The recorded review is authoritative; resuming the paused case graph is best-effort.
+        background_tasks.add_task(resume_owner_review,request.app.state.db,getattr(request.app.state,'agents',None),
+                                  decided['investigation_id'],decided['decision'],decided['draft_version_id'])
+    return response
 
 @router.post('/cases/{case_id}/draft-retries',status_code=202,response_model=DraftRetryStarted|DeletedDraftOperation)
 def retry(case_id:Id,demonstration_id:Id,body:RetryDraft,request:Request,background_tasks:BackgroundTasks):

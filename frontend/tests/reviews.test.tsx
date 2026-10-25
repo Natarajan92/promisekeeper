@@ -189,3 +189,10 @@ it('keeps conflicted unsaved wording until an explicit decision to adopt the cur
   expect(screen.getByLabelText('Draft text')).toHaveValue(draft.exact_text);
   expect(screen.getByRole('button',{name:'Approve exact saved version'})).toBeEnabled();
 });
+
+it('asks for draft feedback after the review actions, not before the draft', () => {
+  render(<DraftReview api={new ApiClient()} view={view as any} onRefresh={()=>{}}/>);
+  const approve=screen.getByRole('button',{name:'Approve exact saved version'});
+  const question=screen.getByText('Was this draft useful?');
+  expect(approve.compareDocumentPosition(question)&Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+});

@@ -5,6 +5,7 @@ from uuid import uuid4
 
 from promisekeeper.application.operations import CommandError, canonical, digest, instant, replay, save_receipt, utcnow
 from promisekeeper.application.draft_templates import build_draft_plan
+from promisekeeper.application.feedback import record_edit_diff
 from promisekeeper.domain.draft_validation import validate_draft
 from promisekeeper.persistence.repositories import append_event, case, demonstration, evaluation_at, require_revision
 
@@ -102,6 +103,14 @@ def review_draft(db,did,cid,request):
         con.execute('''INSERT INTO draft_reviews
             (id,demonstration_id,case_id,operation_id,draft_version_id,owner_actor,decision,decided_at,exact_text,recipient,invoice_id,payload_hash,investigation_id,evidence_revision,review_epoch)
             VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)''',tuple(review.values()))
+        if request['decision']=='APPROVE':
+            # Learning signal only: a failure here never blocks the owner's approval.
+            con.execute('SAVEPOINT edit_feedback')
+            try:
+                record_edit_diff(con,draft)
+                con.execute('RELEASE edit_feedback')
+            except Exception:
+                con.execute('ROLLBACK TO edit_feedback');con.execute('RELEASE edit_feedback')
         con.execute('UPDATE cases SET case_revision=case_revision+1 WHERE id=?',(cid,))
         append_event(con,row,'DRAFT_REVIEWED',request['operation_id'],dict(draft_review_id=review['id'],decision=request['decision'],draft_version_id=draft['id']))
         return save_receipt(con,did,'REVIEW_DRAFT',cid,request,'RECORDED',revision=row['case_revision']+1,draft_review=review)

@@ -40,7 +40,11 @@ export async function investigate(request: APIRequestContext, demonstration_id: 
   });
   expect(started.status()).toBe(202);
   const receipt = await started.json();
-  return waitForInvestigation(request,`/api/v1/investigations/${receipt.investigation_id}?${scope}`);
+  const url = `/api/v1/investigations/${receipt.investigation_id}?${scope}`;
+  const attempt = await waitForInvestigation(request, url);
+  // The drafting agents run after the result is saved; saving their draft advances the case revision.
+  await expect.poll(async () => (await (await request.get(url)).json()).draft_status, {timeout: 20_000}).not.toBe('RUNNING');
+  return attempt;
 }
 
 export async function waitForInvestigation(request:APIRequestContext,url:string,errors:RetryableReadError[]=[]) {

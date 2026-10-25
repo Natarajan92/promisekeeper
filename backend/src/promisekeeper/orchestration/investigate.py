@@ -1,25 +1,34 @@
-"""Captured evidence -> candidates -> validation -> pure rules -> atomic result."""
-from datetime import datetime
+"""Captured evidence -> candidates -> validation -> pure rules -> atomic result, run as the case graph."""
+from dataclasses import replace
 import json
 import threading
-from promisekeeper.agents.protocol import InvestigatorFailure, PROMPT_VERSION, EXTRACTION_POLICY_VERSION
-from promisekeeper.agents.validation import validate_output
-from promisekeeper.application.findings import result_view
-from promisekeeper.application.derived_findings import derive_findings
-from promisekeeper.application.operations import CommandError, canonical, instant, utcnow
+from promisekeeper.agents.roster import AgentSet
+from promisekeeper.application.agent_activity import activity_totals, list_agent_activity
+from promisekeeper.application.operations import CommandError
 from promisekeeper.application.start_investigation import finish_incomplete
-from promisekeeper.contracts.investigations import Result
-from promisekeeper.domain.recommendations import recommend
-from promisekeeper.domain.commitments import reconcile_commitments
-from promisekeeper.orchestration.deadlines import Budget, bounded_call
-from promisekeeper.orchestration.retries import run_step
-from promisekeeper.persistence.repositories import append_event, demonstration
-from promisekeeper.tools.evidence import read_snapshot, snapshot_case
+from promisekeeper.orchestration.case_graph import build_case_graph, graph_config
+from promisekeeper.persistence.repositories import demonstration
 
 _dispatch_lock=threading.Lock()
 _dispatched=set()
 
-def investigate(db, investigation_id, investigator, *, draft_generator=None):
+def release_running_drafts(db,investigation_id):
+    """A graph fault after the result was saved must leave a retryable FAILED draft, never one stuck RUNNING."""
+    from promisekeeper.orchestration import drafts
+    with db.connection() as con:
+        running=[r[0] for r in con.execute("SELECT id FROM draft_generation_attempts WHERE investigation_id=? AND status='RUNNING'",(investigation_id,))]
+    for aid in running:
+        try:
+            drafts.failure(db,aid,'DRAFT_FAILED')
+        except Exception:
+            pass
+
+def investigate(db, investigation_id, investigator, *, draft_generator=None, agents=None):
+    """Run the case graph. True only when a recommendation was committed for this attempt.
+
+    Without an AgentSet the drafting agents are absent and the standard template is used,
+    which keeps direct callers on the reviewed single-Investigator behaviour.
+    """
     with _dispatch_lock:
         if investigation_id in _dispatched:return False
         _dispatched.add(investigation_id)
@@ -28,58 +37,27 @@ def investigate(db, investigation_id, investigator, *, draft_generator=None):
             row=con.execute("SELECT * FROM investigations WHERE id=? AND status='RUNNING'",(investigation_id,)).fetchone()
             if row is None: return False
             attempt=dict(row)
-            raw=json.loads(con.execute('SELECT packet_json FROM evidence_snapshots WHERE id=?',(attempt['snapshot_id'],)).fetchone()[0])
-        budget=Budget(attempt['deadline_at'])
-        packet=run_step(db,attempt,'EVIDENCE_LOOKUP',budget,lambda:read_snapshot(db,dict(schema_version='1',snapshot_id=attempt['snapshot_id'],evidence_version_ids=[r['id'] for r in raw['evidence']])))
-        case=snapshot_case(packet)
-        request=dict(schema_version='1',investigation_id=investigation_id,snapshot_id=attempt['snapshot_id'],snapshot_hash=packet['snapshot_hash'],packet=packet,prompt_version=PROMPT_VERSION,extraction_policy_version=EXTRACTION_POLICY_VERSION)
-        def extraction():
-            timeout=min(20,budget.remaining())
-            return bounded_call(lambda:investigator.extract(request,timeout=timeout),timeout)
-        response=run_step(db,attempt,'EXTRACTION',budget,extraction)
-        with db.transaction() as con:
-            con.execute("UPDATE investigations SET returned_model=?,response_id=?,prompt_version=?,schema_version=?,adapter_version=? WHERE id=? AND status='RUNNING'",
-                (response.returned_model,response.response_id,PROMPT_VERSION,'1',response.adapter_version,investigation_id))
-        output,extracted=run_step(db,attempt,'VALIDATION',budget,lambda:validate_output(response.output,packet,case))
-        recommendation=run_step(db,attempt,'RECONCILIATION',budget,lambda:recommend(case,extracted,datetime.fromisoformat(attempt['evaluation_at'])))
-        commitment_facts=reconcile_commitments(case,extracted,recommendation.financial)
-        limitations=sorted({i.code for i in (*recommendation.financial.issues,*commitment_facts.issues)}) if recommendation.status=='LIMITED' else []
-        derived=derive_findings(case,extracted,recommendation,commitment_facts,packet)
-        result=result_view(attempt,packet,recommendation,derived,limitations=limitations)
-        Result.model_validate(result)
-        budget.remaining()
-        with db.transaction() as con:
-            current=con.execute("SELECT status,deadline_at FROM investigations WHERE id=?",(investigation_id,)).fetchone()
-            if current is None or current['status']!='RUNNING': return False
-            if utcnow()>=datetime.fromisoformat(current['deadline_at']): raise InvestigatorFailure('INVESTIGATION_DEADLINE')
-            con.execute('UPDATE investigations SET status=?,terminal_at=?,returned_model=?,response_id=?,prompt_version=?,schema_version=?,adapter_version=? WHERE id=? AND status=\'RUNNING\'',
-                (recommendation.status,instant(utcnow()),response.returned_model,response.response_id,PROMPT_VERSION,'1',response.adapter_version,investigation_id))
-            con.execute('INSERT INTO investigation_results VALUES (?,?,?,?,?,?,?,?)',
-                (investigation_id,attempt['demonstration_id'],attempt['case_id'],result['action'],result['review_at'],canonical(result),result['result_hash'],'rules-1'))
-            con.execute('UPDATE cases SET latest_completed_investigation_id=?,current_draft_version_id=NULL,case_revision=case_revision+1 WHERE id=?',(investigation_id,attempt['case_id']))
-            append_event(con,dict(id=attempt['case_id'],demonstration_id=attempt['demonstration_id']),'INVESTIGATION_COMPLETED',attempt['operation_id'],dict(investigation_id=investigation_id,status=recommendation.status,result_hash=result['result_hash']))
-            from promisekeeper.application.draft_retry import reserve_initial
-            aid=reserve_initial(con,investigation_id)
-        db.capacity.release(investigation_id)
-        db.reservations.discard(investigation_id)
-        # Recommendation is already committed. Draft failure cannot erase it.
+        agent_set=replace(agents,investigator=investigator) if agents else AgentSet(investigator,None,None,None)
         try:
-            from promisekeeper.orchestration.drafts import generate_draft
-            if aid:
-                if draft_generator is None: generate_draft(db,aid)
-                else: generate_draft(db,aid,draft_generator)
+            graph=build_case_graph(db,agent_set,draft_generator=draft_generator)
         except Exception:
-            pass
-        return True
-    except Exception as exc:
-        finish_incomplete(db,investigation_id,getattr(exc,'code','INVESTIGATION_FAILED'))
-        return False
+            # Without the checkpoint store the owner pause is unavailable; investigation still runs.
+            graph=build_case_graph(db,agent_set,draft_generator=draft_generator,pause_for_owner=False)
+        try:
+            graph.invoke(dict(investigation_id=investigation_id,demonstration_id=attempt['demonstration_id'],case_id=attempt['case_id'],revisions=0),
+                         graph_config(investigation_id))
+        except Exception as exc:
+            finish_incomplete(db,investigation_id,getattr(exc,'code','INVESTIGATION_FAILED'))
+            release_running_drafts(db,investigation_id)
+        with db.connection() as con:
+            saved=con.execute('SELECT 1 FROM investigation_results WHERE investigation_id=?',(investigation_id,)).fetchone()
+        return saved is not None
     finally:
         db.capacity.release(investigation_id)
         db.reservations.discard(investigation_id)
         with _dispatch_lock:_dispatched.discard(investigation_id)
 
-def get_investigation(db,did,iid):
+def get_investigation(db,did,iid,*,token_rates=None):
     with db.connection() as con:
         con.execute('BEGIN')
         demonstration(con,did)
@@ -87,7 +65,9 @@ def get_investigation(db,did,iid):
         if row is None: raise CommandError('NOT_FOUND',404)
         saved=con.execute('SELECT result_json FROM investigation_results WHERE investigation_id=?',(iid,)).fetchone()
         result=json.loads(saved[0]) if saved else None
+        activity=list_agent_activity(con,investigation_id=iid)
         draft_attempt=con.execute('SELECT status FROM draft_generation_attempts WHERE investigation_id=? ORDER BY rowid DESC LIMIT 1',(iid,)).fetchone()
         return dict(schema_version='1',id=iid,investigation_id=iid,demonstration_id=did,case_id=row['case_id'],status=row['status'],snapshot_id=row['snapshot_id'],snapshot_hash=row['hash'],
             evaluation_at=row['evaluation_at'],deadline_at=row['deadline_at'],limitations=result['limitations'] if result else [],failure_code=row['failure_code'],result=result,action=result['action'] if result else None,
-            draft_status=draft_attempt[0] if draft_attempt else 'NONE',progress=[dict(r) for r in con.execute('SELECT step_name,invocation_number,invocation_kind,started_at,ended_at,outcome,failure_code FROM step_attempts WHERE investigation_id=? AND step_name<>? ORDER BY rowid',(iid,'DRAFT'))])
+            draft_status=draft_attempt[0] if draft_attempt else 'NONE',progress=[dict(r) for r in con.execute('SELECT step_name,invocation_number,invocation_kind,started_at,ended_at,outcome,failure_code FROM step_attempts WHERE investigation_id=? AND step_name<>? ORDER BY rowid',(iid,'DRAFT'))],
+            agent_activity=activity,agent_totals=activity_totals(activity,token_rates or {}))

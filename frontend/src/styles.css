@@ -29,3 +29,36 @@ button{min-width:0;max-width:100%;white-space:normal}
 
 .draft-review{max-width:72ch}.draft-review label{display:block;font-weight:650;margin-top:1.1rem;margin-bottom:.35rem}.draft-review input,.draft-review textarea{display:block;width:100%;box-sizing:border-box;font:inherit;line-height:1.6;padding:.7rem;border:1px solid #64777c;border-radius:.25rem;background:#fff;color:#172c34}.draft-review textarea{resize:vertical;min-height:12rem}.decision-actions{display:flex;flex-wrap:wrap;gap:.6rem;margin:1rem 0}.draft-review pre{white-space:pre-wrap;overflow-wrap:anywhere;max-width:100%}.draft-review details{margin:1rem 0}.draft-review h3{margin-top:1.8rem}
 .owner-decisions,.scenario-update{padding-bottom:1.8rem;margin-bottom:1.8rem;border-bottom:1px solid var(--line);max-width:80ch}.owner-decisions>label,.scenario-update>label{display:block;font-weight:bold;margin-bottom:.35rem}.owner-decisions textarea{display:block;width:100%;font:inherit;padding:.7rem;border:1px solid #64777c;border-radius:4px;resize:vertical}.confirmation-panel,.historical-record{border:1px solid var(--line);border-left:3px solid var(--blue);padding:1rem;margin:1rem 0;overflow-wrap:anywhere}.confirmation-check{display:flex;align-items:flex-start;gap:.65rem;margin:1rem 0;font-weight:bold}.confirmation-check input{flex:none;width:1.15rem;height:1.15rem;margin-top:.25rem}input:focus-visible,textarea:focus-visible{outline:3px solid #1e718d;outline-offset:4px}.owner-decisions details{margin:1rem 0}.owner-decisions details button{margin-top:.65rem}.historical-record pre{background:#f6f5ef;padding:1rem}
+.header-tools{display:flex;align-items:center;gap:1.2rem;flex-wrap:wrap;justify-content:flex-end;min-width:0}
+.agent-roster{font-size:.82rem;max-width:30rem}.agent-roster summary{color:var(--blue);font-weight:bold;padding:.4rem 0}
+.agent-roster ul{list-style:none;padding:.6rem .9rem;margin:.3rem 0;background:var(--paper);border:1px solid var(--line);border-radius:5px}
+.agent-roster li{display:flex;flex-wrap:wrap;gap:.2rem .6rem;padding:.35rem 0;border-bottom:1px solid #eef1f0}.agent-roster li:last-child{border-bottom:0}
+.agent-roster li span{color:var(--muted);overflow-wrap:anywhere}.agent-roster .agent-unavailable{color:var(--amber);font-weight:bold}
+.agent-trace{margin:1.6rem 0;padding:1.1rem 1.2rem;border:1px solid var(--line);border-radius:6px;background:#fbfcfb;max-width:80ch}
+.agent-trace h3{font-size:1rem;margin-bottom:.7rem}.agent-trace ol{list-style:none;padding:0;margin:0;counter-reset:agent}
+.agent-step{position:relative;padding:.55rem 0 .55rem 2.1rem;border-left:2px solid var(--line);margin-left:.6rem;counter-increment:agent}
+.agent-step:before{content:counter(agent);position:absolute;left:-.8rem;top:.55rem;width:1.5rem;height:1.5rem;border-radius:50%;background:var(--paper);border:2px solid var(--blue);color:var(--blue);font-size:.72rem;font-weight:bold;display:flex;align-items:center;justify-content:center}
+.agent-step-head{display:flex;gap:.6rem;align-items:baseline;flex-wrap:wrap}.agent-outcome{font-size:.75rem;padding:.05rem .45rem;border:1px solid #a5b5b9;border-radius:3px;background:var(--paper)}
+.outcome-revise .agent-outcome,.outcome-fallback .agent-outcome,.outcome-failed .agent-outcome{border-color:#b57d1b;color:#664307;background:#fff5df}
+.outcome-revise:before,.outcome-fallback:before,.outcome-failed:before{border-color:#b57d1b;color:#664307;border-style:dashed}
+.outcome-waiting .agent-outcome{border-color:var(--blue);color:#fff;background:var(--blue);font-weight:bold}
+.agent-role{font-size:.78rem;color:var(--muted);margin:.1rem 0 .2rem}.agent-note{font-size:.88rem;margin:.2rem 0;overflow-wrap:anywhere}
+.agent-usage{font-size:.74rem;color:var(--muted);margin:0;overflow-wrap:anywhere;font-variant-numeric:tabular-nums}.agent-totals{font-size:.8rem;color:var(--muted);margin:.8rem 0 0;font-variant-numeric:tabular-nums}
+.visually-hidden{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+@media(max-width:720px){.header-tools{justify-content:flex-start}.agent-trace{padding:.9rem .8rem}}
+.agent-disclosure{margin:.6rem 0 1.2rem;font-size:.9rem}.agent-disclosure summary{color:var(--blue);font-weight:bold;padding:.4rem 0}
+.feedback{margin:1rem 0;padding:.8rem 0;border-top:1px solid var(--line);max-width:80ch}.feedback-question{font-weight:bold;font-size:.9rem;margin-bottom:.5rem}.feedback-actions{display:flex;gap:.6rem;flex-wrap:wrap}.feedback-actions button[aria-pressed="true"]{border-color:var(--blue);background:#edf3f3;font-weight:bold}.feedback-comment{display:flex;flex-direction:column;gap:.4rem;margin-top:.7rem}.feedback-comment label{font-size:.85rem}.feedback-comment textarea{font:inherit;padding:.6rem;border:1px solid #64777c;border-radius:4px;resize:vertical}.feedback-comment button{align-self:flex-start}
+.morning-review{margin:0 0 1.8rem;padding:1.3rem 1.5rem;background:var(--paper);border:1px solid var(--line);border-left:4px solid var(--blue);border-radius:7px}
+.morning-head{display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;flex-wrap:wrap}.morning-head h2{font:400 1.6rem/1.15 Georgia,serif;margin-bottom:.35rem}.morning-head>div{min-width:0;max-width:60ch}
+.morning-steps{margin:.8rem 0 0;padding-left:1.2rem;font-size:.86rem}.morning-steps li{padding:.2rem 0;overflow-wrap:anywhere}
+.briefing{margin-top:1rem;border-top:1px solid var(--line);padding-top:1rem}.briefing-text{font-size:1.05rem;line-height:1.65;max-width:75ch}
+.briefing-cases{list-style:none;padding:0;margin:.8rem 0 0;display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:.6rem}
+.briefing-cases button{width:100%;display:flex;flex-direction:column;align-items:flex-start;gap:.2rem;text-align:left;padding:.75rem .9rem}
+.briefing-cases button span{font-size:.82rem;color:var(--muted)}.briefing-cases li>p{margin:.3rem .2rem 0;font-size:.78rem}
+.briefing-outcome{font-weight:bold}.briefing-outcome.outcome-investigated{color:var(--blue)!important}.briefing-outcome.outcome-failed{color:var(--amber)!important}
+@media(max-width:720px){.morning-review{padding:1rem}.morning-head button{width:100%}}
+.agent-roster .agent-permission{font-size:.72rem;padding:0 .35rem;border:1px solid var(--line);border-radius:3px}
+.agent-handoff{font-size:.76rem;color:var(--blue);margin:.1rem 0;font-weight:bold}
+.autonomy-label{font-size:.8rem;font-weight:bold;color:var(--blue);margin-bottom:.4rem}
+.skip-link{top:auto;transform:translateY(-200vh)}.skip-link:focus{transform:none;top:1rem}
+@media(max-width:720px){.app-header{flex-wrap:wrap;align-items:flex-start}.wordmark{font-size:min(2rem,9vw);white-space:nowrap;flex:1 1 100%}.wordmark span{white-space:normal}}

@@ -1,0 +1,1 @@
+ALTER TABLE morning_reviews ADD COLUMN started_by TEXT NOT NULL DEFAULT 'OWNER' CHECK(started_by IN ('OWNER','AUTONOMOUS'));
