@@ -8,6 +8,7 @@ export function FeedbackButtons({api, did, cid, investigationId, target}: {api: 
   const [comment, setComment] = useState('');
   const [state, setState] = useState<'idle' | 'saving' | 'saved'>('idle');
   const [message, setMessage] = useState('');
+  const [forwarded,setForwarded]=useState(false);
   const question = target === 'DRAFT' ? 'Was this draft useful?' : 'Was this recommendation useful?';
   async function send(choice: 'UP' | 'DOWN', text: string | null) {
     setState('saving'); setMessage('');
@@ -15,7 +16,8 @@ export function FeedbackButtons({api, did, cid, investigationId, target}: {api: 
       const response = await api.feedback(did, cid, {schema_version: '1', operation_id: crypto.randomUUID(), investigation_id: investigationId,
         target, rating: choice, comment: text});
       setState('saved');
-      setMessage(response.sent_to_langsmith ? 'Saved. Thanks, this helps improve the agents.' : 'Saved locally (LangSmith not configured).');
+      setForwarded(response.sent_to_langsmith);
+      setMessage(response.sent_to_langsmith ? 'Feedback saved. Thank you.' : 'Feedback saved locally.');
     } catch (error) {
       setState('idle');
       setMessage(`Feedback not saved: ${error instanceof Error ? error.message : 'try again.'}`);
@@ -34,5 +36,6 @@ export function FeedbackButtons({api, did, cid, investigationId, target}: {api: 
       <button className="primary" disabled={state === 'saving'} onClick={() => void send('DOWN', comment.trim() || null)}>Send feedback</button>
     </div>}
     <p className="subtle" role="status" aria-live="polite">{message}</p>
+    {state==='saved'&&forwarded&&<details className="feedback-delivery"><summary>Delivery details</summary><p className="subtle">Forwarded to LangSmith.</p></details>}
   </section>;
 }

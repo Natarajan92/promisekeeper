@@ -1,0 +1,86 @@
+import {mkdirSync} from 'node:fs';
+import {fileURLToPath} from 'node:url';
+import {test,expect} from './support/test';
+import {createCopy,investigate} from './support/scenarioEvents';
+import {caseView,history} from './support/fixtures';
+
+test('Cedar compares original claim and verified settlement without writes, then requires explicit closure',async({page,request})=>{
+  const copy=await createCopy(request),cid=copy.cases.find(item=>item.catalogue_case_id==='PK-003')!.id;
+  const earlier=await investigate(request,copy.id,cid);
+  expect(earlier.result.action).toBe('VERIFY_PAYMENT');
+  await page.addInitScript(id=>localStorage.setItem('selected_demonstration_id',id),copy.id);
+  await page.goto('/');await page.getByRole('button',{name:/PK-003.*Cedar Retail Labs/}).click();
+  await page.getByRole('button',{name:'Findings',exact:true}).click();
+  await expect(page.getByText(/Check your bank statement or accounting records outside PromiseKeeper/)).toBeVisible();
+  await page.getByRole('button',{name:'History',exact:true}).click();
+  await page.getByLabel('Fictional update').selectOption('PK-003-U1');
+  await page.getByRole('button',{name:'Preview selected fictional update'}).click();
+  await expect(page.getByRole('heading',{name:'Exact update preview'})).toBeVisible();
+  await page.getByLabel('I reviewed this exact fictional update').check();
+  await page.getByRole('button',{name:'Confirm fictional update'}).click();
+  await expect(page.getByText(/evidence changed/i).first()).toBeVisible();
+  await page.getByRole('button',{name:'Investigate case',exact:true}).click();
+  await expect(page.getByRole('button',{name:'Review case closure',exact:true})).toBeEnabled();
+  const laterView=await caseView(request,copy.id,cid),later=laterView.latest_completed_result;
+  expect(later.action).toBe('CLOSE');expect(later.financial_facts.balance.minor_units).toBe('0');expect(laterView.lifecycle).toBe('OPEN');
+  const originalEvents=await history(request,copy.id,cid);
+  const writes:string[]=[];const watch=(req:{method:()=>string;url:()=>string})=>{if(req.method()!=='GET'&&req.url().includes('/api/v1/'))writes.push(req.url());};
+  page.on('request',watch);
+  await page.getByRole('button',{name:'Findings',exact:true}).click();
+  await page.getByRole('button',{name:'Compare saved investigations'}).click();
+  const panel=page.locator('.what-changed');
+  await expect(panel.getByText('Recommendation changed',{exact:true})).toBeVisible();
+  await expect(panel.getByText('Latest two completed investigations',{exact:true})).toBeVisible();
+  await expect(panel.getByLabel('Earlier saved values')).toContainText('INR 60,000.00');
+  await expect(panel.getByLabel('Later saved values')).toContainText('INR 0.00');
+  await expect(panel.getByText(/recorded remainder is contested/)).toBeVisible();
+  const settlement=later.timeline.find((entry:any)=>entry.source_id==='PK-003-L2');
+  const source=panel.getByRole('button',{name:`Inspect later source PK-003-L2 / v${laterView.evidence.find((item:any)=>item.id===settlement.evidence_version_id).version}`});
+  await source.focus();await page.keyboard.press('Enter');
+  await expect(page.getByRole('dialog').locator('pre')).toContainText('CR-T2');
+  await page.keyboard.press('Escape');await expect(source).toBeFocused();
+  await panel.getByRole('button',{name:'Open earlier investigation'}).click();
+  await expect(panel.locator('.historical-record')).toContainText('Historical result:');
+  await expect(panel.locator('.historical-record').getByRole('button',{name:'Accept recommendation'})).toHaveCount(0);
+  await panel.getByRole('button',{name:'Open later investigation'}).click();
+  await expect(panel.locator('.historical-record')).toContainText('This recommendation does not close the case.');
+  // Capture the compact comparison with its two saved sides rather than expanded originals.
+  await page.getByRole('button',{name:'Hide comparison'}).click();
+  await page.getByRole('button',{name:'Compare saved investigations'}).click();
+  await expect(panel.getByText('Recommendation changed',{exact:true})).toBeVisible();
+  mkdirSync(fileURLToPath(new URL('../../.runtime/owner-ux-phase2/',import.meta.url)),{recursive:true});
+  await page.setViewportSize({width:1280,height:800});await panel.scrollIntoViewIfNeeded();
+  await panel.screenshot({path:fileURLToPath(new URL('../../.runtime/owner-ux-phase2/comparison-desktop.png',import.meta.url))});
+  await page.setViewportSize({width:390,height:844});await panel.scrollIntoViewIfNeeded();
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
+  await panel.screenshot({path:fileURLToPath(new URL('../../.runtime/owner-ux-phase2/comparison-narrow.png',import.meta.url))});
+  await page.addStyleTag({content:'html{font-size:200%!important}'});
+  expect(await page.evaluate(()=>getComputedStyle(document.documentElement).fontSize)).toBe('32px');
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
+  await panel.screenshot({path:fileURLToPath(new URL('../../.runtime/owner-ux-phase2/comparison-large-text.png',import.meta.url))});
+  await panel.locator('.comparison-side').first().screenshot({path:fileURLToPath(new URL('../../.runtime/owner-ux-phase2/comparison-large-text-values.png',import.meta.url))});
+  expect(writes).toEqual([]);expect(await history(request,copy.id,cid)).toEqual(originalEvents);
+  for(const saved of [earlier.result,later]){
+    const response=await request.get(`/api/v1/investigations/${saved.investigation_id}?demonstration_id=${copy.id}`);
+    expect((await response.json()).result).toEqual(saved);
+  }
+  expect((await caseView(request,copy.id,cid)).lifecycle).toBe('OPEN');
+  page.off('request',watch);
+  await page.getByRole('button',{name:'Review case closure',exact:true}).click();
+  await expect(page.getByRole('button',{name:'Confirm case closure'})).toBeDisabled();
+  await page.getByLabel('Confirm closure of invoice CR-312').check();
+  await page.getByRole('button',{name:'Confirm case closure'}).click();
+  await expect(page.locator('.case-heading')).toContainText('CLOSED');
+});
+
+test('History opens a named comparison with keyboard focus and both saved originals',async({page,request})=>{
+  const copy=await createCopy(request),cid=copy.cases[0].id;
+  const earlier=await investigate(request,copy.id,cid);await investigate(request,copy.id,cid);
+  await page.addInitScript(id=>localStorage.setItem('selected_demonstration_id',id),copy.id);
+  await page.goto('/');await page.getByRole('button',{name:'History',exact:true}).click();
+  const entry=page.locator('.history-list li').filter({hasText:earlier.investigation_id}).filter({has:page.getByRole('button',{name:'Compare this investigation'})});
+  await entry.getByRole('button',{name:'Compare this investigation'}).focus();await page.keyboard.press('Enter');
+  await expect(page.locator('.what-changed').getByRole('heading',{name:'What changed'})).toBeFocused();
+  await expect(page.getByLabel('Earlier investigation')).toHaveValue(earlier.investigation_id);
+  await expect(page.locator('.comparison-summary')).toHaveText('No material change in comparable saved findings');
+});

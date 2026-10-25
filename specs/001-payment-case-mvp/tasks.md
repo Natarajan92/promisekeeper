@@ -1,5 +1,10 @@
 # Tasks: PromiseKeeper MVP Release 0.1
 
+> Subsequent scope decision (25 October 2026): the owner accepted UX Phase 1 and
+> authorized US6 / AC-28 / FR-024 under [owner experience Phase 2](../003-owner-experience/phase2-spec.md).
+> Deferred statements below describe this original MVP task set; new implementation
+> and evidence belong to the separate Phase 2 artifacts. Optional conversation remains deferred.
+
 **Input**: Design documents in `specs/001-payment-case-mvp/`.
 **Created**: 2026-10-23
 **Feature context**: `001-payment-case-mvp`; no Git branch is created by this command.

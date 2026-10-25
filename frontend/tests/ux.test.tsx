@@ -68,10 +68,48 @@ it('refreshes a waiting overview at its review time even when a different case i
   });
   try {
     await act(async()=>{render(<App api={api}/>);});
+    const evidence=screen.getByRole('button',{name:'Evidence'});evidence.focus();
     expect(within(screen.getByRole('button',{name:/Waiting client/})).getByText('Wait until the review date')).toBeInTheDocument();
     await act(async()=>{await vi.advanceTimersByTimeAsync(1_000);});
     expect(within(screen.getByRole('button',{name:/Waiting client/})).getByText('Review required')).toBeInTheDocument();
+    expect(evidence).toHaveFocus();
   }finally {vi.useRealTimers();}
+});
+
+it('focuses the case heading on explicit selection, including an already-selected briefing case',async()=>{
+  const other='77777777-7777-4777-8777-777777777777';
+  const api=new ApiClient(async input=>{
+    const url=String(input);
+    const body=url.endsWith('/health')?{ready:true,agent_mode:'STUB'}:url.endsWith('/catalogue')?{catalogue_version:'release-0.1',variant_ids:[]}:url.endsWith('/demonstrations')?{demonstrations:[demo]}:url.endsWith('/cases')?{demonstration_id:did,clock_mode:'REFERENCE',evaluation_at:caseView.evaluation_at,cases:[summary,{...summary,id:other,client:'Second studio'}]}:url.endsWith('/morning-reviews/latest')?{morning_review:{status:'COMPLETE',briefing:'Saved summary',agent_activity:[],outcomes:[{case_id:cid,client:'Studio North',action:'FOLLOW_UP',outcome:'INVESTIGATED'}]}}:{...caseView,id:url.includes(`/cases/${other}?`)?other:cid,client:url.includes(`/cases/${other}?`)?'Second studio':'Studio North'};
+    return new Response(JSON.stringify({schema_version:'1',...body}));
+  });
+  render(<App api={api}/>);
+  const heading=await screen.findByRole('heading',{name:'Studio North'});
+  expect(heading).not.toHaveFocus();
+  fireEvent.click(screen.getByRole('button',{name:/Studio North.*Follow up.*investigated now/}));
+  expect(heading).toHaveFocus();
+  fireEvent.click(screen.getByRole('button',{name:/Second studio/}));
+  expect(await screen.findByRole('heading',{name:'Second studio'})).toHaveFocus();
+  fireEvent.click(screen.getByRole('button',{name:/Second studio/}));
+  expect(screen.getByRole('heading',{name:'Second studio'})).toHaveFocus();
+});
+
+it('does not focus a delayed case after the owner has selected another case',async()=>{
+  const other='77777777-7777-4777-8777-777777777777';
+  let finish!:(value:Response)=>void;
+  const api=new ApiClient(async input=>{
+    const url=String(input);
+    if(url.includes(`/cases/${other}?`))return new Promise<Response>(resolve=>{finish=resolve;});
+    const body=url.endsWith('/health')?{ready:true,agent_mode:'STUB'}:url.endsWith('/catalogue')?{catalogue_version:'release-0.1',variant_ids:[]}:url.endsWith('/demonstrations')?{demonstrations:[demo]}:url.endsWith('/cases')?{demonstration_id:did,clock_mode:'REFERENCE',evaluation_at:caseView.evaluation_at,cases:[summary,{...summary,id:other,client:'Delayed studio'}]}:url.endsWith('/morning-reviews/latest')?{morning_review:null}:caseView;
+    return new Response(JSON.stringify({schema_version:'1',...body}));
+  });
+  render(<App api={api}/>);await screen.findByRole('heading',{name:'Studio North'});
+  fireEvent.click(screen.getByRole('button',{name:/Delayed studio/}));
+  fireEvent.click(screen.getByRole('button',{name:/Studio North/}));
+  const heading=await screen.findByRole('heading',{name:'Studio North'});expect(heading).toHaveFocus();
+  const evidence=screen.getByRole('button',{name:'Evidence'});evidence.focus();
+  await act(async()=>finish(new Response(JSON.stringify({...caseView,id:other,client:'Delayed studio'}))));
+  expect(evidence).toHaveFocus();expect(screen.queryByRole('heading',{name:'Delayed studio'})).not.toBeInTheDocument();
 });
 
 it('suppresses already-expired overview advice and makes only one immediate recovery refresh',async()=>{

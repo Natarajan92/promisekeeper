@@ -70,6 +70,7 @@ test("deterministic findings show unavailable ledger observations without invent
 });
 
 test("deterministic findings preserve literal legacy SQLite bytes through GET restart and reinvestigation",async({page,playwright})=> {
+  test.setTimeout(60_000); // Three bounded backend startups plus stopped-fixture byte inspections, as in restart-recovery.
   const server=await isolatedServer();
   let requestContext: APIRequestContext | undefined;
   try {

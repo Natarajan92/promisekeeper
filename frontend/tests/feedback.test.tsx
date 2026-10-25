@@ -23,18 +23,23 @@ it('thumbs up saves immediately and thanks the owner', async () => {
   const {api, posts} = recording(true);
   render(<FeedbackButtons api={api} did={did} cid={cid} investigationId={iid} target="RECOMMENDATION"/>);
   fireEvent.click(screen.getByRole('button', {name: 'Helpful'}));
-  expect(await screen.findByText(/Saved\. Thanks, this helps improve the agents\./)).toBeInTheDocument();
+  expect(await screen.findByText('Feedback saved. Thank you.')).toBeInTheDocument();
+  expect(screen.queryByText(/improve the agents/i)).not.toBeInTheDocument();
+  expect(screen.getByText('Forwarded to LangSmith.')).not.toBeVisible();
+  fireEvent.click(screen.getByText('Delivery details'));
+  expect(screen.getByText('Forwarded to LangSmith.')).toBeVisible();
   expect(posts[0].url).toContain(`/cases/${cid}/feedback?demonstration_id=${did}`);
   expect(posts[0].body).toMatchObject({investigation_id: iid, target: 'RECOMMENDATION', rating: 'UP', comment: null});
 });
 
-it('thumbs down with comment posts feedback and says when LangSmith is not configured', async () => {
+it('confirms a local save without inferring the forwarding configuration', async () => {
   const {api, posts} = recording(false);
   render(<FeedbackButtons api={api} did={did} cid={cid} investigationId={iid} target="DRAFT"/>);
   fireEvent.click(screen.getByRole('button', {name: 'Needs work'}));
   fireEvent.change(screen.getByLabelText('What should be better? (optional)'), {target: {value: 'Too formal'}});
   fireEvent.click(screen.getByRole('button', {name: 'Send feedback'}));
-  expect(await screen.findByText(/Saved locally \(LangSmith not configured\)\./)).toBeInTheDocument();
+  expect(await screen.findByText('Feedback saved locally.')).toBeInTheDocument();
+  expect(screen.queryByText(/LangSmith|not configured|improve the agents/i)).not.toBeInTheDocument();
   expect(posts[0].body).toMatchObject({target: 'DRAFT', rating: 'DOWN', comment: 'Too formal'});
 });
 

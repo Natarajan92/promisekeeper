@@ -108,7 +108,7 @@ it('does not append a delayed history page under another case', async () => {
   render(<App api={api}/>);
   await screen.findByRole('heading',{name:'Studio North'});
   fireEvent.click(screen.getByRole('button',{name:'History'}));
-  fireEvent.click(await screen.findByRole('button',{name:'Load earlier history'}));
+  fireEvent.click(await screen.findByRole('button',{name:'Load more history'}));
   fireEvent.click(screen.getByRole('button',{name:/PK-002.*Second Studio/}));
   await screen.findByRole('heading',{name:'Second Studio'});
   fireEvent.click(screen.getByRole('button',{name:'History'}));
@@ -116,5 +116,5 @@ it('does not append a delayed history page under another case', async () => {
   await act(async()=>{resolvePage(new Response(JSON.stringify({schema_version:'1',events:[event(cid,'DELAYED_FIRST_CASE_EVENT')],next_cursor:null})));});
   expect(screen.queryByText('delayed first case event')).not.toBeInTheDocument();
   expect(screen.getByText('second case event')).toBeInTheDocument();
-  expect(screen.queryByRole('button',{name:'Load earlier history'})).not.toBeInTheDocument();
+  expect(screen.queryByRole('button',{name:'Load more history'})).not.toBeInTheDocument();
 });

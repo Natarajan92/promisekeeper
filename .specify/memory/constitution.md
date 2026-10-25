@@ -1,3 +1,9 @@
+<!-- Sync impact: 1.0.0 -> 2.0.0. Principle IV records the owner-approved
+24 October 2026 multi-agent branch exception documented in ADR-010. A major
+version records the incompatible role-cap change; no application behavior changes.
+No principles removed. Existing open-decision TODOs remain implementation-history
+items resolved by the relevant approved feature artifacts, not new permissions.
+Review this note before committing the amendment. -->
 # PromiseKeeper Constitution
 
 ## Core Principles
@@ -29,15 +35,24 @@ human controls. Components MUST NOT bypass these boundaries to create hidden sid
 
 ### IV. Bounded Agent Architecture
 
-The system MUST start with exactly one LLM-driven agent. The maximum specialized agent
-roles are Investigator, Strategist, and Communicator; additional named roles, hidden
-subagents, or duplicate autonomous instances used to evade this limit MUST NOT be added.
-Investigator covers evidence gathering and reconciliation, Strategist covers responsible
-next-action recommendations, and Communicator covers communication drafting. The initial
-agent's responsibilities and tools MUST be explicitly scoped. Remaining work MUST be
-deterministic, human-operated, or deferred.
-Adding a second or third role MUST require a documented need, typed handoffs, acceptance
-criteria, and human authorization for the relevant implementation phase.
+Release 0.1 MUST retain its original one-Investigator baseline. The owner-approved
+multi-agent upgrade of 24 October 2026, recorded in ADR-010, permits exactly these
+bounded LLM responsibilities on that upgrade and its descendant UX increments:
+Investigator/Promise Extractor, personal-note Communicator, Tone Reviewer, and Briefing
+writer. Evidence intake, payment rules, safety validation, case selection/supervision,
+persistence and approval eligibility MUST remain deterministic or human-operated.
+Client memory MUST provide context only and MUST NOT determine financial authority.
+
+Each LLM role MUST have an explicit typed boundary, bounded execution and safe failure
+behavior. The Communicator MUST NOT own financial wording; the Tone Reviewer MUST NOT
+approve a message; the Briefing writer MUST NOT compute financial facts. New agents
+MUST remain unqualified until their actual evaluations have been executed. No agent
+MAY send a customer message, approve wording or close a case.
+
+Additional roles, hidden subagents or duplicate autonomous instances used to evade
+these limits MUST NOT be added. Any further role expansion MUST require a documented
+need, acceptance criteria, typed handoffs, an approved constitutional amendment and
+explicit owner authorization. Presentation-only work MUST NOT expand this exception.
 
 ### V. Deterministic Financial and Safety Logic
 
@@ -213,7 +228,9 @@ A violation MUST be corrected or addressed by an approved constitutional amendme
 the affected work proceeds. Open decisions MUST be resolved explicitly and MUST NOT be
 treated as permission to weaken an invariant.
 
-Version 1.0.0 establishes the initial constitution on 2026-10-23. Subsequent governance
+Version 1.0.0 established the initial constitution on 2026-10-23. Version 2.0.0 records
+the owner-approved 2026-10-24 branch-specific role expansion in the governing document,
+synchronized on 2026-10-25 without introducing new agent behavior. Other governance
 changes MUST follow the amendment procedure above.
 
-**Version**: 1.0.0 | **Ratified**: 2026-10-23 | **Last Amended**: 2026-10-23
+**Version**: 2.0.0 | **Ratified**: 2026-10-23 | **Last Amended**: 2026-10-25

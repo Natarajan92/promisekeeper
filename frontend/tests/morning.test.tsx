@@ -21,11 +21,14 @@ function fake(overrides: Partial<Record<'latestMorningReview' | 'startMorningRev
     morningReview: async () => complete, ...overrides} as unknown as ApiClient;
 }
 
-it('shows the latest briefing and case chips that open a case', async () => {
+it('keeps completed case choices visible and opens the full briefing only on request', async () => {
   const opened: string[] = [];
   render(<MorningReview api={fake({latestMorningReview: async () => ({schema_version: '1', morning_review: complete})})} did={did} onOpenCase={id => opened.push(id)} onDone={() => {}}/>);
-  expect(await screen.findByText(/Northstar Analytics needs a follow-up today/)).toBeInTheDocument();
-  expect(screen.getByText(/Each amount and date was checked against that case's facts/)).toBeInTheDocument();
+  expect(await screen.findByText('Review complete. Choose a case to see its recommendation.')).toBeVisible();
+  expect(screen.getByText(/Northstar Analytics needs a follow-up today/)).not.toBeVisible();
+  fireEvent.click(screen.getByText('Read saved briefing'));
+  expect(screen.getByText(/Northstar Analytics needs a follow-up today/)).toBeVisible();
+  expect(screen.getByText(/Each amount and date was checked against that case's facts/)).toBeVisible();
   fireEvent.click(screen.getByRole('button', {name: /Northstar Analytics.*Follow up.*draft ready/}));
   expect(opened).toEqual(['c1']);
   expect(screen.getByRole('button', {name: /Meridian Studio.*no change needed/})).toBeInTheDocument();

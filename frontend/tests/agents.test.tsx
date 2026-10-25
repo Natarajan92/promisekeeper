@@ -1,5 +1,5 @@
-import { afterEach, expect, it } from 'vitest';
-import { cleanup, render, screen } from '@testing-library/react';
+import { afterEach, expect, it, vi } from 'vitest';
+import { act, cleanup, fireEvent, render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom/vitest';
 import type { ApiClient } from '../src/api/client';
 import type { AgentActivity, Attempt, Health } from '../src/api/types';
@@ -9,6 +9,39 @@ import { did } from './fixtures';
 
 afterEach(cleanup);
 const iid = '44444444-4444-4444-8444-444444444444';
+
+it('shows confirmed progress without exposing model telemetry until requested', async () => {
+  const {container}=render(<AgentTrace compact api={api([row('EXTRACTOR','SUCCEEDED','Evidence checked.',{model:'internal-model',input_tokens:42})])} did={did} investigationId={iid}/>);
+  expect(await screen.findByText('Recommendation saved. Message ready for review.')).toBeInTheDocument();
+  expect(screen.getByText(/Last confirmed: Promise extractor/)).toBeInTheDocument();
+  expect(screen.queryByText(/internal-model/)).not.toBeInTheDocument();
+  const details=screen.getByText('Developer insights').closest('details')!;
+  details.open=true;fireEvent(details,new Event('toggle'));
+  expect(container.textContent).toContain('internal-model');
+});
+
+it('does not turn a completed recommendation into a ready draft', async () => {
+  const pending={attempt:async()=>({status:'COMPLETE',draft_status:'RUNNING',agent_activity:[],agent_totals:null})} as unknown as ApiClient;
+  render(<AgentTrace compact api={pending} did={did} investigationId={iid}/>);
+  expect(await screen.findByText('Recommendation saved. Preparing your message.')).toBeInTheDocument();
+  expect(screen.getByText('Waiting for a confirmed activity update.')).toBeInTheDocument();
+  expect(screen.queryByText(/Message ready for review/)).not.toBeInTheDocument();
+});
+
+it('keeps quiet progress unknown and explains when its existing activity polling budget ends',async()=>{
+  vi.useFakeTimers();let calls=0;
+  const pending={attempt:async()=>{calls++;return {status:'RUNNING',draft_status:'NONE',agent_activity:[],agent_totals:null};}} as unknown as ApiClient;
+  try {
+    await act(async()=>{render(<AgentTrace compact api={pending} did={did} investigationId={iid}/>);});
+    expect(screen.getByText('Investigation in progress.')).toBeInTheDocument();
+    expect(screen.getByText('Waiting for a confirmed activity update.')).toBeInTheDocument();
+    await act(async()=>{await vi.advanceTimersByTimeAsync(46_500);});
+    expect(screen.getByText(/Activity updates paused.*last confirmed status/)).toBeInTheDocument();
+    const stopped=calls;await act(async()=>{await vi.advanceTimersByTimeAsync(10_000);});
+    expect(calls).toBe(stopped);
+    expect(screen.queryByText(/Message ready for review/)).not.toBeInTheDocument();
+  } finally {vi.useRealTimers();}
+});
 
 function row(agent: AgentActivity['agent'], outcome: AgentActivity['outcome'], note: string | null = null, extra: Partial<AgentActivity> = {}): AgentActivity {
   return {agent, event: 'step', outcome, note, model: null, input_tokens: null, output_tokens: null, latency_ms: null, at: '2026-10-24T10:00:00Z',

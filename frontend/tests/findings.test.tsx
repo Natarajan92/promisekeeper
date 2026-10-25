@@ -116,8 +116,22 @@ it('labels legacy findings and requests reinvestigation without adding fields to
   expect(JSON.stringify(result)).toBe(original);
 });
 
-it('shows the AI team trace right after the next step, before case actions', () => {
-  render(<FindingsView result={saved as any} view={{...view,freshness:'CURRENT'} as any} onSource={()=>{}} team={<p>AI TEAM TRACE</p>} actions={<h3>Case actions</h3>}/>);
-  const team=screen.getByText('AI TEAM TRACE');
-  expect(team.compareDocumentPosition(screen.getByRole('heading',{name:'Case actions'}))&Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+it('puts money and case actions before developer insights and mounts the trace only on request', () => {
+  const {container}=render(<FindingsView result={saved} view={{...view,freshness:'CURRENT'}} onSource={()=>{}} team={<p>AI TEAM TRACE</p>} actions={<h3>Case actions</h3>}/>);
+  expect(screen.queryByText('AI TEAM TRACE')).not.toBeInTheDocument();
+  const summary=screen.getByText('Developer insights');
+  expect(container.querySelector('.financial-summary')!.compareDocumentPosition(screen.getByText(saved.explanation.text))&Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+  expect(screen.getByRole('heading',{name:'Case actions'}).compareDocumentPosition(summary)&Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+  const details=summary.closest('details')!;
+  details.open=true;fireEvent(details,new Event('toggle'));
+  expect(screen.getByText('AI TEAM TRACE')).toBeVisible();
+});
+
+it.each(['RUNNING','FAILED'] as const)('keeps saved recommendation distinct from %s message preparation', state => {
+  const navigate: string[]=[];
+  render(<FindingsView result={{...saved,action:'FOLLOW_UP'}} view={{...view,freshness:'CURRENT',draft_generation_state:state}} onSource={()=>{}} onNavigate={section=>navigate.push(section)}/>);
+  expect(screen.getByText(state==='RUNNING'?'Recommendation saved. Your message is still being prepared.':'Recommendation saved. Message preparation needs attention. Open Review to check recovery options.')).toBeInTheDocument();
+  fireEvent.click(screen.getByRole('button',{name:state==='RUNNING'?'Check message preparation':'Review message recovery'}));
+  expect(navigate).toEqual(['review']);
+  expect(screen.queryByRole('button',{name:'Review suggested message'})).not.toBeInTheDocument();
 });

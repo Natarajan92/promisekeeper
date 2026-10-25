@@ -1,9 +1,13 @@
 import type { CaseView, EvidenceObservation, FinancialIssue, Result, SourceVersionRef } from '../api/types';
-import type {ReactNode} from 'react';
+import {useId,useState, type ReactNode} from 'react';
 import { FinancialSummary } from '../cases/CaseEvidence';
 import { actionTitle, instant, localDates, money, words } from '../components/format';
 
 export function FindingsView({result,view,onSource,onNavigate,actions,team}:{result:Result;view:CaseView;onSource:(id:string)=>void;onNavigate?:(section:'evidence'|'review')=>void;actions?:ReactNode;team?:ReactNode}) {
+  const [developerOpen,setDeveloperOpen]=useState(false);
+  const headingId=useId();
+  const draftState=view.draft_generation_attempt?.status ?? view.draft_generation_state;
+  const messageAction=draftState==='RUNNING'?'Check message preparation':draftState==='FAILED'?'Review message recovery':'Review suggested message';
   const reviewReached=!!result.review_at && Date.parse(view.evaluation_at)>=Date.parse(result.review_at);
   function resolveSource(value:string|SourceVersionRef) {
     if(typeof value!=='string')return view.evidence.find(source=>source.id===value.evidence_version_id&&source.stable_source_id===value.source_id);
@@ -31,32 +35,34 @@ export function FindingsView({result,view,onSource,onNavigate,actions,team}:{res
       ? `Source ${observation.source.source_id} has no readable original content.`
       : `Source ${observation.source.source_id} availability: ${words(observation.value)}.`;
   }
-  return <section className="findings" aria-labelledby="findings-heading">
+  return <section className="findings" aria-labelledby={headingId}>
     <div className="findings-heading">
-      <div><p>Saved recommendation · {words(result.status)}</p><h2 id="findings-heading">{actionTitle(result.action)}</h2></div>
+      <div><p>Saved recommendation · {words(result.status)}</p><h2 id={headingId}>{actionTitle(result.action)}</h2></div>
       <p>Evaluated {instant(result.evaluation_at)}</p>
     </div>
     {view.freshness!=='CURRENT'&&<p className="notice">Historical result: {words(view.freshness)}. Inspect current evidence before acting.</p>}
     {!result.findings_version&&<p className="notice">Legacy findings: saved before the current findings profile. Reinvestigate to include source-linked issues and evidence observations.</p>}
     {result.status==='LIMITED'&&<p className="notice">Limited investigation. Review the missing or unresolved evidence below.</p>}
+    <FinancialSummary facts={{...result.financial_facts,label:words(result.financial_label)}} showIssues={false}/>
     <p className="explanation">{localDates(result.explanation.text)}</p>
+    <div className="source-links">{result.explanation.sources.map(sourceButton)}</div>
+    {view.freshness==='CURRENT'&&draftState==='RUNNING'&&<p className="notice">Recommendation saved. Your message is still being prepared.</p>}
+    {view.freshness==='CURRENT'&&draftState==='FAILED'&&<p className="notice">Recommendation saved. Message preparation needs attention. Open Review to check recovery options.</p>}
     <div className="next-step"><h3>Next step</h3><p>{localDates(result.next_step)}</p>
       {onNavigate&&view.freshness==='CURRENT'&&!view.running_attempt&&<div className="decision-actions">
-        {(result.action==='FOLLOW_UP'||!!view.draft)&&<button className="primary" onClick={()=>onNavigate('review')}>Review suggested message</button>}
+        {(result.action==='FOLLOW_UP'||!!view.draft)&&<button className="primary" onClick={()=>onNavigate('review')}>{messageAction}</button>}
         {result.action==='VERIFY_PAYMENT'&&<button onClick={()=>onNavigate('evidence')}>Inspect payment evidence</button>}
       </div>}
     </div>
-    {result.action==='VERIFY_PAYMENT'&&<p className="notice">Verify the evidence before any payment demand.</p>}
+    {result.action==='VERIFY_PAYMENT'&&<aside className="notice"><p>Verify the evidence before any payment demand.</p><p>Check your bank statement or accounting records outside PromiseKeeper to confirm that the claimed payment settled and belongs to this invoice. This app shows the evidence saved in this case; it does not connect to your bank.</p>{view.catalogue_case_id==='PK-003'&&<p>In this demo, the fictional settlement update in History supplies the verified payment record. Review and confirm that update, then investigate again to get a new saved recommendation.</p>}</aside>}
     {result.action==='CLOSE'&&<p className="notice">This recommendation does not close the case. Review the settlement in Case actions and explicitly confirm case closure.</p>}
     {result.action==='WAIT'&&<div className="review-boundary">
       <h3>Review at {instant(result.review_at)}</h3>
       <p>{reviewReached?'Review required: the review date has arrived. Investigate again; another future promise may still require waiting.':'Wait until this review date, then investigate again. No reminder or customer message is sent.'}</p>
       <p>Invoice overdue boundary {instant(result.financial_facts.due_at)}</p>
     </div>}
-    {team}
-    <FinancialSummary facts={{...result.financial_facts,label:words(result.financial_label)}} showIssues={false}/>
     {actions}
-    <div className="source-links">{result.explanation.sources.map(sourceButton)}</div>
+    {team&&<details className="developer-insights" onToggle={event=>setDeveloperOpen(event.currentTarget.open)}><summary>Developer insights</summary>{developerOpen&&team}</details>}
     {result.financial_facts.issues.length>0&&<><h3>Financial issues</h3>{issueList(result.financial_facts.issues)}</>}
     {!!result.commitment_issues?.length&&<><h3>Commitment issues</h3>{issueList(result.commitment_issues)}</>}
     {!!result.evidence_observations?.length&&<><h3>Evidence observations</h3><p className="subtle">Captured in this investigation's saved snapshot.</p><ul>{result.evidence_observations.map((observation,index)=><li key={index}>

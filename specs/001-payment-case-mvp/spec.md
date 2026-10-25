@@ -129,6 +129,8 @@ As an agency owner, I want a clear unresolved question and a recoverable case wh
 
 ### User Story 6 - See What Changed Since the Prior Investigation (Priority: P1)
 
+Activated by the owner on 25 October 2026 under the bounded [owner experience Phase 2](../003-owner-experience/phase2-spec.md); the original MVP task set and retained reports are historical.
+
 As a returning owner, I want a concise comparison of successive investigations so I can understand a changed recommendation faster.
 
 **Why this priority**: Full history and reinvestigation are P0; a comparison summary reduces navigation but is not essential to preserve decisions.
