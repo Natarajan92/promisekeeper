@@ -4,7 +4,7 @@ from datetime import datetime
 import json
 
 from promisekeeper.application.operations import CommandError, canonical, digest, instant, replay, save_receipt
-from promisekeeper.fixtures.catalogue import _event_table, apply_event, variant_ids
+from promisekeeper.fixtures.catalogue import CASE_IDS, _event_table, apply_event, variant_ids
 from promisekeeper.persistence.repositories import append_event, append_evidence, case, demonstration, load_fixture, require_revision
 
 
@@ -16,7 +16,7 @@ def catalogue_view():
         events.update(table)
         for event_id in table:
             eligibility.setdefault(event_id, []).append(variant)
-    return dict(schema_version="1", catalogue_version="release-0.1", baseline_case_ids=["PK-001", "PK-002", "PK-003"],
+    return dict(schema_version="1", catalogue_version="release-0.1", baseline_case_ids=list(CASE_IDS),
                 variant_ids=list(variant_ids()), events=[dict(id=e["id"], kind=e["kind"], case_id=e["case_id"],
                     evaluation_at=instant(datetime.fromisoformat(e["evaluation_at"])),
                     eligible_variant_ids=eligibility[event_id]) for event_id, e in sorted(events.items())])

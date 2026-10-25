@@ -30,7 +30,7 @@ def test_migrations_replay_constraints_and_immutable_history(tmp_path):
             assert con.execute("PRAGMA journal_mode").fetchone()[0] == "delete"
             assert con.execute("PRAGMA synchronous").fetchone()[0] == 3
             assert con.execute("PRAGMA busy_timeout").fetchone()[0] == 250
-            assert con.execute("SELECT count(*) FROM cases").fetchone()[0] == 3
+            assert con.execute("SELECT count(*) FROM cases").fetchone()[0] == 6
             assert con.execute("PRAGMA foreign_key_check").fetchall() == []
         with pytest.raises(sqlite3.IntegrityError), db.transaction() as con:
             con.execute("UPDATE evidence_versions SET original_content='changed'")

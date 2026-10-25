@@ -242,3 +242,44 @@ def upload_to_langsmith(report, dataset_name):
         return True
     except Exception:
         return False
+
+
+def load_supervisor_scenarios():
+    data = json.loads((FIXTURES / 'supervisor_scenarios.json').read_text(encoding='utf-8'))
+    if data.get('schema_version') != '1':
+        raise ValueError('Unsupported supervisor scenario schema')
+    return data
+
+
+def evaluate_supervisor(planner, *, repeats=1):
+    """Each scenario is one planner turn. Valid = passes the code guardrails; correct = an owner-acceptable choice.
+    STUB runs only prove the harness; LIVE runs compare models on validity, correctness, latency and tokens."""
+    from promisekeeper.orchestration.morning_review import check_choice
+    dataset = load_supervisor_scenarios()
+    items, latencies, tokens = [], [], []
+    for _ in range(max(1, repeats)):
+        for scenario in dataset['scenarios']:
+            context = dict(pending=scenario['pending'], done=scenario['done'], steps_left=len(scenario['pending']))
+            try:
+                call, error = planner.next_step(context, timeout=15), None
+                choice = call.value
+                latencies.append(call.latency_ms)
+                if call.input_tokens is not None and call.output_tokens is not None:
+                    tokens.append(call.input_tokens + call.output_tokens)
+            except Exception as exc:
+                choice, error = None, getattr(exc, 'code', type(exc).__name__)
+            problem = check_choice(choice, scenario['pending']) if choice is not None else error
+            correct = problem is None and [choice['action'], choice.get('case')] in scenario['acceptable']
+            # Owner-facing reasons name clients, never internal case codes.
+            reason_clean = choice is not None and not re.search(r'\bPK-\d{3}\b', str(choice.get('reason', '')))
+            items.append(dict(id=scenario['id'], choice=choice, error=error, valid=problem is None, problem=problem, correct=correct,
+                              reason_clean=reason_clean))
+    count = len(items)
+    metrics = dict(validity=sum(i['valid'] for i in items) / count, accuracy=sum(i['correct'] for i in items) / count,
+                   reason_clean=sum(i['reason_clean'] for i in items) / count, errors=sum(i['error'] is not None for i in items),
+                   latency_ms_p50=_percentile(latencies, 0.5) if latencies else None,
+                   latency_ms_p95=_percentile(latencies, 0.95) if latencies else None,
+                   mean_tokens=sum(tokens) / len(tokens) if tokens else None)
+    model = getattr(planner, 'model', None)
+    return dict(suite='supervisor', dataset_version=dataset['dataset_version'], generated_at=datetime.now(timezone.utc).isoformat(),
+                mode='LIVE' if model else 'OFFLINE_SCRIPTED', model=model, live_qualified=False, items=items, metrics=metrics)

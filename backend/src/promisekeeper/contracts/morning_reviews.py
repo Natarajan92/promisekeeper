@@ -20,6 +20,9 @@ class CaseOutcome(StrictInput):
     balance_text: str | None
     review_at_text: str | None
     draft_ready: bool
+    # Order the supervisor chose and why; absent on reviews saved before the planning supervisor.
+    priority: int | None = None
+    supervisor_reason: str | None = None
 
 
 class MorningReviewView(StrictInput):

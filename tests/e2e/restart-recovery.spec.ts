@@ -1,7 +1,7 @@
 import { test,expect } from './support/test';
 import { isolatedServer } from './support/server';
 import { createCopy,investigate,confirmScenarioEvent } from './support/scenarioEvents';
-import { caseView,command,post,readyDraft,history,type FaultPreset } from './support/fixtures';
+import { caseView,command,post,readyDraft,history,showAllCases,type FaultPreset } from './support/fixtures';
 
 for(const boundary of ['start','result','draft','approval','closure'] as const) {
   test(`actual process kill after ${boundary} commit reconciles once and preserves earlier state`,async({playwright,page})=>{
@@ -63,7 +63,7 @@ for(const boundary of ['start','result','draft','approval','closure'] as const) 
         events=await history(request,copy.id,cid);
       } else expect(after.review_state).not.toBe('APPROVED');
       await page.addInitScript(id=>localStorage.setItem('selected_demonstration_id',id),copy.id);await page.goto(server.url);
-      if(boundary==='closure')await page.getByRole('button',{name:/PK-003/}).first().click();
+      if(boundary==='closure'){await showAllCases(page);await page.getByRole('button',{name:/PK-003/}).first().click();}
       await expect(page.getByRole('button',{name:'History',exact:true})).toBeVisible();
       await server.kill();await server.start();
       expect(await history(request,copy.id,cid)).toEqual(events);

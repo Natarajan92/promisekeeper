@@ -153,3 +153,13 @@ Use the `deterministic-1` result profile with exact issue version references. Pr
 
 **Consequences**: More moving parts and more provider calls per case. Every agent failure falls back to the standard template, a plain briefing or no memory, never to an unreviewed result. The new agents are unqualified until measured with `evaluate --suite agents` and `--suite hinglish` in LIVE mode; the Release 0.1 qualification does not cover them.
 
+
+## ADR-011: Planning Morning Supervisor, six demo cases and an urgent-first overview
+
+**Context**: On 25 October 2026 the owner asked for a genuinely dynamic morning supervisor, six use cases (including Hinglish customer messages), a sideways-scrolling morning review and a case overview that shows urgent cases first. ADR-010 and Constitution principle IV kept case selection deterministic.
+
+**Decision**: Amend principle IV narrowly. Code still decides which open cases are due, closed or running. A planning supervisor agent then chooses one step at a time, `INVESTIGATE` a pending case or `FINISH`, and re-plans after every result. It sees structured case facts only (never customer message text). Code validates each choice: the case must be pending, and `FINISH` is refused while a due case waits. An invalid choice falls back to rule order for that step; an unavailable planner is switched off for the rest of the run. Due cases are always investigated; the planner may also re-check a current case. The supervisor model is configurable separately (`PK_SUPERVISOR_MODEL`) so a smaller decision model can be compared with `evaluate --suite supervisor --models a,b`. STUB mode uses a deterministic risk-first policy as the stand-in. The default demo gains fictional PK-004 to PK-006 (two Hinglish messages and one settled ledger); migration 010 widens the case CHECK. Release measurements and reviewed evaluation inventories stay on PK-001 to PK-003.
+
+**Unchanged**: Code owns money, dates, recommendations, eligibility, approval and closure. Investigations stay read-only proposals; nothing is sent.
+
+**Consequences**: One more provider call per morning-review step in LIVE. The supervisor and any smaller model are unqualified until measured in LIVE mode; the offline suite only proves the harness and guardrails.

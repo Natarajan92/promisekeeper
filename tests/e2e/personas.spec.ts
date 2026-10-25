@@ -2,6 +2,7 @@ import {mkdirSync} from 'node:fs';
 import {fileURLToPath} from 'node:url';
 import {test,expect,type Page} from './support/test';
 import {createCopy,confirmScenarioEvent,investigate} from './support/scenarioEvents';
+import {showAllCases} from './support/fixtures';
 
 // Simulated persona walkthroughs (agent-run, STUB mode, fictional data). Not a real-user study.
 const shots=fileURLToPath(new URL('../../.runtime/personas/',import.meta.url));
@@ -69,6 +70,7 @@ test('P4 bookkeeper: settlement evidence leads to a supported closure only after
   await confirmScenarioEvent(request,copy.id,cedar.id,'PK-003-U1');
   await investigate(request,copy.id,cedar.id);
   await open(page,copy.id);
+  await showAllCases(page);
   await page.getByRole('button',{name:/PK-003.*Cedar Retail Labs/}).click();
   await page.getByRole('button',{name:'Findings',exact:true}).click();
   await expect(page.getByRole('heading',{name:'Review case closure'})).toBeVisible();

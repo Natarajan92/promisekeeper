@@ -1,6 +1,13 @@
 import { randomUUID } from 'node:crypto';
-import { expect, type APIRequestContext } from './test';
+import { expect, type APIRequestContext, type Page } from './test';
 import { mutationHeaders } from './scenarioEvents';
+
+// The case overview shows cases needing attention by default; settled and closed cases sit behind Show all.
+export async function showAllCases(page:Page) {
+  const toggle=page.getByRole('button',{name:/Show all \d+ cases/});
+  await toggle.waitFor();
+  await toggle.click();
+}
 
 export const faultPresets = ['kill-after-start','kill-after-result','kill-after-draft','kill-after-approval','kill-after-closure','retry-exhaustion','late-provider','blocked-provider'] as const;
 export type FaultPreset = typeof faultPresets[number];

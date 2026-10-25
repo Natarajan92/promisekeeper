@@ -35,7 +35,7 @@ test('wait and verification journeys explain the next action in IST without dema
   await investigate(request,copy.id,copy.cases[1].id);
   await investigate(request,copy.id,copy.cases[2].id);
   await page.addInitScript(id=>localStorage.setItem('selected_demonstration_id',id),copy.id);
-  await page.goto('/');await page.getByRole('button',{name:/PK-002.*Meridian Software/}).click();
+  await page.goto('/');await page.getByRole('button',{name:/Show all \d+ cases/}).click();await page.getByRole('button',{name:/PK-002.*Meridian Software/}).click();
   await page.getByRole('button',{name:'View recommendation',exact:true}).click();
   await expect(page.getByRole('heading',{name:'Wait until the review date'})).toBeVisible();
   await expect(page.locator('.next-step')).toContainText('26 Oct 2026, 00:00 IST');

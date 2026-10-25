@@ -42,11 +42,11 @@ test("multiple copies need selection and valid saved selection opens exact raw e
   await page.screenshot({path:fileURLToPath(new URL("../../.runtime/gate-iii/case-workspace.png",import.meta.url)),fullPage:true});
 });
 
-test("all three cases expose their originals and verification labels without investigation",async({page,request})=> {
+test("the three release cases expose their originals and verification labels without investigation",async({page,request})=> {
   const copy=await createCopy(request);
   await select(page,copy.id);
   const messages=["We will pay INR 80,000 by 20 October 2026.","We will pay INR 50,000 by 25 October 2026.","We paid the remaining INR 60,000 today; reference CR-T2."];
-  for(const [index,item] of copy.cases.entries()) {
+  for(const [index,item] of copy.cases.slice(0,3).entries()) {
     await page.getByRole("button",{name:new RegExp(item.catalogue_case_id)}).first().click();
     await expect(page.getByText(messages[index],{exact:true})).toBeVisible();
     await expect(page.getByText(/Customer wording is a claim until supported/)).toBeVisible();
@@ -55,6 +55,18 @@ test("all three cases expose their originals and verification labels without inv
     const detail=await (await request.get(`/api/v1/cases/${item.id}?demonstration_id=${copy.id}`)).json();
     expect(detail.latest_completed_result).toBeNull();
     expect(detail.case_revision).toBe(0);
+  }
+});
+
+test("Hinglish cases show the original customer wording exactly and stay uninvestigated",async({page,request})=> {
+  const copy=await createCopy(request);
+  expect(copy.cases.map((item:any)=>item.catalogue_case_id)).toEqual(["PK-001","PK-002","PK-003","PK-004","PK-005","PK-006"]);
+  await select(page,copy.id);
+  const hinglish:Record<string,string>={"PK-004":"Sir, INR 60,000 pakka 15 October 2026 tak transfer kar denge.","PK-005":"Sir, INR 45,000 ka payment today kar diya hai, reference LI-T9."};
+  for(const [code,text] of Object.entries(hinglish)) {
+    await page.getByRole("button",{name:new RegExp(code)}).first().click();
+    await expect(page.getByText(text,{exact:true})).toBeVisible();
+    await expect(page.getByText("Non-authoritative source",{exact:true})).toBeVisible();
   }
 });
 

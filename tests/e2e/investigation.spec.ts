@@ -203,12 +203,12 @@ test("lost start response reconciles the original operation after reload without
 
 test("baseline actions and staged settlement preserve the earlier result and source history", async ({ request }) => {
   const copy = await createCopy(request);
-  const expected = ["FOLLOW_UP","WAIT","VERIFY_PAYMENT"];
+  const expected = ["FOLLOW_UP","WAIT","VERIFY_PAYMENT","FOLLOW_UP","VERIFY_PAYMENT","CLOSE"];
   for (const [i, item] of copy.cases.entries()) {
     const attempt = await investigate(request,copy.id,item.id);
     expect(attempt.status).toBe("COMPLETE");
     expect(attempt.result.action).toBe(expected[i]);
-    expect(attempt.result.financial_facts.balance.minor_units).toBe(["8000000","5000000","6000000"][i]);
+    expect(attempt.result.financial_facts.balance.minor_units).toBe(["8000000","5000000","6000000","6000000","4500000","0"][i]);
   }
   const cedar = copy.cases[2].id;
   await confirmScenarioEvent(request,copy.id,cedar,"PK-003-U1");

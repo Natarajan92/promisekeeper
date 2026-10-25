@@ -5,10 +5,10 @@ import pytest
 from promisekeeper.fixtures.catalogue import apply_event, fresh_copy, variant_ids
 
 
-def test_fresh_copies_seed_exactly_three_cases_without_sharing_instance_ids():
+def test_fresh_copies_seed_exactly_six_cases_without_sharing_instance_ids():
     left,right=fresh_copy(),fresh_copy()
     assert left is not None, "A new approved demonstration must be materialized"
-    assert set(left.cases)=={"PK-001","PK-002","PK-003"}
+    assert set(left.cases)=={"PK-001","PK-002","PK-003","PK-004","PK-005","PK-006"}
     assert left.id != right.id
     assert left.cases["PK-002"].evidence.case_id != right.cases["PK-002"].evidence.case_id
     assert left.evaluation_at.isoformat()=="2026-10-23T10:00:00+05:30"

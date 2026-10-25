@@ -214,6 +214,160 @@
         "balance_minor": "6000000",
         "review_at": null
       }
+    },
+    {
+      "id": "PK-004",
+      "client": "Saffron Foods",
+      "invoice_id": "SF-221",
+      "ledger_availability": "AVAILABLE",
+      "ledger_complete": true,
+      "sources": [
+        {
+          "source_id": "PK-004-I1",
+          "kind": "INVOICE",
+          "original_content": "Fictional invoice SF-221; client Saffron Foods; INR 60,000.00; due 5 October 2026.",
+          "data": {
+            "invoice_id": "SF-221",
+            "client": "Saffron Foods",
+            "amount_text": "60,000.00",
+            "currency_text": "INR",
+            "due_text": "5 October 2026"
+          },
+          "event_at": null,
+          "arrived_at": "2026-10-23T10:00:00+05:30",
+          "availability": "AVAILABLE",
+          "authoritative": true,
+          "version": 1
+        },
+        {
+          "source_id": "PK-004-M1",
+          "kind": "MESSAGE",
+          "original_content": "Sir, INR 60,000 pakka 15 October 2026 tak transfer kar denge.",
+          "data": {
+            "speaker": "Fictional client",
+            "candidate": {
+              "kind": "COMMITMENT",
+              "clause": "Sir, INR 60,000 pakka 15 October 2026 tak transfer kar denge.",
+              "commitment_key": "PK-004-M1-C1",
+              "amount_text": "60,000",
+              "currency_text": "INR",
+              "date_text": "15 October 2026",
+              "explicitly_replaces_source_id": null
+            }
+          },
+          "event_at": "2026-10-07T12:00:00+05:30",
+          "arrived_at": "2026-10-23T10:00:00+05:30",
+          "availability": "AVAILABLE",
+          "authoritative": false,
+          "version": 1
+        }
+      ],
+      "expected": {
+        "action": "FOLLOW_UP",
+        "balance_minor": "6000000",
+        "review_at": null
+      }
+    },
+    {
+      "id": "PK-005",
+      "client": "Lotus Interiors",
+      "invoice_id": "LI-415",
+      "ledger_availability": "AVAILABLE",
+      "ledger_complete": true,
+      "sources": [
+        {
+          "source_id": "PK-005-I1",
+          "kind": "INVOICE",
+          "original_content": "Fictional invoice LI-415; client Lotus Interiors; INR 45,000.00; due 12 October 2026.",
+          "data": {
+            "invoice_id": "LI-415",
+            "client": "Lotus Interiors",
+            "amount_text": "45,000.00",
+            "currency_text": "INR",
+            "due_text": "12 October 2026"
+          },
+          "event_at": null,
+          "arrived_at": "2026-10-23T10:00:00+05:30",
+          "availability": "AVAILABLE",
+          "authoritative": true,
+          "version": 1
+        },
+        {
+          "source_id": "PK-005-M1",
+          "kind": "MESSAGE",
+          "original_content": "Sir, INR 45,000 ka payment today kar diya hai, reference LI-T9.",
+          "data": {
+            "speaker": "Fictional client",
+            "candidate": {
+              "kind": "CLAIM",
+              "clause": "Sir, INR 45,000 ka payment today kar diya hai, reference LI-T9.",
+              "amount_text": "45,000",
+              "currency_text": "INR",
+              "payment_date_text": "today",
+              "transaction_reference_text": "LI-T9"
+            }
+          },
+          "event_at": "2026-10-22T18:00:00+05:30",
+          "arrived_at": "2026-10-23T10:00:00+05:30",
+          "availability": "AVAILABLE",
+          "authoritative": false,
+          "version": 1
+        }
+      ],
+      "expected": {
+        "action": "VERIFY_PAYMENT",
+        "balance_minor": "4500000",
+        "review_at": null
+      }
+    },
+    {
+      "id": "PK-006",
+      "client": "Banyan Logistics",
+      "invoice_id": "BL-530",
+      "ledger_availability": "AVAILABLE",
+      "ledger_complete": true,
+      "sources": [
+        {
+          "source_id": "PK-006-I1",
+          "kind": "INVOICE",
+          "original_content": "Fictional invoice BL-530; client Banyan Logistics; INR 30,000.00; due 1 October 2026.",
+          "data": {
+            "invoice_id": "BL-530",
+            "client": "Banyan Logistics",
+            "amount_text": "30,000.00",
+            "currency_text": "INR",
+            "due_text": "1 October 2026"
+          },
+          "event_at": null,
+          "arrived_at": "2026-10-23T10:00:00+05:30",
+          "availability": "AVAILABLE",
+          "authoritative": true,
+          "version": 1
+        },
+        {
+          "source_id": "PK-006-L1",
+          "kind": "LEDGER",
+          "original_content": "Fictional verified settled ledger transaction BL-T1; INR 30,000.00; invoice BL-530.",
+          "data": {
+            "transaction_ref": "BL-T1",
+            "amount_text": "30,000.00",
+            "currency_text": "INR",
+            "invoice_id": "BL-530",
+            "verification_status": "VERIFIED",
+            "settled": true
+          },
+          "event_at": "2026-10-04T09:00:00+05:30",
+          "arrived_at": "2026-10-23T10:00:00+05:30",
+          "availability": "AVAILABLE",
+          "authoritative": true,
+          "version": 1
+        }
+      ],
+      "expected": {
+        "action": "CLOSE",
+        "balance_minor": "0",
+        "review_at": null
+      }
     }
   ],
   "events": [

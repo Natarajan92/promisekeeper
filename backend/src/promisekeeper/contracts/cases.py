@@ -129,7 +129,7 @@ class CommandEligibility(StrictInput):
 
 class CaseSummary(StrictInput):
     id: Id
-    catalogue_case_id: Literal["PK-001", "PK-002", "PK-003"]
+    catalogue_case_id: Literal["PK-001", "PK-002", "PK-003", "PK-004", "PK-005", "PK-006"]
     client: str
     invoice_id: str
     currency: str | None
