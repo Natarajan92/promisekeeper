@@ -8,7 +8,7 @@ import { showAllCases } from './support/fixtures';
 async function detail(request:APIRequestContext,did:string,cid:string){return (await request.get(`/api/v1/cases/${cid}?demonstration_id=${did}`)).json();}
 async function openCase(page:Page,did:string,caseCode='PK-003',url='/'){
   await page.addInitScript(id=>localStorage.setItem('selected_demonstration_id',id),did);await page.goto(url);
-  await showAllCases(page);await page.getByRole('button',{name:new RegExp(caseCode)}).first().click();await page.getByRole('button',{name:'History',exact:true}).click();
+  await page.getByRole('link',{name:/^Cases/}).click();await showAllCases(page);await page.getByRole('button',{name:new RegExp(caseCode)}).first().click();await page.getByRole('button',{name:'History',exact:true}).click();
 }
 async function closeCase(request:APIRequestContext,did:string,cid:string){const view=await detail(request,did,cid);const command={schema_version:'1',operation_id:randomUUID(),expected_case_revision:view.case_revision,investigation_id:view.current_result.investigation_id,confirmed_result_hash:view.current_result.result_hash,confirm:true};const response=await request.post(`/api/v1/cases/${cid}/closure?demonstration_id=${did}`,{headers:mutationHeaders,data:command});expect(response.status()).toBe(200);return {command,response:await response.json()};}
 
@@ -24,7 +24,8 @@ test('PK-003 preview, settlement, advice disposition and explicit closure preser
   await page.getByRole('button',{name:'Review case closure',exact:true}).click();await page.getByLabel('Confirm closure of invoice CR-312').check();await page.getByRole('button',{name:'Confirm case closure'}).click();
   await expect(page.getByText(/PK-003 \/ CR-312 \/ CLOSED/)).toBeVisible();const closed=await detail(request,copy.id,cid);expect(closed.lifecycle).toBe('CLOSED');
   const old=await (await request.get(`/api/v1/investigations/${earlier.investigation_id}?demonstration_id=${copy.id}`)).json();expect(old.result).toEqual(earlier.result);expect(old.result.action).toBe('VERIFY_PAYMENT');
-  await page.reload();await showAllCases(page);await page.getByRole('button',{name:/PK-003/}).first().click();await page.getByRole('button',{name:'History',exact:true}).click();
+  // Reload keeps the case route, so the same case page reopens.
+  await page.reload();await expect(page.getByRole('heading',{level:1,name:copy.cases[2].client})).toBeVisible();await page.getByRole('button',{name:'History',exact:true}).click();
   await page.getByRole('button',{name:'Review case reopening'}).click();await page.getByLabel('Confirm reopening of invoice CR-312').check();await page.getByRole('button',{name:'Confirm case reopening'}).click();
   await expect(page.getByText(/PK-003 \/ CR-312 \/ OPEN/)).toBeVisible();
   const history=await (await request.get(`/api/v1/cases/${cid}/history?demonstration_id=${copy.id}&limit=100`)).json();expect(history.events.filter((e:any)=>e.event_type==='CASE_CLOSED')).toHaveLength(1);expect(history.events.filter((e:any)=>e.event_type==='CASE_REOPENED')).toHaveLength(1);
@@ -57,7 +58,7 @@ test('history preserves exact drafts, decisions and source versions through real
 
 test('deleting the selected copy clears its browser selection and preserves another copy and receipts',async({page,request})=>{
   const removed=await createCopy(request);const kept=await createCopy(request);await openCase(page,removed.id,'PK-001');
-  await page.getByText('Delete selected demonstration',{exact:true}).click();await page.getByRole('button',{name:'Review selected-copy deletion'}).click();await page.getByLabel('Confirm deletion of this selected demonstration').check();await page.getByRole('button',{name:'Delete this demonstration'}).click();
+  await page.getByRole('button',{name:/^Workspace/}).click();await page.getByText('Delete selected demonstration',{exact:true}).click();await page.getByRole('button',{name:'Review selected-copy deletion'}).click();await page.getByLabel('Confirm deletion of this selected demonstration').check();await page.getByRole('button',{name:'Delete this demonstration'}).click();
   await expect.poll(()=>page.evaluate(()=>localStorage.getItem('selected_demonstration_id'))).not.toBe(removed.id);
   const copies=await (await request.get('/api/v1/demonstrations')).json();expect(copies.demonstrations.some((d:any)=>d.id===removed.id)).toBe(false);expect(copies.demonstrations.some((d:any)=>d.id===kept.id)).toBe(true);
   expect((await request.get(`/api/v1/demonstrations/${kept.id}/cases`)).status()).toBe(200);
@@ -73,7 +74,7 @@ test('later conflicting evidence on a closed case requires explicit reopening an
     const history=await (await request.get(`/api/v1/cases/${cid}/history?demonstration_id=${copy.id}&limit=100`)).json();expect(history.events.filter((e:any)=>e.event_type==='CASE_CLOSED')).toHaveLength(1);expect(history.events.filter((e:any)=>e.event_type==='CASE_REOPENED')).toHaveLength(1);
   }finally{await request.dispose();await server.stop();}
 });
-for(const destination of ['Findings','another copy'] as const){
+for(const destination of ['Overview','another copy'] as const){
   test(`deletion outcome survives navigation to ${destination} without clearing another selected copy`,async({page,request})=>{
     const removed=await createCopy(request);const kept=await createCopy(request);await openCase(page,removed.id,'PK-001');
     let release!:()=>void;const delayed=new Promise<void>(resolve=>{release=resolve;});const pattern=`**/api/v1/demonstrations/${removed.id}/deletion`;
@@ -86,9 +87,9 @@ for(const destination of ['Findings','another copy'] as const){
       return handler;
     });
     try{
-      await page.getByText('Delete selected demonstration',{exact:true}).click();await page.getByRole('button',{name:'Review selected-copy deletion'}).click();await page.getByLabel('Confirm deletion of this selected demonstration').check();await page.getByRole('button',{name:'Delete this demonstration'}).click();
+      await page.getByRole('button',{name:/^Workspace/}).click();await page.getByText('Delete selected demonstration',{exact:true}).click();await page.getByRole('button',{name:'Review selected-copy deletion'}).click();await page.getByLabel('Confirm deletion of this selected demonstration').check();await page.getByRole('button',{name:'Delete this demonstration'}).click();
       await routeEntered;
-      if(destination==='Findings')await page.getByRole('button',{name:'Findings',exact:true}).click();else await page.getByRole('combobox',{name:'Demonstration copy'}).selectOption(kept.id);
+      if(destination==='Overview')await page.getByRole('button',{name:'Overview',exact:true}).click();else await page.getByRole('combobox',{name:'Demonstration copy'}).selectOption(kept.id);
       release();const listingDeadline=Date.now()+7_000;await expect.poll(async()=>{
         const observed=await readAvailable(request,'/api/v1/demonstrations',readErrors,Math.max(1,listingDeadline-Date.now()));
         if(observed===null)return 'UNOBSERVED';

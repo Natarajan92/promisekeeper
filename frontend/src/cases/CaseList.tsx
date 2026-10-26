@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import type { CaseSummary } from '../api/types';
 import { instant, money, words } from '../components/format';
+import { Avatar } from '../components/Avatar';
+import { caseChip } from '../components/Chip';
 import { attentionOrder, needsAttention, reviewDue, statusLabel } from './caseStatus';
 
 export { needsAttention } from './caseStatus';
@@ -22,13 +24,14 @@ export function CaseList({cases,selected,onSelect,evaluationAt,plan}:{cases:Case
       const {expired,needsReview}=reviewDue(item,evaluationAt);
       return <button key={item.id} className={`case-select ${selected===item.id?'selected':''}`} aria-current={selected===item.id?'page':undefined} onClick={()=>onSelect(item.id)}>
       <span className="case-code">{item.catalogue_case_id} <span>{words(item.lifecycle)}</span></span>
-      <strong>{item.client}</strong>
-      <span>{item.invoice_id} · {item.currency ?? 'Unknown currency'}</span>
+      <span className="case-who"><Avatar name={item.client}/><span className="case-who-text"><strong>{item.client}</strong>
+      <span>{item.invoice_id} · {item.currency ?? 'Unknown currency'}</span></span></span>
       <span className="case-balance"><span>{words(item.balance_label ?? 'RECORDED_REMAINDER')}</span><strong>{money(item.balance)}</strong></span>
-      <span className={needsReview?'review-label':'case-action'}>{statusLabel(item,evaluationAt)}</span>
-      {item.review_at&&<span>{expired?'Review due':'Next review'}: {instant(item.review_at)}</span>}
+      <span className="case-status-row"><span className={`${needsReview?'review-label':'case-action'} chip chip-${caseChip(item,evaluationAt).tone}`}>{statusLabel(item,evaluationAt)}</span></span>
+      {item.review_at&&<span className="case-review-at">{expired?'Review due':'Next review'}: {instant(item.review_at)}</span>}
       <span className="case-date">Due date: {item.due_text ?? 'Unknown due date'}</span>
       <span className="case-date">Overdue from {instant(item.due_at)}</span>
+      <span className="case-open">Open case →</span>
     </button>;})}</div>
   </nav>;
 }

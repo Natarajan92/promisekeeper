@@ -1,0 +1,11 @@
+transaction_ref,payer_name,payer_alias,address,amount,currency,paid_at,invoice_reference,status
+ECON-T1,Econ Private Limited,ECONC,"12, 1st Gandhinagar, KR PURAM, Bangalore 560012",25000,INR,2026-09-25,,SETTLED
+ECON-T2,ECON PVT LTD,Econ,,15000,INR,2026-10-10,,SETTLED
+KITE-T1,Kite Creative Studio,Kite,44 Church Street Bangalore 560001,40000,INR,2026-10-05,KITE-201,SETTLED
+LOTUS-T1,Lotus Software Works,Lotus,,50000,INR,2026-10-20,LOTUS-301,SETTLED
+NOVA-T1,NOVA MEDIA SVCS,Nova,21 MG RD Pune 411001,65000.50,INR,2026-10-10,,SETTLED
+NOVA-PENDING,Nova Media Services,Nova,,7000,INR,2026-10-24,NOVA-401,PENDING
+KITE-REVERSED,Kite Creative Studio,Kite,,80000,INR,2026-10-22,KITE-201,REVERSED
+MYSTERY-T1,Unidentified deposit,,,12500,INR,2026-10-18,,UNKNOWN
+NOVA-EXCESS,Nova Media Services,Nova,,25000,INR,2026-10-23,,SETTLED
+ECON-T1,Econ Private Limited,ECONC,"12, 1st Gandhinagar, KR PURAM, Bangalore 560012",25000,INR,2026-09-25,,SETTLED

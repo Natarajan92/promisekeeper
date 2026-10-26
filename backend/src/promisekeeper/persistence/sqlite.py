@@ -83,7 +83,9 @@ class Database:
                                   f"\nINSERT INTO schema_migrations VALUES ('{path.name}');\nCOMMIT;")
             immutable = ("evidence_versions", "invoice_projections", "payment_projections", "commitment_anchors",
                          "commitment_attributions", "evidence_snapshots", "investigation_results", "draft_versions",
-                         "draft_reviews", "owner_dispositions", "case_events", "operation_receipts")
+                         "draft_reviews", "owner_dispositions", "case_events", "operation_receipts",
+                         "intake_batches", "intake_customers", "intake_invoices", "intake_payments",
+                         "intake_allocations", "intake_documents", "intake_ledger_reviews")
             for table in immutable:
                 con.executescript(f"""
                     CREATE TRIGGER IF NOT EXISTS immutable_{table}_update BEFORE UPDATE ON {table}

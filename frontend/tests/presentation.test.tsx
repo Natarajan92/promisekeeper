@@ -41,3 +41,11 @@ it('uses readable completion labels and source versions without changing compari
   fireEvent.click(screen.getByText('Exact evidence version'));expect(screen.getByText('settlement',{exact:true})).toBeVisible();
   expect(methods.every(method=>method==='GET')).toBe(true);
 });
+it('shows rupees with the symbol and Indian grouping while other currencies keep their code',async()=>{
+  const {money}=await import('../src/components/format');
+  expect(money({currency:'INR',minor_units:'23500075'})).toBe('₹2,35,000.75');
+  expect(money({currency:'INR',minor_units:'-5000'})).toBe('-₹50.00');
+  expect(money({currency:'INR',minor_units:'0'})).toBe('₹0.00');
+  expect(money({currency:'USD',minor_units:'123400'})).toBe('USD 1,234.00');
+  expect(money(null)).toBe('Unknown');
+});

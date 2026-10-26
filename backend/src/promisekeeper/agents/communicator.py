@@ -57,11 +57,16 @@ class NebiusCommunicator:
                                schema_model=NoteOut, timeout=timeout)
 
 
+# STUB note: warm and true for every customer. It claims nothing the customer
+# did (no message, update or project), and has no numbers, money or dates.
+DEFAULT_STUB_NOTE = 'We truly value working with your team.'
+
+
 class ScriptedCommunicator:
     """Offline stand-in; list items may be exceptions to exercise failure paths."""
 
     def __init__(self, notes=None):
-        self.notes = list(notes or ['Thank you for keeping us informed about the project.'])
+        self.notes = list(notes or [DEFAULT_STUB_NOTE])
         self.calls = 0
 
     def write_note(self, ctx, *, timeout):

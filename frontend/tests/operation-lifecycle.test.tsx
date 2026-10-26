@@ -5,7 +5,11 @@ import App from '../src/App';
 import { ApiClient } from '../src/api/client';
 import { caseView, cid, demo, did } from './fixtures';
 
-afterEach(()=>{cleanup();localStorage.clear();vi.restoreAllMocks();});
+afterEach(()=>{cleanup();localStorage.clear();vi.restoreAllMocks();window.location.hash='';});
+// Each case has its own page; these flows start on the case page and reach other copies through the workspace switcher.
+const caseHash=`#/cases/${cid}`;
+const openSwitcher=()=>fireEvent.click(screen.getByRole('button',{name:/^Workspace/}));
+async function goTo(hash:string){await act(async()=>{window.location.hash=hash;});}
 const second='77777777-7777-4777-8777-777777777777';
 const pendingKey=(copy=did)=>`promisekeeper.pending.${copy}.${cid}`;
 const bufferKey=(copy=did)=>`promisekeeper.unsaved-draft.${copy}.${cid}`;
@@ -44,28 +48,30 @@ async function openHistory() {
   await screen.findByRole('heading',{name:'Studio North'});
   fireEvent.click(screen.getByRole('button',{name:'History'}));
 }
+// Selected-copy deletion lives only in the Workspace switcher.
 function deleteSelected() {
+  openSwitcher();
   fireEvent.click(screen.getByRole('button',{name:'Review selected-copy deletion'}));
   fireEvent.click(screen.getByLabelText('Confirm deletion of this selected demonstration'));
   fireEvent.click(screen.getByRole('button',{name:'Delete this demonstration'}));
 }
 
 it('unlocks both History consumers when the unmounted Review save later commits',async()=>{
-  const app=workspace();render(<App api={app.api}/>);
+  const app=workspace();window.location.hash=caseHash;render(<App api={app.api}/>);
   await screen.findByRole('heading',{name:'Studio North'});
-  fireEvent.click(screen.getByRole('button',{name:'Review'}));
+  fireEvent.click(screen.getByRole('button',{name:'Overview'}));
   fireEvent.change(screen.getByLabelText('Draft text'),{target:{value:'Committed wording A'}});
   fireEvent.click(screen.getByRole('button',{name:'Save unapproved version'}));
   fireEvent.click(screen.getByRole('button',{name:'History'}));
   await screen.findAllByText(/Request not recorded/);
-  expect(screen.getByRole('button',{name:'Review selected-copy deletion'})).toBeDisabled();
+  openSwitcher();expect(screen.getByRole('button',{name:'Review selected-copy deletion'})).toBeDisabled();
   expect(screen.getByRole('button',{name:'Preview selected fictional update'})).toBeDisabled();
   await act(async()=>app.complete());
   await waitFor(()=>expect(screen.getByRole('button',{name:'Review selected-copy deletion'})).toBeEnabled());
   expect(screen.getByRole('button',{name:'Preview selected fictional update'})).toBeEnabled();
   expect(screen.queryByRole('button',{name:'Retry original request'})).not.toBeInTheDocument();
   expect(screen.getByText(/Business time.*revision 1/)).toBeInTheDocument();
-  fireEvent.click(screen.getByRole('button',{name:'Review'}));
+  fireEvent.click(screen.getByRole('button',{name:'Overview'}));
   expect(screen.getByLabelText('Draft text')).toHaveValue('Committed wording A');
   expect(screen.getByText(/Version 2/)).toBeInTheDocument();
   expect(screen.queryByText(/Unsaved wording/)).not.toBeInTheDocument();
@@ -73,16 +79,16 @@ it('unlocks both History consumers when the unmounted Review save later commits'
 });
 
 it('preserves newer unsaved wording after an older save commits outside Review',async()=>{
-  const app=workspace();render(<App api={app.api}/>);
+  const app=workspace();window.location.hash=caseHash;render(<App api={app.api}/>);
   await screen.findByRole('heading',{name:'Studio North'});
-  fireEvent.click(screen.getByRole('button',{name:'Review'}));
+  fireEvent.click(screen.getByRole('button',{name:'Overview'}));
   fireEvent.change(screen.getByLabelText('Draft text'),{target:{value:'Committed wording A'}});
   fireEvent.click(screen.getByRole('button',{name:'Save unapproved version'}));
   fireEvent.change(screen.getByLabelText('Draft text'),{target:{value:'Newer unsaved wording B'}});
-  fireEvent.click(screen.getByRole('button',{name:'Findings'}));
+  fireEvent.click(screen.getByRole('button',{name:/^Evidence \(\d+\)$/}));
   await act(async()=>app.complete());
   await screen.findByText(/revision 1/);
-  fireEvent.click(screen.getByRole('button',{name:'Review'}));
+  fireEvent.click(screen.getByRole('button',{name:'Overview'}));
   expect(screen.getByLabelText('Draft text')).toHaveValue('Newer unsaved wording B');
   expect(localStorage.getItem(bufferKey())).toContain('Newer unsaved wording B');
   expect(screen.getByText(/A newer saved version exists/)).toBeInTheDocument();
@@ -91,11 +97,11 @@ it('preserves newer unsaved wording after an older save commits outside Review',
 it('a known receipt unlocks the sibling even while its earlier recovery lookup is outstanding',async()=>{
   const app=workspace({delayedLookups:true});
   localStorage.setItem(pendingKey(),JSON.stringify({kind:'closure',path:'/closure',operation:{schema_version:'1',operation_id:'shared-operation'}}));
-  render(<App api={app.api}/>);await openHistory();
+  window.location.hash=`${caseHash}?section=history`;render(<App api={app.api}/>);await screen.findByRole('heading',{name:'Studio North'});
   await waitFor(()=>expect(app.lookups).toHaveLength(2));
   await act(async()=>app.lookups[0](reply({schema_version:'1',receipt:{operation_id:'shared-operation',operation_type:'CLOSE_CASE',target_id:cid,committed_at:caseView.evaluation_at,outcome:'CLOSED',case_revision:1}})));
   await waitFor(()=>expect(screen.getByRole('button',{name:'Preview selected fictional update'})).toBeEnabled());
-  expect(screen.getByRole('button',{name:'Review selected-copy deletion'})).toBeEnabled();
+  openSwitcher();expect(screen.getByRole('button',{name:'Review selected-copy deletion'})).toBeEnabled();
   await act(async()=>app.lookups[1](absent()));
   expect(screen.queryByText(/Request not recorded/)).not.toBeInTheDocument();
   expect(screen.queryByRole('button',{name:'Retry original request'})).not.toBeInTheDocument();
@@ -104,18 +110,18 @@ it('a known receipt unlocks the sibling even while its earlier recovery lookup i
 it('checking a disappeared pending record releases stale local controls without claiming a commit',async()=>{
   const app=workspace();
   localStorage.setItem(pendingKey(),JSON.stringify({kind:'closure',path:'/closure',operation:{schema_version:'1',operation_id:'removed-operation'}}));
-  render(<App api={app.api}/>);await openHistory();
+  window.location.hash=caseHash;render(<App api={app.api}/>);await openHistory();
   await screen.findAllByText(/Request not recorded/);
   localStorage.removeItem(pendingKey());
   fireEvent.click(screen.getAllByRole('button',{name:'Check saved request outcome'})[0]);
-  await waitFor(()=>expect(screen.getByRole('button',{name:'Review selected-copy deletion'})).toBeEnabled());
+  openSwitcher();await waitFor(()=>expect(screen.getByRole('button',{name:'Review selected-copy deletion'})).toBeEnabled());
   expect(screen.getByRole('button',{name:'Preview selected fictional update'})).toBeEnabled();
   expect(screen.queryByText('Decision saved.')).not.toBeInTheDocument();
 });
 
 it('confirmed deletion rediscovery clears its selected scope after navigating away from History',async()=>{
-  const app=workspace();render(<App api={app.api}/>);await openHistory();deleteSelected();
-  fireEvent.click(screen.getByRole('button',{name:'Findings'}));
+  const app=workspace();window.location.hash=caseHash;render(<App api={app.api}/>);await openHistory();deleteSelected();
+  fireEvent.click(screen.getByRole('button',{name:'Overview'}));
   expect(screen.getByRole('heading',{name:'Studio North'})).toBeInTheDocument();
   await act(async()=>app.complete('DELETED'));
   expect(await screen.findByText(/No saved demonstrations/)).toBeInTheDocument();
@@ -128,12 +134,14 @@ it('deletion of the previous copy preserves the new selected copy and its unsave
   const otherPending=JSON.stringify({kind:'edit',path:'/draft-versions',operation:{schema_version:'1',operation_id:'other-operation',exact_text:'Other pending text'}});
   const otherBuffer=JSON.stringify({text:'Other unsaved wording',recipient:'Other Studio',base:'draft-one'});
   localStorage.setItem(pendingKey(second),otherPending);localStorage.setItem(bufferKey(second),otherBuffer);
-  const app=workspace({twoCopies:true});render(<App api={app.api}/>);await openHistory();deleteSelected();
+  const app=workspace({twoCopies:true});window.location.hash=caseHash;render(<App api={app.api}/>);await openHistory();deleteSelected();
   fireEvent.change(screen.getByLabelText('Demonstration copy'),{target:{value:second}});
+  await goTo(caseHash);
   await screen.findByRole('heading',{name:'Other Studio'});
-  fireEvent.click(screen.getByRole('button',{name:'Review'}));
+  fireEvent.click(screen.getByRole('button',{name:'Overview'}));
   await screen.findByDisplayValue('Other unsaved wording');
   await act(async()=>app.complete('DELETED'));
+  await waitFor(()=>expect(screen.queryByText('Loading saved demonstrations…')).not.toBeInTheDocument());openSwitcher();
   await waitFor(()=>expect(screen.getByLabelText('Demonstration copy').querySelectorAll('option')).toHaveLength(2));
   expect(screen.getByLabelText('Demonstration copy')).toHaveValue(second);
   expect(screen.getByRole('heading',{name:'Other Studio'})).toBeInTheDocument();

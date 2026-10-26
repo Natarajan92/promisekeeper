@@ -9,8 +9,8 @@ test('Cedar compares original claim and verified settlement without writes, then
   const earlier=await investigate(request,copy.id,cid);
   expect(earlier.result.action).toBe('VERIFY_PAYMENT');
   await page.addInitScript(id=>localStorage.setItem('selected_demonstration_id',id),copy.id);
-  await page.goto('/');await page.getByRole('button',{name:/PK-003.*Cedar Retail Labs/}).click();
-  await page.getByRole('button',{name:'Findings',exact:true}).click();
+  await page.goto('/#/cases');await page.getByRole('button',{name:/PK-003.*Cedar Retail Labs/}).click();
+  await page.getByRole('button',{name:'Overview',exact:true}).click();
   await expect(page.getByText(/Check your bank statement or accounting records outside PromiseKeeper/)).toBeVisible();
   await page.getByRole('button',{name:'History',exact:true}).click();
   await page.getByLabel('Fictional update').selectOption('PK-003-U1');
@@ -26,13 +26,13 @@ test('Cedar compares original claim and verified settlement without writes, then
   const originalEvents=await history(request,copy.id,cid);
   const writes:string[]=[];const watch=(req:{method:()=>string;url:()=>string})=>{if(req.method()!=='GET'&&req.url().includes('/api/v1/'))writes.push(req.url());};
   page.on('request',watch);
-  await page.getByRole('button',{name:'Findings',exact:true}).click();
+  await page.getByRole('button',{name:'Compare',exact:true}).click();
   await page.getByRole('button',{name:'Compare saved investigations'}).click();
   const panel=page.locator('.what-changed');
   await expect(panel.getByText('Recommendation changed',{exact:true})).toBeVisible();
   await expect(panel.getByText('Latest two completed investigations',{exact:true})).toBeVisible();
-  await expect(panel.getByLabel('Earlier saved values')).toContainText('INR 60,000.00');
-  await expect(panel.getByLabel('Later saved values')).toContainText('INR 0.00');
+  await expect(panel.getByLabel('Earlier saved values')).toContainText('₹60,000.00');
+  await expect(panel.getByLabel('Later saved values')).toContainText('₹0.00');
   await expect(panel.getByText(/recorded remainder is contested/)).toBeVisible();
   const settlement=later.timeline.find((entry:any)=>entry.source_id==='PK-003-L2');
   const source=panel.getByRole('button',{name:`Inspect later source PK-003-L2 / v${laterView.evidence.find((item:any)=>item.id===settlement.evidence_version_id).version}`});
@@ -66,6 +66,7 @@ test('Cedar compares original claim and verified settlement without writes, then
   }
   expect((await caseView(request,copy.id,cid)).lifecycle).toBe('OPEN');
   page.off('request',watch);
+  await page.getByRole('button',{name:'History',exact:true}).click();
   await page.getByRole('button',{name:'Review case closure',exact:true}).click();
   await expect(page.getByRole('button',{name:'Confirm case closure'})).toBeDisabled();
   await page.getByLabel('Confirm closure of invoice CR-312').check();
@@ -77,7 +78,7 @@ test('History opens a named comparison with keyboard focus and both saved origin
   const copy=await createCopy(request),cid=copy.cases[0].id;
   const earlier=await investigate(request,copy.id,cid);await investigate(request,copy.id,cid);
   await page.addInitScript(id=>localStorage.setItem('selected_demonstration_id',id),copy.id);
-  await page.goto('/');await page.getByRole('button',{name:'History',exact:true}).click();
+  await page.goto(`/#/cases/${cid}`);await page.getByRole('button',{name:'History',exact:true}).click();
   const entry=page.locator('.history-list li').filter({hasText:earlier.investigation_id}).filter({has:page.getByRole('button',{name:'Compare this investigation'})});
   await entry.getByRole('button',{name:'Compare this investigation'}).focus();await page.keyboard.press('Enter');
   await expect(page.locator('.what-changed').getByRole('heading',{name:'What changed'})).toBeFocused();

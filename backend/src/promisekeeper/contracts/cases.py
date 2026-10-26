@@ -64,6 +64,7 @@ class PaymentData(StrictInput):
     settled: bool
     reverses_source_id: str | None = None
     suspected_duplicate_source_id: str | None = None
+    original_transaction_ref: str | None = None
 
 
 class MessageData(StrictInput):

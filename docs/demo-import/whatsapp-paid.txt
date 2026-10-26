@@ -1,0 +1,6 @@
+Sender: Econ accounts (fictional)
+Sent: 2026-10-22T15:30:00+05:30
+Invoice: EC-101
+
+We already paid INR 60000 on 22 October 2026. UTR: ECON-T3.
+Please check before sending another reminder.

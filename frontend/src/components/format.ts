@@ -1,8 +1,11 @@
 import type { Action, Money } from '../api/types';
-export function money(value:Money|null|undefined):string {
+// Rupees show the symbol with Indian grouping; any other currency keeps its code. Backend text is never rewritten.
+export function money(value:Money|{currency:string;minor_units:string}|null|undefined):string {
   if(!value) return 'Unknown';
   const raw=BigInt(value.minor_units); const magnitude=raw<0n?-raw:raw;
-  return `${value.currency} ${raw<0n?'-':''}${(magnitude/100n).toLocaleString('en-IN')}.${(magnitude%100n).toString().padStart(2,'0')}`;
+  const amount=`${(magnitude/100n).toLocaleString('en-IN')}.${(magnitude%100n).toString().padStart(2,'0')}`;
+  if(value.currency==='INR')return `${raw<0n?'-':''}₹${amount}`;
+  return `${value.currency} ${raw<0n?'-':''}${amount}`;
 }
 export function instant(value:string|null|undefined):string {
   if(!value) return 'Unknown date';
@@ -10,12 +13,13 @@ export function instant(value:string|null|undefined):string {
 }
 const labels:Record<string,string> = {
   FOLLOW_UP:'Follow up', WAIT:'Wait until the review date', VERIFY_PAYMENT:'Verify the payment', CLOSE:'Review case closure',
-  WAIT_NO_CUSTOMER_DRAFT:'No message is needed yet. Return on the review date shown in Findings.',
+  WAIT_NO_CUSTOMER_DRAFT:'No message is needed yet. Return on the review date shown in the suggestion.',
   INTERNAL_VERIFICATION_NO_CUSTOMER_DRAFT:'Check the payment records first. No customer message is needed for this step.',
   CLOSE_NO_CUSTOMER_DRAFT:'Review the settlement and confirm closure in Case actions. No customer message is needed.',
   EVIDENCE_CHANGED:'Evidence changed. Investigate again before acting',
   TIME_EXPIRED:'The review date has arrived. Investigate again before acting',
   INVESTIGATION_RUNNING:'An investigation is in progress',
+  SENDER_REVIEW_REQUIRED:'Review senders in a new imported workspace; the original evidence and history are retained',
   NO_COMPLETED_RESULT:'Investigate the case first', CASE_CLOSED:'The case is closed',
   ATTRIBUTION:'Which payment belongs to this promise',
   NOTE_HAS_DIGITS:'The personal note contains a number. Amounts and dates belong only in the fact lines.',

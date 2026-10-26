@@ -76,6 +76,7 @@ class Payment:
     settled: bool
     reverses_payment_version_id: UUID | None = None
     suspected_duplicate_of: UUID | None = None
+    original_transaction_ref: str | None = None
 
 
 @dataclass(frozen=True, slots=True)

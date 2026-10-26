@@ -2,7 +2,7 @@
 import pytest
 from support.lifecycle import command, create_case
 from promisekeeper.agents.briefing import ScriptedBriefing
-from promisekeeper.agents.communicator import ScriptedCommunicator
+from promisekeeper.agents.communicator import DEFAULT_STUB_NOTE, ScriptedCommunicator
 from promisekeeper.agents.protocol import InvestigatorFailure
 from promisekeeper.agents.reviewer import ReviewVerdict, ScriptedReviewer
 from promisekeeper.agents.roster import AgentSet
@@ -15,7 +15,7 @@ from promisekeeper.orchestration.case_graph import resume_owner_review
 from promisekeeper.orchestration.investigate import get_investigation, investigate
 from promisekeeper.persistence.sqlite import Database
 
-NOTE = 'Thank you for keeping us informed about the project.'
+NOTE = DEFAULT_STUB_NOTE  # the STUB communicator's default note
 
 
 def agents(communicator=None, reviewer=None, **kw):

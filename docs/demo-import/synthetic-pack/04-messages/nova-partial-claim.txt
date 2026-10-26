@@ -1,0 +1,4 @@
+Sender: NOVA fictional accounts
+Sent: 2026-10-11T10:00:00+05:30
+
+For invoice NOVA-402, we paid INR 5000.25 on 10 October 2026. UTR: NOVA-T1.

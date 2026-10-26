@@ -58,3 +58,4 @@ class PaymentInput(StrictInput):
     settled: bool
     reverses_payment_version_id: UUID | None = None
     suspected_duplicate_of: UUID | None = None
+    original_transaction_ref: str | None = Field(default=None,min_length=1,max_length=120)

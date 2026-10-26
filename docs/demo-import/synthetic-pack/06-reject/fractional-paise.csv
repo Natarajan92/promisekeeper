@@ -1,0 +1,2 @@
+transaction_ref,payer_name,payer_alias,address,amount,currency,paid_at,invoice_reference,status
+BAD-PRECISION,Econ,,,1.234,INR,2026-10-24,,SETTLED

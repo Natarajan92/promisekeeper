@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
 import type { ApiClient } from '../api/client';
 import type { AgentActivity, CaseOutcome, CaseSummary, MorningReviewView } from '../api/types';
 import { words } from '../components/format';
@@ -14,9 +14,25 @@ function stepLabel(row: AgentActivity) {
 }
 const OUTCOME_TEXT = {INVESTIGATED: 'investigated now', SKIPPED: 'no change needed', FAILED: 'needs your retry'} as const;
 
-export function MorningReview({api, did, onOpenCase, onDone, maxWaitMs = MAX_POLL_MS, cases, evaluationAt, onPlan}:
+/** The parts of the morning review a page may lay out itself; every part keeps its own behaviour and wording. */
+export interface MorningReviewParts {
+  /** The "Start morning review" button. */
+  button: ReactNode;
+  /** One-line explanation of what the review does. */
+  description: ReactNode;
+  /** Status message, "Check again" and the live supervisor steps while a review runs. */
+  live: ReactNode;
+  /** The finished review: briefing status, the per-case strip, saved briefing and supervisor steps. */
+  results: ReactNode;
+  review: MorningReviewView | null;
+  running: boolean;
+}
+
+export function MorningReview({api, did, onOpenCase, onDone, maxWaitMs = MAX_POLL_MS, cases, evaluationAt, onPlan, layout}:
   {api: ApiClient; did: string; onOpenCase: (caseId: string) => void; onDone: () => void; maxWaitMs?: number;
-   cases?: CaseSummary[]; evaluationAt?: string; onPlan?: (plan: Record<string, number>) => void}) {
+   cases?: CaseSummary[]; evaluationAt?: string; onPlan?: (plan: Record<string, number>) => void;
+   /** Optional page layout; without it the review renders as one section, as before. */
+   layout?: (parts: MorningReviewParts) => ReactNode}) {
   const [review, setReview] = useState<MorningReviewView | null>(null);
   const [busy, setBusy] = useState(false);
   const [following, setFollowing] = useState(false);
@@ -91,19 +107,15 @@ export function MorningReview({api, did, onOpenCase, onDone, maxWaitMs = MAX_POL
     const card = list.querySelector('li');
     list.scrollBy({left: direction * ((card?.getBoundingClientRect().width ?? 260) + 10), behavior: 'smooth'});
   }
-  return <section className="morning-review" aria-labelledby="morning-heading">
-    <div className="morning-head">
-      <div>
-        <h2 id="morning-heading">Morning review</h2>
-        <p className="subtle">Your AI supervisor plans which cases to investigate first, re-plans after every result and briefs you. Code checks each of its choices. Nothing is sent or approved without you.</p>
-      </div>
-      <button className={review?.status==='COMPLETE'?undefined:'primary'} disabled={running} onClick={() => void start()}>{running ? 'Reviewing your cases…' : 'Start morning review'}</button>
-    </div>
+  const description = <p className="subtle">Your AI supervisor plans which cases to investigate first, re-plans after every result and briefs you. Code checks each of its choices. Nothing is sent or approved without you.</p>;
+  const button = <button className={review?.status==='COMPLETE'?undefined:'primary'} disabled={running} onClick={() => void start()}>{running ? 'Reviewing your cases…' : 'Start morning review'}</button>;
+  const live = <>
     {message && <p className="notice" role="status">{message}</p>}
     {review?.status === 'RUNNING' && !working && <button onClick={() => void follow(review)}>Check again</button>}
     {running && steps.length > 0 && <ol className="morning-steps" aria-live="polite">{steps.map((row, index) =>
       <li key={`${row.at}-${index}`}><strong>{AGENT_LABEL[row.agent]}</strong> {stepLabel(row)}{row.note ? `: ${row.note}` : ''}</li>)}</ol>}
-    {review?.briefing && review.status !== 'RUNNING' && <div className="briefing">
+  </>;
+  const results = review?.briefing && review.status !== 'RUNNING' ? <div className="briefing">
       {review.started_by === 'AUTONOMOUS' && <p className="autonomy-label">Started automatically by your AI supervisor because cases were due.</p>}
       <p className="briefing-status">{review.status==='COMPLETE'?'Review complete. Choose a case to see its recommendation.':'Review stopped. Check saved case outcomes before retrying.'}</p>
       {planned && <p className="subtle">Cases that need your attention come first, in the same order as the Case overview. “Checked #N” is the order your AI supervisor investigated them. Scroll sideways to see every case.</p>}
@@ -134,6 +146,17 @@ export function MorningReview({api, did, onOpenCase, onDone, maxWaitMs = MAX_POL
       </details>
       {steps.length > 0 && <details className="agent-disclosure"><summary>See what the supervisor did</summary><ol className="morning-steps">{steps.map((row, index) =>
         <li key={`${row.at}-${index}`}><strong>{AGENT_LABEL[row.agent]}</strong> {stepLabel(row)}{row.note ? `: ${row.note}` : ''}</li>)}</ol></details>}
-    </div>}
+    </div> : null;
+  if (layout) return <>{layout({button, description, live, results, review, running})}</>;
+  return <section className="morning-review" aria-labelledby="morning-heading">
+    <div className="morning-head">
+      <div>
+        <h2 id="morning-heading">Morning review</h2>
+        {description}
+      </div>
+      {button}
+    </div>
+    {live}
+    {results}
   </section>;
 }

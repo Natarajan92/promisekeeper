@@ -23,8 +23,8 @@ test("deterministic findings retain invoice issue source after an approved evide
     original_content:"Fictional invoice NS-104; client Northstar Analytics; INR 125,000.00; due 10 October 2026."});
   await page.setViewportSize({width:400,height:900});
   await page.addInitScript(id=>localStorage.setItem("selected_demonstration_id",id),copy.id);
-  await page.goto("/");
-  await page.getByRole("button",{name:"Findings",exact:true}).click();
+  await page.goto(`/#/cases/${cid}`);
+  await page.getByRole("button",{name:"Overview",exact:true}).click();
   await expect(page.getByText(/Historical result: evidence changed/i)).toBeVisible();
   await expect(page.getByRole("heading",{name:"Financial issues",exact:true})).toBeVisible();
   const row=page.locator(".findings li").filter({hasText:"Preserve and review both invoice authorities."});
@@ -57,9 +57,9 @@ test("deterministic findings show unavailable ledger observations without invent
     {subject:"LEDGER",field:"complete",value:true,source:null,snapshot_id:saved.result.snapshot_id,snapshot_hash:saved.result.snapshot_hash},
   ]);
   await page.addInitScript(id=>localStorage.setItem("selected_demonstration_id",id),copy.id);
-  await page.goto("/");
+  await page.goto("/#/cases");
   await page.getByRole("button",{name:/PK-003/}).first().click();
-  await page.getByRole("button",{name:"Findings",exact:true}).click();
+  await page.getByRole("button",{name:"Overview",exact:true}).click();
   await expect(page.getByRole("heading",{name:"Evidence observations",exact:true})).toBeVisible();
   for(const text of ["Saved ledger availability: unavailable.","Saved ledger is complete."]) {
     const observation=page.locator(".findings li").filter({has:page.getByText(text,{exact:true})});
@@ -106,17 +106,17 @@ test("deterministic findings preserve literal legacy SQLite bytes through GET re
     await assertLegacy();
     expect((await (await request.get(`/api/v1/cases/${cid}?${query}`)).json()).latest_completed_result).toEqual(literal);
     await page.addInitScript(id=>localStorage.setItem("selected_demonstration_id",id),copy.id);
-    await page.goto(server.url);
+    await page.goto(`${server.url}/#/cases`);
     await page.getByRole("button",{name:/PK-003/}).first().click();
-    await page.getByRole("button",{name:"Findings",exact:true}).click();
+    await page.getByRole("button",{name:"Overview",exact:true}).click();
     await expect(page.getByText(/Legacy findings: saved before the current findings profile\. Reinvestigate/)).toBeVisible();
     await server.stop();
     await assertStored();
     await server.start();
     await assertLegacy();
     await page.reload();
-    await page.getByRole("button",{name:/PK-003/}).first().click();
-    await page.getByRole("button",{name:"Findings",exact:true}).click();
+    await page.getByRole("link",{name:/^Cases/}).click();await page.getByRole("button",{name:/PK-003/}).first().click();
+    await page.getByRole("button",{name:"Overview",exact:true}).click();
     await expect(page.getByText(/Legacy findings: saved before/)).toBeVisible();
     const renewed=await investigate(request,copy.id,cid);
     expect(renewed.result.findings_version).toBe("deterministic-1");
@@ -162,12 +162,13 @@ for (const [variant,action,balance] of financialVariants) {
 test("owner starts an investigation and opens exact source versions from its findings",async({page,request})=> {
   const copy=await createCopy(request);
   await page.addInitScript(id=>localStorage.setItem("selected_demonstration_id",id),copy.id);
-  await page.goto("/");
+  await page.goto("/#/cases");
   await page.getByRole("button",{name:/PK-001|Northstar Analytics/i}).first().click();
-  await page.getByRole("button",{name:"Findings",exact:true}).click();
+  await page.getByRole("button",{name:"Overview",exact:true}).click();
   await page.getByRole("button",{name:"Investigate case",exact:true}).click();
   await expect(page.getByRole("heading",{name:"Follow up on the overdue balance",exact:true})).toBeVisible();
   await expect(page.getByText(/80,000/).first()).toBeVisible();
+  await page.locator('.findings .suggestion-why > summary').click();
   const source=page.getByRole("button",{name:"PK-001-I1 / v1",exact:true}).first();
   await source.click();
   await expect(page.getByRole("dialog")).toBeVisible();
@@ -188,13 +189,13 @@ test("lost start response reconciles the original operation after reload without
     expect(accepted.status()).toBe(202);
     await route.abort("connectionreset");
   });
-  await page.goto("/");
+  await page.goto(`/#/cases/${cid}`);
   await page.getByRole("button",{name:"Investigate case",exact:true}).click();
   await expect(page.getByText(/outcome is unknown|Connection unavailable/i).first()).toBeVisible();
   expect(operationId).toBeTruthy();
   await page.unroute(`**/api/v1/cases/${cid}/investigations?*`);
   await page.reload();
-  await page.getByRole("button",{name:"Findings",exact:true}).click();
+  await page.getByRole("button",{name:"Overview",exact:true}).click();
   await expect(page.getByRole("heading",{name:"Follow up on the overdue balance",exact:true})).toBeVisible();
   const history=await (await request.get(`/api/v1/cases/${cid}/history?demonstration_id=${copy.id}`)).json();
   expect(history.events.filter((e:any)=>e.event_type==="INVESTIGATION_STARTED")).toHaveLength(1);

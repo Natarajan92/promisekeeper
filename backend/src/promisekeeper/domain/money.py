@@ -26,7 +26,9 @@ def parse_money(raw, currency="INR"):
         error = "NEGATIVE_AMOUNT"
     elif re.fullmatch(r"[0-9,]+\.[0-9]{3,}", value):
         error = "INVALID_PRECISION"
-    elif not re.fullmatch(r"(?:0|[1-9][0-9]*|[1-9][0-9]{0,2}(?:,[0-9]{3})+)(?:\.[0-9]{1,2})?", value):
+    # Plain digits, international grouping (1,234,567) or Indian lakh/crore
+    # grouping (12,34,567). Commas only ever separate digits; nothing is guessed.
+    elif not re.fullmatch(r"(?:0|[1-9][0-9]*|[1-9][0-9]{0,2}(?:,[0-9]{3})+|[1-9][0-9]?(?:,[0-9]{2})+,[0-9]{3})(?:\.[0-9]{1,2})?", value):
         error = "INVALID_AMOUNT"
     if error:
         return MoneyValue(raw, None, error)

@@ -1,0 +1,4 @@
+invoice_id,customer_id,customer_name,customer_alias,address,amount,currency,issued_at,due_at
+EC-101,ECON,,,,100000,INR,2026-09-01,2026-10-01
+EC-102,ECON,,,,40000,INR,2026-09-10,2026-10-10
+AD-201,ACME,,,,120000,INR,2026-09-01,2026-10-01

@@ -105,7 +105,7 @@ def source_view(con, row):
     item["schema_version"] = "1"
     raw = json.loads(row["record_json"])
     # Catalogue candidate answers are fixture expectations, never public source facts.
-    item["data"] = {k: v for k, v in raw["data"].items() if k != "candidate"}
+    item["data"] = {k: v for k, v in raw["data"].items() if k not in {"candidate", "candidates"}}
     item["commitment_anchors"] = [dict(a) for a in con.execute(
         "SELECT id,evidence_version_id,commitment_key,clause_start,clause_end FROM commitment_anchors WHERE evidence_version_id=? ORDER BY clause_start", (row["id"],))]
     return item

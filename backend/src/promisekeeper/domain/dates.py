@@ -30,11 +30,16 @@ def parse_instant(raw: str) -> datetime:
     return _aware(datetime.fromisoformat(raw)).astimezone(timezone.utc)
 
 
-def _calendar_day(raw: str, original_at: datetime | None) -> date:
+def _calendar_day(raw: str, original_at: datetime | None, *, allow_weekday=False) -> date:
     value = raw.strip()
     if value.lower() in {"today", "tomorrow"}:
         original = _aware(original_at)
         return original.date() + timedelta(days=value.lower() == "tomorrow")
+    weekday=re.fullmatch(r'next (Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday)',value,re.I)
+    if allow_weekday and weekday:
+        original=_aware(original_at).date()
+        target=['monday','tuesday','wednesday','thursday','friday','saturday','sunday'].index(weekday[1].lower())
+        return original+timedelta(days=(target-original.weekday())%7 or 7)
     if re.fullmatch(r"[0-9]{4}-[0-9]{2}-[0-9]{2}", value):
         return date.fromisoformat(value)
     match = re.fullmatch(r"([0-9]{1,2}) ([A-Za-z]+) ([0-9]{4})", value)
@@ -50,7 +55,7 @@ def source_day(raw: str | None, *, original_at: datetime | None = None) -> date 
         return None
 
 
-def deadline(raw, *, original_at=None):
+def deadline(raw, *, original_at=None, allow_weekday=False):
     if raw is None:
         return DateValue(raw, None, "UNKNOWN_DATE")
     try:
@@ -60,7 +65,7 @@ def deadline(raw, *, original_at=None):
         if re.match(r"^[0-9]{4}-[0-9]{2}-[0-9]{2}[Tt]", expression):
             instant = parse_instant(expression)
         else:
-            day = _calendar_day(expression, original_at) + timedelta(days=1)
+            day = _calendar_day(expression, original_at,allow_weekday=allow_weekday) + timedelta(days=1)
             instant = datetime.combine(day, time.min, IST).astimezone(timezone.utc)
         return DateValue(raw, instant, None)
     except (ValueError, TypeError, OverflowError):

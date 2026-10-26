@@ -3,7 +3,7 @@ import { AgentTraceDisclosure } from '../agents/AgentTrace';
 import { FeedbackButtons } from '../agents/FeedbackButtons';
 import type { ApiClient } from '../api/client';
 import type { CaseView } from '../api/types';
-import { draftBufferKey, readPending } from '../api/pendingOperations';
+import { draftBufferKey, readFencingPending } from '../api/pendingOperations';
 import {caseActivitySnapshot,caseIsUpdating,subscribeCaseActivity} from '../api/caseActivity';
 import { instant, words } from '../components/format';
 import { useDraftReview } from './useDraftReview';
@@ -54,14 +54,14 @@ export function DraftReview({api,view,onRefresh}:{api:ApiClient;view:CaseView;on
   const canCopy=useRef(copyEligible);canCopy.current=copyEligible;
   useEffect(()=>()=>{activeCopy.current='';},[]);
   async function copyApproved() {
-    if(!copyEligible||!draft||copying||caseIsUpdating(view.demonstration_id,view.id,view.case_revision)||readPending(view.demonstration_id,view.id))return;
+    if(!copyEligible||!draft||copying||caseIsUpdating(view.demonstration_id,view.id,view.case_revision)||readFencingPending(view.demonstration_id,view.id))return;
     const requestedKey=copyKey;const exact=draft.exact_text;setCopying(true);setCopyResult(null);
     try {
       if(!navigator.clipboard?.writeText)throw new Error('Clipboard unavailable');
       await navigator.clipboard.writeText(exact);
-      if(activeCopy.current===requestedKey&&canCopy.current&&!caseIsUpdating(view.demonstration_id,view.id,view.case_revision)&&!readPending(view.demonstration_id,view.id))setCopyResult({key:requestedKey,state:'copied'});
+      if(activeCopy.current===requestedKey&&canCopy.current&&!caseIsUpdating(view.demonstration_id,view.id,view.case_revision)&&!readFencingPending(view.demonstration_id,view.id))setCopyResult({key:requestedKey,state:'copied'});
     }catch {
-      if(activeCopy.current===requestedKey&&canCopy.current&&!caseIsUpdating(view.demonstration_id,view.id,view.case_revision)&&!readPending(view.demonstration_id,view.id))setCopyResult({key:requestedKey,state:'manual'});
+      if(activeCopy.current===requestedKey&&canCopy.current&&!caseIsUpdating(view.demonstration_id,view.id,view.case_revision)&&!readFencingPending(view.demonstration_id,view.id))setCopyResult({key:requestedKey,state:'manual'});
     }finally {if(activeCopy.current)setCopying(false);}
   }
   const changedHead=dirty&&buffer.base!==(draft?.id??null);

@@ -191,3 +191,30 @@ footer{font-size:.75rem;background:var(--paper);padding:20px max(24px,3.5vw)}
 .attention-badge{font-size:.72rem!important;font-weight:bold;padding:.05rem .45rem;border-radius:3px;border:1px solid}
 .attention-badge.urgent{color:var(--amber)!important;border-color:#d9b46a;background:#fff5df}
 .attention-badge.can-wait{color:var(--muted)!important;border-color:var(--line)}
+/* File-driven owner workflow, sharing the casebook palette and native controls. */
+.intake-panel{margin:0 0 20px;background:#fff;border:1px solid #bed0d6;border-radius:9px;overflow:hidden}
+.intake-panel>summary{padding:16px 20px;color:#24576a;font-weight:700;cursor:pointer;background:#edf3f4}
+.intake-panel[open]>summary{border-bottom:1px solid #cbd8dc}
+.intake-content{padding:24px;max-width:100%;overflow-wrap:anywhere}
+.intake-content h2{font-family:Georgia,serif;font-weight:400;margin:0 0 12px}
+.intake-content h3{margin-top:28px}.intake-content h4{margin:0 0 8px}
+.intake-content .notice{margin:12px 0}.intake-content select,.intake-content input:not([type=checkbox]){width:100%;max-width:100%;min-width:0}
+.intake-content input:not([type=checkbox]):not([type=file]){padding:.6rem .85rem;border:1px solid #a5b5b9;border-radius:5px;background:#fff;color:var(--ink)}
+.intake-content input[type=file]{padding:8px;border:1px solid #bed0d6;border-radius:4px;background:#f8faf9}
+.intake-upload,.intake-workspace-summary{margin:20px 0;padding:20px;background:#f8faf9;border:1px solid #d5dfe1;border-radius:7px}
+.intake-form,.intake-allocation-fields,.intake-document-target{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin:16px 0}
+.intake-form label,.intake-allocation-fields label,.intake-document-target label{display:grid;align-content:start;gap:8px;font-weight:600;min-width:0}
+.intake-confirm{display:flex!important;grid-column:1/-1;align-items:flex-start;gap:10px!important;font-weight:400!important;margin:16px 0;line-height:1.5}
+.intake-confirm input[type=checkbox]{flex:0 0 auto;margin-top:4px;width:18px;height:18px;accent-color:#24576a}
+.intake-sample-links{display:flex;flex-wrap:wrap;gap:10px 18px;margin:16px 0}.intake-sample-links a{color:#24576a;text-underline-offset:3px}
+.intake-samples,.intake-files{margin:20px 0}.intake-samples summary,.intake-original summary,.intake-files>summary{cursor:pointer;color:#24576a;font-weight:600}
+.intake-preview{margin-top:20px;padding-top:20px;border-top:1px solid #cbd8dc}.intake-table-wrap{width:100%;overflow:auto;margin:16px 0;border:1px solid #d5dfe1;border-radius:4px}
+.intake-preview table{width:100%;border-collapse:collapse;font-size:.9rem;background:#fff}.intake-preview th,.intake-preview td{text-align:left;vertical-align:top;padding:10px;border-bottom:1px solid #e1e7e9;min-width:90px;max-width:240px}
+.intake-preview th{color:#24576a;background:#edf3f4;font-weight:600}.intake-preview pre,.intake-original pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#f6f5ef;border:1px solid #d5dfe1;border-radius:4px;padding:16px;max-height:24rem;overflow:auto}
+.intake-extracted{padding:16px;background:#fff;border:1px solid #d5dfe1;border-radius:5px;margin:12px 0}.intake-extracted blockquote{margin:12px 0;padding-left:16px;border-left:3px solid #24576a;white-space:pre-wrap}
+.intake-extracted dl{display:grid;grid-template-columns:160px minmax(0,1fr);gap:8px}.intake-extracted dt{color:#52666d}.intake-extracted dd{margin:0}
+.intake-receipt,.intake-invoice{background:#fff;border:1px solid #cbd8dc;border-radius:7px;padding:20px;margin:16px 0}.intake-receipt header{display:flex;justify-content:space-between;align-items:start;gap:16px}.intake-receipt header p{margin:0}
+.intake-badge{display:inline-block;color:#805410;background:#faf2df;border:1px solid #e5d3aa;border-radius:4px;padding:4px 8px;font-size:.85rem;white-space:normal}
+.intake-candidate{padding:12px 0;border-top:1px solid #e1e7e9}.intake-candidate li{margin:6px 0;color:#52666d}.intake-reviewed{color:#24576a;background:#edf3f4;padding:12px;border-left:3px solid #24576a}
+.intake-invoice .text-button{display:block;margin-top:12px}.intake-original{margin:12px 0;padding:12px;border:1px solid #d5dfe1;border-radius:5px}
+@media(max-width:680px){.intake-content{padding:16px}.intake-upload,.intake-workspace-summary,.intake-receipt,.intake-invoice{padding:16px}.intake-form,.intake-allocation-fields,.intake-document-target{grid-template-columns:minmax(0,1fr)}.intake-receipt header{display:block}.intake-badge{margin-top:12px}.intake-extracted dl{grid-template-columns:minmax(0,1fr)}.intake-extracted dt{font-weight:600}.intake-content button{max-width:100%;white-space:normal;overflow-wrap:anywhere}}

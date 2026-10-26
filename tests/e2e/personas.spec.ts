@@ -33,20 +33,20 @@ test('P1 busy owner: one morning review gives a briefing and a ready follow-up d
   await expect(page.getByRole('region',{name:'How your AI team worked on this case'})).toContainText('Tone reviewer');
   expect(writes).toBe(0);
   await shot(page,'p1-findings-trace');
-  await page.getByRole('button',{name:'Review',exact:true}).click();
-  await expect(page.getByLabel('Draft text')).toHaveValue(/Thank you for keeping us informed/);
+  await page.getByRole('button',{name:'Overview',exact:true}).click();
+  await expect(page.getByLabel('Draft text')).toHaveValue(/We truly value working with your team/);
   await shot(page,'p1-review');
 });
 
 test('P2 relationship-protective owner: an "already paid" claim never becomes a demand',async({page,request})=>{
   const copy=await createCopy(request);const cedar=copy.cases[2];
   await investigate(request,copy.id,cedar.id);await open(page,copy.id);
-  await page.getByRole('button',{name:/PK-003.*Cedar Retail Labs/}).click();
-  await page.getByRole('button',{name:'Findings',exact:true}).click();
+  await page.getByRole('link',{name:/^Cases/}).click();await page.getByRole('button',{name:/PK-003.*Cedar Retail Labs/}).click();
+  await page.getByRole('button',{name:'Overview',exact:true}).click();
   await expect(page.getByRole('heading',{name:'Verify the payment'})).toBeVisible();
   await expect(page.locator('main')).not.toContainText(/you owe|overdue amount due|legal action/i);
   await shot(page,'p2-verify-payment');
-  await page.getByRole('button',{name:'Review',exact:true}).click();
+  await page.getByRole('button',{name:'Overview',exact:true}).click();
   await shot(page,'p2-review');
 });
 
@@ -55,12 +55,12 @@ test('P3 returning owner: new evidence makes the old result historical and the s
   await investigate(request,copy.id,northstar.id);
   await confirmScenarioEvent(request,copy.id,northstar.id,'PK-001-U1');
   await open(page,copy.id);
-  await page.getByRole('button',{name:/PK-001.*Northstar Analytics/}).click();
+  await page.getByRole('link',{name:/^Cases/}).click();await page.getByRole('button',{name:/PK-001.*Northstar Analytics/}).click();
   await shot(page,'p3-stale');
-  await page.getByRole('button',{name:'Start morning review'}).click();
+  await page.getByRole('link',{name:/^Dashboard/}).click();await page.getByRole('button',{name:'Start morning review'}).click();
   await expect(page.getByText('Review complete. Choose a case to see its recommendation.')).toBeVisible({timeout:30_000});
   await expect(page.getByRole('button',{name:/Northstar Analytics.*investigated now/})).toBeVisible();
-  await page.getByRole('button',{name:'History',exact:true}).click();
+  await page.getByRole('button',{name:/Northstar Analytics.*investigated now/}).click();await page.getByRole('button',{name:'History',exact:true}).click();
   await shot(page,'p3-history');
 });
 
@@ -70,13 +70,15 @@ test('P4 bookkeeper: settlement evidence leads to a supported closure only after
   await confirmScenarioEvent(request,copy.id,cedar.id,'PK-003-U1');
   await investigate(request,copy.id,cedar.id);
   await open(page,copy.id);
-  await showAllCases(page);
+  await page.getByRole('link',{name:/^Cases/}).click();await showAllCases(page);
   await page.getByRole('button',{name:/PK-003.*Cedar Retail Labs/}).click();
-  await page.getByRole('button',{name:'Findings',exact:true}).click();
+  await page.getByRole('button',{name:'Overview',exact:true}).click();
   await expect(page.getByRole('heading',{name:'Review case closure'})).toBeVisible();
-  await expect(page.getByRole('button',{name:/PK-003.*Cedar Retail Labs/})).toContainText('open');
   await expect(page.getByRole('button',{name:'Confirm case closure'})).toHaveCount(0);
-  await page.getByRole('button',{name:'Evidence',exact:true}).click();
+  await page.getByRole('link',{name:/^Cases/}).click();await showAllCases(page);
+  await expect(page.getByRole('button',{name:/PK-003.*Cedar Retail Labs/})).toContainText('open');
+  await page.getByRole('button',{name:/PK-003.*Cedar Retail Labs/}).click();
+  await page.getByRole('button',{name:/^Evidence \(\d+\)$/}).click();
   await page.getByRole('button',{name:'Inspect exact source version'}).first().click();
   await expect(page.getByRole('dialog')).toBeVisible();
   await shot(page,'p4-source');
@@ -85,17 +87,17 @@ test('P4 bookkeeper: settlement evidence leads to a supported closure only after
 test('P5 sceptical owner: unsafe edits are blocked, feedback is saved and the trace shows hand-offs',async({page,request})=>{
   const copy=await createCopy(request);const northstar=copy.cases[0];
   await investigate(request,copy.id,northstar.id);await open(page,copy.id);
-  await page.getByRole('button',{name:/PK-001.*Northstar Analytics/}).click();
-  await page.getByRole('button',{name:'Findings',exact:true}).click();
+  await page.getByRole('link',{name:/^Cases/}).click();await page.getByRole('button',{name:/PK-001.*Northstar Analytics/}).click();
+  await page.getByRole('button',{name:'Overview',exact:true}).click();
   await page.getByText('Developer insights',{exact:true}).click();
   await expect(page.getByText('→ Safety check: personal note')).toBeVisible();
-  await page.getByRole('button',{name:'Needs work'}).click();
+  await page.getByRole('region',{name:'Was this recommendation useful?'}).getByRole('button',{name:'Needs work'}).click();
   await page.getByLabel('What should be better? (optional)').fill('Please mention the earlier promise date.');
   await page.getByRole('button',{name:'Send feedback'}).click();
   await expect(page.getByText(/Feedback saved/)).toBeVisible();
-  await page.getByRole('button',{name:'Review',exact:true}).click();
+  await page.getByRole('button',{name:'Overview',exact:true}).click();
   const text=await page.getByLabel('Draft text').inputValue();
-  await page.getByLabel('Draft text').fill(text.replace('Thank you for keeping us informed about the project.','A late fee of INR 500 applies.'));
+  await page.getByLabel('Draft text').fill(text.replace('We truly value working with your team.','A late fee of INR 500 applies.'));
   await page.getByRole('button',{name:'Save unapproved version'}).click();
   await expect(page.getByRole('button',{name:'Approve exact saved version'})).toBeDisabled();
   await shot(page,'p5-blocked');

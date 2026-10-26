@@ -1,5 +1,6 @@
-"""Explicit STUB adapter using approved candidate packets, never authoritative facts."""
+"""STUB adapter for approved fixtures and bounded uploaded text; never money authority."""
 from functools import lru_cache
+import re
 from promisekeeper.agents.protocol import AgentResponse, InvestigatorFailure
 from promisekeeper.fixtures.catalogue import fresh_copy, variant_ids, apply_event, _event_table
 
@@ -31,6 +32,25 @@ class ScriptedInvestigator:
         result=dict(schema_version='1',snapshot_id=request['snapshot_id'],commitments=[],payment_claims=[],contradictions=[],unresolved=[])
         for r in request['packet']['evidence']:
             if r['kind']!='MESSAGE' or r['availability']!='AVAILABLE': continue
+            if '-UPLOAD-CONTEXT-' in r['stable_source_id']:
+                continue
+            if '-UPLOAD-' in r['stable_source_id']:
+                from promisekeeper.domain.document_extraction import extract_document
+                content=r['original_content']
+                kind='customer_email' if re.search(r'^From:',content,re.M|re.I) and re.search(r'^Date:',content,re.M|re.I) else 'whatsapp'
+                extracted=extract_document(content,kind,event_at=r['event_at'],sender_role='CUSTOMER' if '-UPLOAD-CUSTOMER-' in r['stable_source_id'] else 'UNVERIFIED')
+                for number,entry in enumerate(extracted['candidates'],1):
+                    start=content.index(entry['clause']);end=start+len(entry['clause'])
+                    span=dict(evidence_version_id=r['id'],source_id=r['stable_source_id'],start=start,end=end,quote=content[start:end])
+                    item=dict(candidate_id=f'candidate-{len(result["commitments"])+len(result["payment_claims"])}',source=span,
+                              speaker=entry['speaker'],amount_text=entry['amount_text'],currency_text=entry['currency_text'])
+                    if entry['kind']=='COMMITMENT':
+                        item.update(commitment_key=r['stable_source_id']+f'-C{number}',date_text=entry['date_text'],explicitly_replaces_source_id=None)
+                        result['commitments'].append(item)
+                    else:
+                        item.update(payment_date_text=entry['payment_date_text'],transaction_reference_text=entry['transaction_reference_text'])
+                        result['payment_claims'].append(item)
+                continue
             approved=_approved().get((r['stable_source_id'],r['original_content']))
             if approved is None: raise InvestigatorFailure('UNREGISTERED_STUB_PACKET')
             kind,c=approved

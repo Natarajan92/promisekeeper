@@ -28,7 +28,7 @@ it('loads only on request, shows Cedar before/after certainty, sources and origi
   expect(calls).toHaveLength(0);open();await screen.findByText('Recommendation changed');
   expect(screen.getByText('Latest two completed investigations')).toBeInTheDocument();
   expect(screen.getByText(/Recorded remainder/)).toBeInTheDocument();expect(screen.getByText(/Verified remainder/)).toBeInTheDocument();
-  expect(screen.getByText('INR 60,000.00')).toBeInTheDocument();expect(screen.getByText('INR 0.00')).toBeInTheDocument();
+  expect(screen.getByText('₹60,000.00')).toBeInTheDocument();expect(screen.getByText('₹0.00')).toBeInTheDocument();
   expect(screen.getByText(/recorded remainder is contested/)).toBeInTheDocument();
   fireEvent.click(screen.getByRole('button',{name:'Inspect later source PK-003-L2 / saved reference 1'}));expect(onSource).toHaveBeenCalledWith('settlement');
   fireEvent.click(screen.getByRole('button',{name:'Open earlier investigation'}));

@@ -4,6 +4,10 @@ import { isolatedServer } from "./support/server";
 import { fileURLToPath } from "node:url";
 import { randomUUID } from "node:crypto";
 
+// Navigation only: the workspace chooser never opens by itself, so open it from the top bar.
+async function openWorkspace(page: Page) {
+  await page.getByRole("button", {name:/^Workspace/}).click();
+}
 async function select(page: Page, id: string) {
   await page.addInitScript(copy => localStorage.setItem("selected_demonstration_id", copy), id);
   await page.goto("/");
@@ -16,6 +20,7 @@ test("empty discovery requires explicit creation, then preserves the sole copy o
   try {
   expect((await (await request.get("/api/v1/demonstrations")).json()).demonstrations).toEqual([]);
   await page.goto(server.url);
+  await openWorkspace(page);
   await expect(page.getByRole("button", {name:/create.*demonstration/i}).first()).toBeVisible();
   expect((await (await request.get("/api/v1/demonstrations")).json()).demonstrations).toEqual([]);
   await page.getByRole("button", {name:/create.*demonstration/i}).first().click();
@@ -32,9 +37,10 @@ test("multiple copies need selection and valid saved selection opens exact raw e
   await createCopy(request);
   const copy = await createCopy(request);
   await page.goto("/");
+  await openWorkspace(page);
   await expect(page.getByLabel("Demonstration copy")).toBeVisible();
   await select(page, copy.id);
-  await page.getByRole("button", {name:/PK-001|Northstar Analytics/i}).first().click();
+  await page.getByRole('link',{name:/^Cases/}).click();await page.getByRole("button", {name:/PK-001|Northstar Analytics/i}).first().click();await page.getByRole('button',{name:/^Evidence \(\d+\)$/}).click();
   await expect(page.getByText(/Fictional invoice NS-104; client Northstar Analytics/)).toBeVisible();
   await expect(page.getByText(/VERIFIED|Verified/).first()).toBeVisible();
   await expect(page.getByText(/We will pay INR 80,000 by 20 October 2026/)).toBeVisible();
@@ -47,7 +53,8 @@ test("the three release cases expose their originals and verification labels wit
   await select(page,copy.id);
   const messages=["We will pay INR 80,000 by 20 October 2026.","We will pay INR 50,000 by 25 October 2026.","We paid the remaining INR 60,000 today; reference CR-T2."];
   for(const [index,item] of copy.cases.slice(0,3).entries()) {
-    await page.getByRole("button",{name:new RegExp(item.catalogue_case_id)}).first().click();
+    await page.getByRole("link",{name:/^Cases/}).click();
+    await page.getByRole("button",{name:new RegExp(item.catalogue_case_id)}).first().click();await page.getByRole('button',{name:/^Evidence \(\d+\)$/}).click();
     await expect(page.getByText(messages[index],{exact:true})).toBeVisible();
     await expect(page.getByText(/Customer wording is a claim until supported/)).toBeVisible();
     await expect(page.getByText("AVAILABLE · VERIFIED",{exact:true})).toBeVisible();
@@ -64,7 +71,8 @@ test("Hinglish cases show the original customer wording exactly and stay uninves
   await select(page,copy.id);
   const hinglish:Record<string,string>={"PK-004":"Sir, INR 60,000 pakka 15 October 2026 tak transfer kar denge.","PK-005":"Sir, INR 45,000 ka payment today kar diya hai, reference LI-T9."};
   for(const [code,text] of Object.entries(hinglish)) {
-    await page.getByRole("button",{name:new RegExp(code)}).first().click();
+    await page.getByRole("link",{name:/^Cases/}).click();
+    await page.getByRole("button",{name:new RegExp(code)}).first().click();await page.getByRole('button',{name:/^Evidence \(\d+\)$/}).click();
     await expect(page.getByText(text,{exact:true})).toBeVisible();
     await expect(page.getByText("Non-authoritative source",{exact:true})).toBeVisible();
   }
@@ -75,9 +83,11 @@ test("case dates and status remain visible at narrow width and 200 percent text"
   await page.setViewportSize({width:400,height:900});
   await select(page,copy.id);
   await page.evaluate(()=>document.documentElement.style.fontSize="200%");
-  const first=page.getByRole("button",{name:/PK-001.*Northstar Analytics/}).first();
+  await page.getByRole('link',{name:/^Cases/}).click();const first=page.getByRole("button",{name:/PK-001.*Northstar Analytics/}).first();
   await expect(first.getByText(/10 October 2026/)).toBeVisible();
   await expect(first.getByText("Not investigated")).toBeVisible();
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=document.documentElement.clientWidth+1)).toBe(true);
+  await first.click();await page.getByRole('button',{name:/^Evidence \(\d+\)$/}).click();
   await expect(page.getByRole("heading",{name:"Saved evidence",exact:true})).toBeVisible();
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=document.documentElement.clientWidth+1)).toBe(true);
   expect(await page.locator(".financial-summary dd").first().evaluate(element=>
@@ -100,6 +110,7 @@ test("listing failure preserves saved selection and never creates or resets", as
 
 test("missing saved selection clears it and offers a chooser for retained copies", async ({ page }) => {
   await select(page, "00000000-0000-0000-0000-000000000000");
+  await openWorkspace(page);
   await expect(page.getByLabel("Demonstration copy")).toBeVisible();
   expect(await page.evaluate(() => localStorage.getItem("selected_demonstration_id"))).not.toBe("00000000-0000-0000-0000-000000000000");
 });
@@ -114,6 +125,7 @@ test("confirmed deletion clears the removed browser selection without creating a
   expect(removed.status()).toBe(200);
   const retained=(await (await request.get("/api/v1/demonstrations")).json()).demonstrations;
   await page.reload();
+  await openWorkspace(page);
   await expect(page.getByLabel("Demonstration copy")).toBeVisible();
   expect(await page.evaluate(()=>localStorage.getItem("selected_demonstration_id"))).not.toBe(copy.id);
   expect((await (await request.get("/api/v1/demonstrations")).json()).demonstrations).toEqual(retained);
@@ -127,7 +139,7 @@ test("saved browser selection and invoice evidence survive a real backend restar
     const copy=await createCopy(request);
     await page.goto(server.url);
     await expect(page.getByText("Northstar Analytics",{exact:true}).first()).toBeVisible();
-    await page.getByRole("button",{name:/PK-001|Northstar Analytics/i}).first().click();
+    await page.getByRole('link',{name:/^Cases/}).click();await page.getByRole("button",{name:/PK-001|Northstar Analytics/i}).first().click();await page.getByRole('button',{name:/^Evidence \(\d+\)$/}).click();
     await expect(page.getByText(/Fictional invoice NS-104; client Northstar Analytics/)).toBeVisible();
     expect(await page.evaluate(()=>localStorage.getItem("selected_demonstration_id"))).toBe(copy.id);
     await server.stop();

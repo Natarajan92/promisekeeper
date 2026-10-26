@@ -36,6 +36,16 @@ function SourceHarness({result,caseData=view}:{result:Result;caseData?:CaseView}
   return <><FindingsView result={result} view={caseData} onSource={id=>setSelected(caseData.evidence.find(record=>record.id===id) ?? null)}/>{selected&&<SourceViewer source={selected} onClose={()=>setSelected(null)}/>}</>;
 }
 
+it('keeps explanation source identifiers behind a disclosure while retaining exact-source access',()=>{
+  render(<SourceHarness result={{...saved,explanation:{...saved.explanation,sources:['message-1']}}}/>);
+  const sourceButton=screen.getByText('message-1 / v1');
+  expect(sourceButton).not.toBeVisible();
+  fireEvent.click(screen.getByText('Why we think so: based on these saved records'));
+  expect(sourceButton).toBeVisible();
+  fireEvent.click(sourceButton);
+  expect(within(screen.getByRole('dialog')).getByText('I have sent INR 20,000. Please check.')).toBeInTheDocument();
+});
+
 it('shows every financial and commitment issue once for COMPLETE CLOSE without limitations', () => {
   render(<FindingsView result={{...saved,financial_facts:{...saved.financial_facts,issues:[financialIssue,{code:'INVALID_REVERSAL',detail:'A reversal record needs review.',sources:[],source_versions:[]}]},commitment_issues:[commitmentIssue,{code:'MISSING_IDENTITY',detail:'A promise identity needs review.',sources:[],source_versions:[]}]}} view={view} onSource={()=>{}}/>);
   expect(screen.getByRole('heading',{name:'Review case closure'})).toBeInTheDocument();
@@ -130,7 +140,7 @@ it('puts money and case actions before developer insights and mounts the trace o
 it.each(['RUNNING','FAILED'] as const)('keeps saved recommendation distinct from %s message preparation', state => {
   const navigate: string[]=[];
   render(<FindingsView result={{...saved,action:'FOLLOW_UP'}} view={{...view,freshness:'CURRENT',draft_generation_state:state}} onSource={()=>{}} onNavigate={section=>navigate.push(section)}/>);
-  expect(screen.getByText(state==='RUNNING'?'Recommendation saved. Your message is still being prepared.':'Recommendation saved. Message preparation needs attention. Open Review to check recovery options.')).toBeInTheDocument();
+  expect(screen.getByText(state==='RUNNING'?'Recommendation saved. Your message is still being prepared.':'Recommendation saved. Message preparation needs attention. Open the reminder draft to check recovery options.')).toBeInTheDocument();
   fireEvent.click(screen.getByRole('button',{name:state==='RUNNING'?'Check message preparation':'Review message recovery'}));
   expect(navigate).toEqual(['review']);
   expect(screen.queryByRole('button',{name:'Review suggested message'})).not.toBeInTheDocument();

@@ -1,0 +1,378 @@
+{
+  "schema_version": 1,
+  "as_of": "2026-10-25",
+  "fictional": true,
+  "cases": [
+    {
+      "invoice_id": "ECON-101",
+      "remainder_minor": "6000000",
+      "action": "VERIFY_PAYMENT"
+    },
+    {
+      "invoice_id": "ECON-102",
+      "remainder_minor": "4000000",
+      "action": "WAIT"
+    },
+    {
+      "invoice_id": "KITE-201",
+      "remainder_minor": "8000000",
+      "action": "FOLLOW_UP"
+    },
+    {
+      "invoice_id": "LOTUS-301",
+      "remainder_minor": "0",
+      "action": "CLOSE"
+    },
+    {
+      "invoice_id": "NOVA-401",
+      "remainder_minor": "5000050",
+      "action": "FOLLOW_UP"
+    },
+    {
+      "invoice_id": "NOVA-402",
+      "remainder_minor": "500025",
+      "action": "FOLLOW_UP"
+    }
+  ],
+  "documents": [
+    {
+      "path": "04-messages/econ-remittance.eml",
+      "kind": "remittance_email",
+      "invoice_id": "ECON-101"
+    },
+    {
+      "path": "04-messages/econ-already-paid.txt",
+      "kind": "whatsapp",
+      "invoice_id": "ECON-101"
+    },
+    {
+      "path": "04-messages/econ-future-promise.eml",
+      "kind": "customer_email",
+      "invoice_id": "ECON-102"
+    },
+    {
+      "path": "04-messages/kite-expired-promise.txt",
+      "kind": "whatsapp",
+      "invoice_id": "KITE-201"
+    },
+    {
+      "path": "04-messages/nova-split-remittance.eml",
+      "kind": "remittance_email",
+      "invoice_id": "NOVA-401"
+    },
+    {
+      "path": "04-messages/nova-partial-claim.txt",
+      "kind": "whatsapp",
+      "invoice_id": "NOVA-402"
+    }
+  ],
+  "manual_allocations": [
+    {
+      "transaction_ref": "ECON-T1",
+      "invoice_id": "ECON-101",
+      "amount": "25000"
+    },
+    {
+      "transaction_ref": "ECON-T2",
+      "invoice_id": "ECON-101",
+      "amount": "15000"
+    },
+    {
+      "transaction_ref": "NOVA-T1",
+      "invoice_id": "NOVA-401",
+      "amount": "30000.10"
+    },
+    {
+      "transaction_ref": "NOVA-T1",
+      "invoice_id": "NOVA-401",
+      "amount": "10000.15"
+    },
+    {
+      "transaction_ref": "NOVA-T1",
+      "invoice_id": "NOVA-402",
+      "amount": "5000.25"
+    }
+  ],
+  "rejected": [
+    {
+      "path": "06-reject/conflicting-receipt.csv",
+      "kind": "payments",
+      "reason": "Existing UTR conflicts; original must not be overwritten."
+    },
+    {
+      "path": "06-reject/negative-debit.csv",
+      "kind": "payments",
+      "reason": "A debit must not become a positive receipt."
+    },
+    {
+      "path": "06-reject/unsupported-currency.csv",
+      "kind": "payments",
+      "reason": "Only INR supported."
+    },
+    {
+      "path": "06-reject/fractional-paise.csv",
+      "kind": "payments",
+      "reason": "Reject fractions smaller than one paise."
+    },
+    {
+      "path": "06-reject/future-payment.csv",
+      "kind": "payments",
+      "reason": "A future payment is not received evidence."
+    },
+    {
+      "path": "06-reject/bad-date.csv",
+      "kind": "payments",
+      "reason": "Invalid calendar date."
+    },
+    {
+      "path": "06-reject/over-allocation.csv",
+      "kind": "allocations",
+      "reason": "Only INR 20000 remains on the receipt."
+    },
+    {
+      "path": "06-reject/pending-allocation.csv",
+      "kind": "allocations",
+      "reason": "Pending receipt cannot be treated as settled."
+    },
+    {
+      "path": "06-reject/reversed-allocation.csv",
+      "kind": "allocations",
+      "reason": "Reversed receipt cannot reduce a balance."
+    },
+    {
+      "path": "06-reject/unknown-reference.csv",
+      "kind": "allocations",
+      "reason": "Unknown receipt is rejected."
+    },
+    {
+      "path": "06-reject/unknown-invoice.csv",
+      "kind": "allocations",
+      "reason": "Unknown invoice is rejected."
+    },
+    {
+      "path": "06-reject/duplicate-headers.csv",
+      "kind": "customers",
+      "reason": "Duplicate headers are rejected."
+    },
+    {
+      "path": "06-reject/seventh-invoice.csv",
+      "kind": "invoices",
+      "reason": "Six-invoice demonstration limit."
+    },
+    {
+      "path": "06-reject/unknown-customer.csv",
+      "kind": "invoices",
+      "reason": "Unknown customer master reference."
+    },
+    {
+      "path": "06-reject/101-rows.csv",
+      "kind": "payments",
+      "reason": "Maximum 100 CSV data rows."
+    },
+    {
+      "path": "06-reject/malformed-quotes.csv",
+      "kind": "payments",
+      "reason": "Malformed CSV quotation."
+    },
+    {
+      "path": "06-reject/mixed-invoices.txt",
+      "kind": "whatsapp",
+      "invoice_id": "ECON-101",
+      "reason": "Cannot assign another invoice's promise."
+    },
+    {
+      "path": "06-reject/conditional-promise.txt",
+      "kind": "whatsapp",
+      "invoice_id": "ECON-102",
+      "reason": "Conditional wording is not a firm promise."
+    },
+    {
+      "path": "06-reject/negative-payment.txt",
+      "kind": "whatsapp",
+      "invoice_id": "ECON-101",
+      "reason": "Negation cannot become a payment claim."
+    },
+    {
+      "path": "06-reject/payment-question.txt",
+      "kind": "whatsapp",
+      "invoice_id": "ECON-102",
+      "reason": "A question is not a promise."
+    },
+    {
+      "path": "06-reject/repeated-quote.txt",
+      "kind": "whatsapp",
+      "invoice_id": "ECON-102",
+      "reason": "Repeated exact quote has ambiguous source span."
+    },
+    {
+      "path": "06-reject/31-clauses.txt",
+      "kind": "whatsapp",
+      "invoice_id": "ECON-102",
+      "reason": "Maximum 30 quoted claims/promises."
+    },
+    {
+      "path": "06-reject/multiple-amounts.txt",
+      "kind": "whatsapp",
+      "invoice_id": "ECON-102",
+      "reason": "Multiple quoted amounts require explicit clarification, not first-match extraction."
+    },
+    {
+      "path": "06-reject/multiple-dates.txt",
+      "kind": "whatsapp",
+      "invoice_id": "ECON-102",
+      "reason": "Alternative dates require clarification."
+    },
+    {
+      "path": "06-reject/deduction-claim.txt",
+      "kind": "whatsapp",
+      "invoice_id": "NOVA-402",
+      "reason": "No inferred discount, withholding or write-off."
+    },
+    {
+      "path": "06-reject/multiple-references.txt",
+      "kind": "whatsapp",
+      "invoice_id": "ECON-101",
+      "reason": "Competing references must not select one claim identity."
+    },
+    {
+      "path": "06-reject/mixed-past-future.txt",
+      "kind": "whatsapp",
+      "invoice_id": "ECON-102",
+      "reason": "Mixed past claim and future promise require separate unambiguous wording."
+    },
+    {
+      "path": "06-reject/shared-currency-alternatives.txt",
+      "kind": "whatsapp",
+      "invoice_id": "ECON-102",
+      "reason": "Shared currency prefix does not justify choosing the first amount."
+    },
+    {
+      "path": "06-reject/shared-date-alternatives.txt",
+      "kind": "whatsapp",
+      "invoice_id": "ECON-102",
+      "reason": "Shared by-prefix does not justify choosing the first date."
+    },
+    {
+      "path": "06-reject/shared-reference-alternatives.txt",
+      "kind": "whatsapp",
+      "invoice_id": "ECON-101",
+      "reason": "Shared UTR prefix does not justify choosing the first reference."
+    },
+    {
+      "path": "06-reject/shared-currency-conjunction.txt",
+      "kind": "whatsapp",
+      "invoice_id": "ECON-102",
+      "reason": "Combined amounts need an explicit unambiguous total."
+    },
+    {
+      "path": "06-reject/shared-reference-conjunction.txt",
+      "kind": "whatsapp",
+      "invoice_id": "ECON-101",
+      "reason": "Combined references need an explicit claim per payment."
+    },
+    {
+      "path": "06-reject/shared-currency-deduction.txt",
+      "kind": "whatsapp",
+      "invoice_id": "NOVA-402",
+      "reason": "Do not infer a deduction when the currency prefix is shared."
+    },
+    {
+      "path": "06-reject/html-only.eml",
+      "kind": "customer_email",
+      "invoice_id": "ECON-102",
+      "reason": "HTML/OCR/attachment retrieval unsupported."
+    },
+    {
+      "path": "06-reject/missing-date.eml",
+      "kind": "customer_email",
+      "invoice_id": "ECON-102",
+      "reason": "Source date is required."
+    },
+    {
+      "path": "07-explore/untrusted-instructions.txt",
+      "kind": "whatsapp",
+      "invoice_id": "ECON-102",
+      "context_only": false,
+      "reason": "Mixed unsupported instructions and promise text must be clarified rather than silently ignoring surrounding prose. No document is imported."
+    }
+  ],
+  "explorations": [
+    {
+      "path": "07-explore/relative-weekday.txt",
+      "kind": "whatsapp",
+      "invoice_id": "ECON-102",
+      "context_only": false,
+      "reason": "Review the explicit source-relative weekday interpretation; WAIT until that date expires."
+    },
+    {
+      "path": "07-explore/rupee-symbol.txt",
+      "kind": "whatsapp",
+      "invoice_id": "ECON-102",
+      "context_only": false,
+      "reason": "Quoted currency stays verbatim; preview explicitly interprets the rupee symbol as INR and the future promise supports WAIT."
+    },
+    {
+      "path": "07-explore/supporting-context.txt",
+      "kind": "whatsapp",
+      "invoice_id": "ECON-102",
+      "context_only": true,
+      "reason": "Context only; no invented extraction. LIMITED."
+    }
+  ],
+  "generated_files": [
+    "01-customers.csv",
+    "02-invoices.csv",
+    "03-receipts-initial.csv",
+    "03a-existing-allocations.csv",
+    "03b-owner-reviewed-allocations.csv",
+    "04-messages/econ-already-paid.txt",
+    "04-messages/econ-future-promise.eml",
+    "04-messages/econ-remittance.eml",
+    "04-messages/kite-expired-promise.txt",
+    "04-messages/nova-partial-claim.txt",
+    "04-messages/nova-split-remittance.eml",
+    "05-later/allocation-later.csv",
+    "05-later/receipts-later.csv",
+    "06-reject/101-rows.csv",
+    "06-reject/31-clauses.txt",
+    "06-reject/bad-date.csv",
+    "06-reject/conditional-promise.txt",
+    "06-reject/conflicting-receipt.csv",
+    "06-reject/deduction-claim.txt",
+    "06-reject/duplicate-headers.csv",
+    "06-reject/fractional-paise.csv",
+    "06-reject/future-payment.csv",
+    "06-reject/html-only.eml",
+    "06-reject/malformed-quotes.csv",
+    "06-reject/missing-date.eml",
+    "06-reject/mixed-invoices.txt",
+    "06-reject/mixed-past-future.txt",
+    "06-reject/multiple-amounts.txt",
+    "06-reject/multiple-dates.txt",
+    "06-reject/multiple-references.txt",
+    "06-reject/negative-debit.csv",
+    "06-reject/negative-payment.txt",
+    "06-reject/over-allocation.csv",
+    "06-reject/payment-question.txt",
+    "06-reject/pending-allocation.csv",
+    "06-reject/repeated-quote.txt",
+    "06-reject/reversed-allocation.csv",
+    "06-reject/seventh-invoice.csv",
+    "06-reject/shared-currency-alternatives.txt",
+    "06-reject/shared-currency-conjunction.txt",
+    "06-reject/shared-currency-deduction.txt",
+    "06-reject/shared-date-alternatives.txt",
+    "06-reject/shared-reference-alternatives.txt",
+    "06-reject/shared-reference-conjunction.txt",
+    "06-reject/unknown-customer.csv",
+    "06-reject/unknown-invoice.csv",
+    "06-reject/unknown-reference.csv",
+    "06-reject/unsupported-currency.csv",
+    "07-explore/relative-weekday.txt",
+    "07-explore/rupee-symbol.txt",
+    "07-explore/supporting-context.txt",
+    "07-explore/untrusted-instructions.txt",
+    "EXPECTED-RESULTS.json",
+    "START-HERE.md"
+  ]
+}

@@ -61,7 +61,10 @@ def scripted_choice(context):
     elif item.get('recommended_action') == 'VERIFY_PAYMENT':
         why = 'a payment claim still needs checking against the ledger'
     elif _balance(item) > 0:
-        why = f"largest open balance still waiting ({item['balance_text']}), overdue {item.get('days_overdue', 0)} days"
+        days = item.get('days_overdue', 0)
+        # 0 means not yet overdue or no due date; say nothing rather than "overdue 0 days".
+        overdue = f", overdue {days} day{'' if days == 1 else 's'}" if days > 0 else ''
+        why = f"largest open balance still waiting ({item['balance_text']}){overdue}"
     else:
         why = 'nothing appears outstanding; confirming whether it can close'
     return {'action': 'INVESTIGATE', 'case': item['case'], 'reason': f'{why[0].upper()}{why[1:]}.'}
