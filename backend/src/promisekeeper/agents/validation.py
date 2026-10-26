@@ -13,6 +13,16 @@ def validate_output(raw, packet, case):
         output = CandidateOnlyOutput.model_validate_json(raw) if isinstance(raw,str) else CandidateOnlyOutput.model_validate(raw)
         if output.snapshot_id != packet['snapshot_id']: raise ValueError('Snapshot mismatch')
         records = {r['id']:r for r in packet['evidence']}
+        # The same bounded intake rules constrain uploaded evidence for every
+        # provider. A LIVE extractor cannot turn a legacy/conditional document
+        # into an active customer promise by returning an otherwise valid span.
+        for record in records.values():
+            if record['kind']=='MESSAGE' and record['availability']=='AVAILABLE' and '-UPLOAD-CUSTOMER-' in record['stable_source_id']:
+                import re
+                from promisekeeper.domain.document_extraction import extract_document
+                content=record['original_content']
+                kind='customer_email' if re.search(r'^From:',content,re.M|re.I) and re.search(r'^Date:',content,re.M|re.I) else 'whatsapp'
+                extract_document(content,kind,event_at=record['event_at'],sender_role='CUSTOMER')
         domain_sources = {m.source.id:m.source for m in case.messages}
         seen=set()
         def span(s):
@@ -38,7 +48,8 @@ def validate_output(raw, packet, case):
             for s in item.sources: span(s)
         extraction=Extraction(tuple(commitments),tuple(claims))
         reconcile_commitments(case,extraction,reconcile_payments(case))
-        if case.messages and not commitments and not claims: raise ValueError('Empty fabricated extraction')
+        reviewed_context_only=bool(case.messages) and all('-UPLOAD-CONTEXT-' in m.source.source_id for m in case.messages)
+        if case.messages and not commitments and not claims and not reviewed_context_only: raise ValueError('Empty fabricated extraction')
         return output,extraction
     except (ValueError,KeyError,TypeError,ValidationError) as exc:
         raise InvestigatorFailure('INVALID_INVESTIGATOR_OUTPUT') from exc

@@ -45,3 +45,16 @@ def test_large_valid_amount_does_not_depend_on_float_or_machine_integer_limits()
     value = parse_money(raw)
     assert value.minor_units == 10 ** 4502 + 1
     assert minor_text(value.minor_units) == "1" + "0" * 4501 + "1"
+
+
+@pytest.mark.parametrize("raw,want", [
+    ("1,20,000.00", 12000000), ("12,34,567.89", 123456789), ("1,00,00,000", 1000000000),
+    ("99,999", 9999900), ("1,234,567.89", 123456789),
+])
+def test_indian_and_international_digit_grouping_normalize_exactly(raw, want):
+    assert parse_money(raw).minor_units == want and parse_money(raw).error is None
+
+
+@pytest.mark.parametrize("raw", ["48,00,0", "1,2,000", "12,34,56", "1,234,56,789", ",120,000", "1,20,000,", "01,20,000"])
+def test_malformed_digit_grouping_is_still_invalid(raw):
+    assert parse_money(raw).error == "INVALID_AMOUNT"

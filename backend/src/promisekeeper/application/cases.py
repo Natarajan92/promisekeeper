@@ -63,6 +63,9 @@ def delete_demonstration(db, did, request):
         con.execute("DELETE FROM agent_activity WHERE demonstration_id=?", (did,))
         con.execute("DELETE FROM morning_reviews WHERE demonstration_id=?", (did,))
         con.execute("DELETE FROM client_memory WHERE demonstration_id=?", (did,))
+        for table in ('intake_allocations','intake_documents','intake_ledger_reviews','intake_invoices',
+                      'intake_payments','intake_customers','intake_batches'):
+            con.execute(f'DELETE FROM {table} WHERE demonstration_id=?', (did,))
         con.execute("""INSERT INTO operation_tombstones
             SELECT operation_id,demonstration_id,operation_type,canonical_request_hash,committed_at
             FROM operation_receipts WHERE demonstration_id=?""", (did,))
@@ -107,6 +110,8 @@ def _case_view(con, did, cid, fixture, demo, *, include_reviews=True):
                ("start_investigation", "edit_draft", "approve_draft", "reject_draft", "close", "reopen")}
     allowed["confirm_scenario_event"] = dict(allowed=True, blocking_reasons=[])
     start_blocks = (["CASE_CLOSED"] if row["lifecycle"] != "OPEN" else []) + (["INVESTIGATION_RUNNING"] if running else [])
+    from promisekeeper.application.sender_review import needs_sender_review
+    if needs_sender_review(con,did,cid):start_blocks.append('SENDER_REVIEW_REQUIRED')
     allowed["start_investigation"] = dict(allowed=not start_blocks, blocking_reasons=start_blocks)
     view = dict(schema_version="1", **{k: row[k] for k in (
         "id", "demonstration_id", "catalogue_case_id", "client", "invoice_id", "lifecycle", "case_revision",

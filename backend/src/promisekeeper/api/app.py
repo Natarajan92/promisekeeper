@@ -22,6 +22,7 @@ def error_response(code, status, operation_id=None):
     messages = {"STORAGE_UNAVAILABLE": "Storage is unavailable. Reconcile the operation before retrying.",
                 "REVISION_CONFLICT": "The case changed. Refresh and review again.",
                 "PREVIEW_CHANGED": "The preview changed. Review a new preview before confirming.",
+                "SENDER_REVIEW_REQUIRED": "Older communication needs explicit sender review. Create a new imported workspace from its original files and review each sender before investigating.",
                 "NOT_RECORDED": "No committed operation is recorded for this copy.",
                 "OPERATION_PAYLOAD_MISMATCH": "This operation ID was already used for another request.",
                 "INVESTIGATOR_BUSY": "An investigation is already using the execution slot."}
@@ -112,8 +113,8 @@ def create_app(settings=None, *, static_dir=None):
         return dict(schema_version="1", ready=app.state.db.ready, catalogue_version="release-0.1",
                     agent_mode=settings.agent_mode, configuration=settings.safe_summary())
 
-    from promisekeeper.api import cases, demonstrations, operations, scenarios, investigations, reviews, history, decisions, feedback, morning_reviews
-    for router in (operations.router, demonstrations.router, cases.router, scenarios.router, investigations.router, reviews.router, history.router, decisions.router, feedback.router, morning_reviews.router):
+    from promisekeeper.api import cases, demonstrations, operations, scenarios, investigations, reviews, history, decisions, feedback, morning_reviews, intake
+    for router in (operations.router, demonstrations.router, cases.router, scenarios.router, investigations.router, reviews.router, history.router, decisions.router, feedback.router, morning_reviews.router, intake.router):
         app.include_router(router, prefix="/api/v1")
     dist = Path(static_dir) if static_dir else Path(__file__).resolve().parents[4] / "frontend" / "dist"
     if dist.is_dir():

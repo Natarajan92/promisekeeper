@@ -107,27 +107,31 @@ def _materialize(copy_id, case):
             validated = PaymentInput.model_validate_json(json.dumps(dict(source=inputs[sid], **data)))
             payments.append(Payment(source=source, **validated.model_dump(exclude={"source"})))
         elif record["kind"] == "MESSAGE":
-            if set(data) != {"speaker", "candidate"}:
+            imported_candidates = set(data) == {"speaker", "candidates"} and '-UPLOAD-' in sid
+            if set(data) != {"speaker", "candidate"} and not imported_candidates:
                 raise ValueError("Unsupported message fields")
             messages.append(Message(source, data["speaker"]))
-            candidate = data["candidate"]
-            clause = candidate["clause"]
-            if not isinstance(clause, str) or not clause or source.original_content.count(clause) != 1:
-                raise ValueError("Candidate requires one exact source clause")
-            start = source.original_content.index(clause)
-            common = dict(source=source, start=start, end=start+len(clause), quote=clause, speaker=data["speaker"],
-                          amount_text=candidate["amount_text"], currency_text=candidate["currency_text"])
-            if candidate["kind"] == "COMMITMENT":
-                key = candidate["commitment_key"]
-                anchors.append(CommitmentAnchor(commitment_id(copy_id, source.id, key), copy_id, case_id,
-                                                source.id, key, start, start+len(clause)))
-                commitments.append(CommitmentCandidate(**common, commitment_key=key, date_text=candidate["date_text"],
-                                                       explicitly_replaces_source_id=candidate.get("explicitly_replaces_source_id")))
-            elif candidate["kind"] == "CLAIM":
-                claims.append(ClaimCandidate(**common, payment_date_text=candidate["payment_date_text"],
-                                              transaction_reference_text=candidate["transaction_reference_text"]))
-            else:
-                raise ValueError("Unsupported candidate kind")
+            candidates = data['candidates'] if imported_candidates else [data['candidate']]
+            if not isinstance(candidates,list) or len(candidates)>30:
+                raise ValueError('Unsupported candidate collection')
+            for candidate in candidates:
+                clause = candidate["clause"]
+                if not isinstance(clause, str) or not clause or source.original_content.count(clause) != 1:
+                    raise ValueError("Candidate requires one exact source clause")
+                start = source.original_content.index(clause)
+                common = dict(source=source, start=start, end=start+len(clause), quote=clause, speaker=data["speaker"],
+                              amount_text=candidate["amount_text"], currency_text=candidate["currency_text"])
+                if candidate["kind"] == "COMMITMENT":
+                    key = candidate["commitment_key"]
+                    anchors.append(CommitmentAnchor(commitment_id(copy_id, source.id, key), copy_id, case_id,
+                                                    source.id, key, start, start+len(clause)))
+                    commitments.append(CommitmentCandidate(**common, commitment_key=key, date_text=candidate["date_text"],
+                                                           explicitly_replaces_source_id=candidate.get("explicitly_replaces_source_id")))
+                elif candidate["kind"] == "CLAIM":
+                    claims.append(ClaimCandidate(**common, payment_date_text=candidate["payment_date_text"],
+                                                  transaction_reference_text=candidate["transaction_reference_text"]))
+                else:
+                    raise ValueError("Unsupported candidate kind")
     for record in records:
         if record["kind"] != "ATTRIBUTION":
             continue

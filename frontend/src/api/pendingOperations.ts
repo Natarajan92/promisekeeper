@@ -59,3 +59,9 @@ export function completePending(did:string,cid:string,command:PendingCommand,res
   forgetPending(did,cid,command.operation.operation_id);
   for(const listener of committedListeners)listener({did,cid,command,response});
 }
+// Workspace-level commands (selected-copy deletion) are retained under this scope, never under a case.
+export const WORKSPACE_SCOPE='workspace';
+// A case's own pending request, or an uncertain workspace deletion that fences every case command in that copy.
+export function readFencingPending(did:string,cid:string):PendingCommand|null {
+  return readPending(did,cid)??(cid===WORKSPACE_SCOPE?null:readPending(did,WORKSPACE_SCOPE));
+}

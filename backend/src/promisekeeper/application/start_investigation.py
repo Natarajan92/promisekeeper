@@ -31,6 +31,8 @@ def start_investigation(db, did, cid, request, *, agent_mode="STUB", requested_m
             require_revision(row, request)
             if row["lifecycle"] != "OPEN":
                 raise CommandError("CASE_CLOSED")
+            from promisekeeper.application.sender_review import needs_sender_review
+            if needs_sender_review(con,did,cid):raise CommandError('SENDER_REVIEW_REQUIRED')
             if request["retry_of"] is not None:
                 previous = con.execute("SELECT status FROM investigations WHERE demonstration_id=? AND case_id=? AND id=?",
                                        (did, cid, request["retry_of"])).fetchone()

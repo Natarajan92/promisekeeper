@@ -4,6 +4,7 @@ import type { Attempt, CaseView, ReceiptResponse } from '../api/types';
 import { instant, words } from '../components/format';
 import {rememberCaseRevision} from '../api/caseActivity';
 import { AgentTrace } from '../agents/AgentTrace';
+import { useWorkspaceFence } from '../reviews/useDraftReview';
 export function InvestigationControls({api,view,onRefresh}:{api:ApiClient;view:CaseView;onRefresh:()=>void}) {
   const [busy,setBusy]=useState(false);
   const [message,setMessage]=useState('');
@@ -15,6 +16,7 @@ export function InvestigationControls({api,view,onRefresh}:{api:ApiClient;view:C
   const scope={did:view.demonstration_id,cid:view.id};
   const eligibility=view.allowed_commands.start_investigation;
   const [hasPending,setHasPending]=useState(()=>!!pendingOperation(scope.did,scope.cid,'investigation'));
+  const deletionPending=useWorkspaceFence(scope.did);
   useEffect(()=>{mounted.current=true;return ()=>{mounted.current=false;};},[]);
   useEffect(()=>{if(view.running_attempt)setActiveId(view.running_attempt);},[view.running_attempt]);
   function acknowledge(receipt:ReceiptResponse) {
@@ -67,5 +69,5 @@ export function InvestigationControls({api,view,onRefresh}:{api:ApiClient;view:C
     void poll();return ()=>{cancelled=true;clearTimeout(timer);clearTimeout(watchdog);};
   },[activeId,api,scope.did,scope.cid]);
   const running=!!activeId;
-  return <section className="investigation-controls" aria-label="Investigation controls"><div><button className={view.current_result&&!running?undefined:'primary'} disabled={busy||running||!eligibility?.allowed} onClick={()=>void start()}>{running?'Investigation running':hasPending?'Retry original start':attempt?.status==='INCOMPLETE'?'Retry investigation':'Investigate case'}</button>{hasPending&&!running&&<button disabled={busy} onClick={()=>void reconcileOnly()}>Check operation outcome</button>}{limited&&<button onClick={()=>{started.current=Date.now();setActiveId(null);setTimeout(()=>setActiveId(view.running_attempt??attempt?.investigation_id??activeId),0);setLimited(false);}}>Check saved investigation status</button>}</div>{!eligibility?.allowed&&!running&&<p className="subtle">Start unavailable: {eligibility?.blocking_reasons.map(words).join(', ') || 'server eligibility unavailable'}.</p>}<p className={limited?'notice':'status-message'} role="status" aria-live="polite">{message||(view.current_result&&!running?'A current recommendation is saved. Investigate again only if something has changed.':'Starts only when you choose to investigate. Sources stay available during an investigation.')}</p>{attempt&&<p className="subtle">{attempt.status} · evaluated {instant(attempt.evaluation_at)} · deadline {instant(attempt.deadline_at)}</p>}{running&&activeId&&<AgentTrace key={`live:${activeId}`} api={api} did={scope.did} investigationId={activeId} compact title="Investigation progress"/>}</section>;
+  return <section className="investigation-controls" aria-label="Investigation controls"><div><button className={view.current_result&&!running?undefined:'primary'} disabled={busy||running||deletionPending||!eligibility?.allowed} onClick={()=>void start()}>{running?'Investigation running':hasPending?'Retry original start':attempt?.status==='INCOMPLETE'?'Retry investigation':'Investigate case'}</button>{hasPending&&!running&&<button disabled={busy} onClick={()=>void reconcileOnly()}>Check operation outcome</button>}{limited&&<button onClick={()=>{started.current=Date.now();setActiveId(null);setTimeout(()=>setActiveId(view.running_attempt??attempt?.investigation_id??activeId),0);setLimited(false);}}>Check saved investigation status</button>}</div>{deletionPending&&<p className="notice">A deletion of this demonstration is pending. Check its saved outcome before starting an investigation.</p>}{!eligibility?.allowed&&!running&&<p className="subtle">Start unavailable: {eligibility?.blocking_reasons.map(words).join(', ') || 'server eligibility unavailable'}.</p>}<p className={limited?'notice':'status-message'} role="status" aria-live="polite">{message||(view.current_result&&!running?'A current recommendation is saved. Investigate again only if something has changed.':'Starts only when you choose to investigate. Sources stay available during an investigation.')}</p>{attempt&&<p className="subtle">{attempt.status} · evaluated {instant(attempt.evaluation_at)} · deadline {instant(attempt.deadline_at)}</p>}{running&&activeId&&<AgentTrace key={`live:${activeId}`} api={api} did={scope.did} investigationId={activeId} compact title="Investigation progress"/>}</section>;
 }

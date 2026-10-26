@@ -1,0 +1,5 @@
+Sender: ECON fictional accounts
+Sent: 2026-10-22T10:00:00+05:30
+
+Invoice ECON-101 is under discussion.
+For invoice ECON-102, we will pay INR 40000 by 1 November 2026.

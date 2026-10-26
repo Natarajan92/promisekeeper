@@ -1,0 +1,100 @@
+# Offline system evaluation
+
+Dataset: promisekeeper-system-extended-v2 (90 cases). Mode: STUB; LIVE unqualified; human study unexecuted.
+
+| Case | Track | Verdict | Failed checks | Duration ms |
+|---|---|---|---|---:|
+| M01 | contract | PASS |  | 4500.0 |
+| M02 | contract | PASS |  | 844.0 |
+| M03 | contract | PASS |  | 1062.0 |
+| M04 | contract | PASS |  | 938.0 |
+| M05 | contract | PASS |  | 813.0 |
+| M06 | contract | PASS |  | 922.0 |
+| M07 | contract | PASS |  | 797.0 |
+| M08 | contract | PASS |  | 890.0 |
+| M09 | contract | PASS |  | 844.0 |
+| M10 | contract | PASS |  | 1016.0 |
+| M11 | contract | PASS |  | 1125.0 |
+| M12 | contract | PASS |  | 907.0 |
+| M13 | contract | PASS |  | 859.0 |
+| M14 | contract | PASS |  | 859.0 |
+| M15 | contract | PASS |  | 859.0 |
+| M16 | contract | PASS |  | 921.0 |
+| M17 | contract | PASS |  | 953.0 |
+| M18 | contract | PASS |  | 1094.0 |
+| M19 | contract | PASS |  | 750.0 |
+| M20 | contract | PASS |  | 703.0 |
+| M21 | safety | PASS |  | 906.0 |
+| M22 | contract | PASS |  | 688.0 |
+| M23 | capability | PASS |  | 656.0 |
+| M24 | capability | PASS |  | 625.0 |
+| M25 | capability | PASS |  | 781.0 |
+| M26 | capability | PASS |  | 625.0 |
+| M27 | capability | PASS |  | 657.0 |
+| M28 | safety | PASS |  | 718.0 |
+| M29 | safety | PASS |  | 860.0 |
+| M30 | safety | PASS |  | 844.0 |
+| M31 | safety | PASS |  | 921.0 |
+| M32 | safety | PASS |  | 969.0 |
+| M33 | safety | PASS |  | 828.0 |
+| M34 | contract | PASS |  | 750.0 |
+| M35 | contract | PASS |  | 875.0 |
+| M36 | contract | PASS |  | 718.0 |
+| I01 | contract | PASS |  | 453.0 |
+| I02 | contract | PASS |  | 391.0 |
+| I03 | contract | PASS |  | 375.0 |
+| I04 | contract | PASS |  | 391.0 |
+| I05 | contract | PASS |  | 485.0 |
+| I06 | contract | PASS |  | 375.0 |
+| I07 | contract | PASS |  | 391.0 |
+| I08 | contract | PASS |  | 359.0 |
+| I09 | contract | PASS |  | 359.0 |
+| I10 | contract | PASS |  | 375.0 |
+| I11 | capability | PASS |  | 406.0 |
+| I12 | capability | PASS |  | 406.0 |
+| A01 | contract | PASS |  | 797.0 |
+| A02 | contract | PASS |  | 922.0 |
+| A03 | contract | PASS |  | 891.0 |
+| A04 | contract | PASS |  | 937.0 |
+| A05 | contract | PASS |  | 875.0 |
+| A06 | contract | PASS |  | 922.0 |
+| A07 | contract | PASS |  | 938.0 |
+| A08 | contract | PASS |  | 1110.0 |
+| W01 | contract | PASS |  | 625.0 |
+| W02 | contract | PASS |  | 672.0 |
+| W03 | contract | PASS |  | 719.0 |
+| W04 | contract | PASS |  | 563.0 |
+| W05 | contract | PASS |  | 484.0 |
+| W06 | contract | PASS |  | 1219.0 |
+| W07 | contract | PASS |  | 859.0 |
+| W08 | contract | PASS |  | 531.0 |
+| A09 | contract | PASS |  | 890.0 |
+| X01 | safety | PASS |  | 844.0 |
+| X02 | safety | PASS |  | 812.0 |
+| X03 | safety | PASS |  | 781.0 |
+| X04 | safety | PASS |  | 734.0 |
+| X05 | safety | PASS |  | 766.0 |
+| X06 | safety | PASS |  | 703.0 |
+| X07 | safety | PASS |  | 782.0 |
+| X08 | safety | PASS |  | 843.0 |
+| X09 | safety | PASS |  | 860.0 |
+| X10 | contract | PASS |  | 765.0 |
+| X11 | contract | PASS |  | 766.0 |
+| X12 | contract | PASS |  | 734.0 |
+| X13 | contract | PASS |  | 578.0 |
+| X14 | contract | PASS |  | 656.0 |
+| X15 | contract | PASS |  | 734.0 |
+| X16 | contract | PASS |  | 437.0 |
+| X17 | contract | PASS |  | 438.0 |
+| X18 | contract | PASS |  | 437.0 |
+| X19 | contract | PASS |  | 454.0 |
+| X20 | contract | PASS |  | 469.0 |
+| X21 | safety | PASS |  | 1078.0 |
+| X22 | safety | PASS |  | 782.0 |
+| X23 | safety | PASS |  | 859.0 |
+| X24 | safety | PASS |  | 750.0 |
+| X25 | contract | PASS |  | 406.0 |
+
+{"PASS": 90, "FAIL": 0, "ERROR": 0, "UNEXECUTED": 0}
+
+Individual literal expectations, inputs and actual observations are in results.json.

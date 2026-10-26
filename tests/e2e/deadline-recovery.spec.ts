@@ -12,7 +12,7 @@ test('wall clock retry exhaustion is terminal and a late provider result cannot 
     const view=await caseView(request,copy.id,cid);const wallStart=Date.now();
     const response=await post(request,copy.id,cid,'investigations',command(view,{retry_of:null}));expect(response.status()).toBe(202);
     const receipt=await response.json();const attemptPath=`/api/v1/investigations/${receipt.investigation_id}?demonstration_id=${copy.id}`;
-    await page.addInitScript(id=>localStorage.setItem('selected_demonstration_id',id),copy.id);await page.goto(server.url);
+    await page.addInitScript(id=>localStorage.setItem('selected_demonstration_id',id),copy.id);await page.goto(`${server.url}/#/cases/${cid}`);
     let terminal:any;
     await expect.poll(async()=>{terminal=await (await request.get(attemptPath)).json();return terminal.status;},{timeout:58_000,intervals:[500]}).toBe('INCOMPLETE');
     const elapsed=Date.now()-wallStart;expect(elapsed).toBeGreaterThanOrEqual(39_000);expect(elapsed).toBeLessThan(60_000);
@@ -55,7 +55,7 @@ test('unreachable server visibly limits the real running UI within sixty seconds
   const request=await playwright.request.newContext({baseURL:server.url});
   try {
     const copy=await createCopy(request);const cid=copy.cases[0].id;
-    await page.addInitScript(id=>localStorage.setItem('selected_demonstration_id',id),copy.id);await page.goto(server.url);
+    await page.addInitScript(id=>localStorage.setItem('selected_demonstration_id',id),copy.id);await page.goto(`${server.url}/#/cases/${cid}`);
     const startButton=page.getByRole('button',{name:'Investigate case',exact:true});
     await startButton.evaluate(button=>{
       const timing={clicked:0,limited:0};(window as any).__recoveryTiming=timing;

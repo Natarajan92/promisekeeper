@@ -44,7 +44,7 @@ def snapshot_case(packet):
         if s.kind == 'INVOICE': invoices.append(Invoice(s,**d))
         elif s.kind in {'LEDGER','REVERSAL'}:
             payments.append(Payment(s,d['transaction_ref'],d['amount_text'],d['currency_text'],d['invoice_id'],
-                VerificationStatus(d['verification_status']),d['settled'],by_source.get(d.get('reverses_source_id')),by_source.get(d.get('suspected_duplicate_source_id'))))
+                VerificationStatus(d['verification_status']),d['settled'],by_source.get(d.get('reverses_source_id')),by_source.get(d.get('suspected_duplicate_source_id')),d.get('original_transaction_ref')))
         elif s.kind == 'MESSAGE': messages.append(Message(s,d['speaker']))
         for a in r['commitment_anchors']:
             anchors.append(CommitmentAnchor(UUID(a['id']),did,cid,UUID(a['evidence_version_id']),a['commitment_key'],a['clause_start'],a['clause_end']))

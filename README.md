@@ -40,6 +40,12 @@ flowchart LR
 
 The owner accepted UX Phases 1 and 2, including read-only comparison of saved investigations and guidance to verify Cedar's payment in external bank/accounting records. [Phase 3](specs/003-owner-experience/phase3-spec.md) completes the presentation with a consistent casebook layout, readable saved-copy and history labels, and a rehearsed fictional STUB demonstration. Its [verification report](reports/owner-experience-phase-iii.md) records the implementation, browser checks and limits of the automated rehearsal. The owner authorized publishing and merging the UX work on 25 October 2026; formal human acceptance remains pending.
 
+## Try separate files
+
+The [file-driven walkthrough](docs/demo-import/README.md) covers customer and invoice imports, independent receipts, explained matching, owner-confirmed partial/split allocations, separate email/WhatsApp documents and Morning Review. Open **Upload** for the six guided steps. The compact [course-demo script and files](docs/demo-import/course-demo/START-HERE.md) cover every recommendation and can be regenerated for the demo day. Preview each file, confirm coverage and review the exact draft before copying. The offline parser uses actual text; intake calls no live model or external source. Fixed CSV headers, INR, six invoices and plain-text communication are demo limits. This local build has no authentication; use fictional records only.
+
+The new [multi-page UX report](reports/multi-page-ux.md) records the Dashboard, Upload, Cases, Assistant and Approvals changes, recovery fixes and verification. The [single LIVE rehearsal](reports/course-demo-live-rehearsal.md) records a Meera recommendation difference; it is not agent qualification.
+
 ## Try it in three commands
 
 ```powershell
@@ -116,9 +122,9 @@ uv run --project backend python -m promisekeeper.cli serve --host 127.0.0.1 --po
 
 `init-demo` always creates a fresh copy; restarting `serve` preserves existing copies. Only one process may own a database. `/api/v1/health`, `/api/v1/demonstrations` and the generated `/docs` expose the current API. Case, source, history and scenario routes require a `demonstration_id` query parameter. Mutations require JSON and `X-PromiseKeeper-Request: 1`; obtain the exact case-bound fixture preview before confirming an event. Keep the same operation ID and payload when reconciling an unknown outcome.
 
-Build the frontend before serving, then open `http://127.0.0.1:8000`. Select a retained copy, inspect its three cases and source versions, and explicitly investigate when ready. STUB uses approved extraction packets through the same runtime validation and deterministic rules as LIVE.
+Build the frontend before serving, then open `http://127.0.0.1:8000`. Choose a retained copy through **Workspace**, open **Cases** to inspect its invoices and source versions, and explicitly investigate when ready. **Dashboard** runs Morning Review; **Assistant** explains the team and its plan. For seeded demos, STUB uses approved extraction packets. Imported communication uses bounded offline parsing of the actual uploaded text. Both pass through source-quote validation and deterministic money rules.
 
-Open **Review** to edit and explicitly approve or reject an exact saved draft. **History** provides prior results and source versions, advice decisions, fictional update previews, and explicit closure/reopening or selected-copy deletion. Each confirmation rechecks the saved case; approval never sends a message.
+Use the case **Overview** or **Approvals** to edit and explicitly approve or reject an exact saved draft. Case **History** provides prior results and source versions, advice decisions, fictional update previews and explicit closure/reopening; **Compare** shows changes between saved investigations. Selected-copy deletion is in **Workspace**. Each confirmation rechecks the saved case; approval never sends a message.
 
 For Nebius configuration, copy [.env.example](.env.example) to the ignored `.env` and set `NEBIUS_API_KEY`. The backend reads this file; existing process variables take precedence. Keys stay outside frontend code. `PK_NEBIUS_MODEL` selects one explicit Nebius model; there is no automatic provider/model fallback. Keep `PK_AGENT_MODE=STUB` for offline demonstrations. A live candidate must pass the recorded extraction evaluation before Gate III acceptance:
 
@@ -129,6 +135,8 @@ uv run --project backend python -m promisekeeper.cli evaluate --suite live --cat
 This explicit command makes real Nebius calls even when the interactive workspace is configured STUB. See the Gate III report for actual results and unexecuted checks. The owner approved and committed Gate II as `9b0da8f`, then authorized Gate III and selected Nebius. The owner authorized Gate IV publication and Gate V implementation on 24 October 2026; release acceptance still requires the recorded checks and actual human observations.
 
 ## Gate V verification commands
+
+The [system eval set](evals/system/README.md) exercises fictional uploads, payment allocations, message grounding and owner controls through the real app. Run `backend/.venv/Scripts/python.exe scripts/evaluate_system.py --output reports/system-evaluation/my-new-run` from the repository root. The [original gap report](reports/system-evaluation.md) and [fix verification](reports/system-eval-fixes.md) distinguish supported behavior, unsafe advice and remaining limits; they do not qualify LIVE agents.
 
 Run the fixture report offline without credentials. Each output path must be new; preserve earlier failed reports.
 

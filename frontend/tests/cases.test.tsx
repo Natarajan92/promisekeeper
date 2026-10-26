@@ -8,7 +8,9 @@ import { CaseEvidence } from '../src/cases/CaseEvidence';
 import App from '../src/App';
 import { caseView, demo, did, cid, source } from './fixtures';
 import { act } from '@testing-library/react';
-afterEach(() => { cleanup(); localStorage.clear(); vi.restoreAllMocks(); });
+afterEach(() => { cleanup(); localStorage.clear(); vi.restoreAllMocks(); window.location.hash=''; });
+// The case page is its own route; the case list lives on the Cases page.
+const openCasesPage=()=>fireEvent.click(screen.getByRole('link',{name:/^Cases/}));
 describe('saved demonstration discovery', () => {
   it('restores valid preference, otherwise selects only a sole copy', () => {
     expect(resolveSelection([demo], did)).toBe(did);
@@ -28,6 +30,7 @@ describe('saved demonstration discovery', () => {
   it('requires an explicit create action when no copies exist', async () => {
     const fetcher = vi.fn(async (url: RequestInfo | URL, _init?:RequestInit) => new Response(JSON.stringify(String(url).endsWith('/health') ? {schema_version:'1',ready:true,agent_mode:'STUB'} : String(url).endsWith('/catalogue') ? {schema_version:'1',catalogue_version:'release-0.1',variant_ids:[]} : {schema_version:'1',demonstrations:[]})));
     render(<App api={new ApiClient(fetcher)} />);
+    fireEvent.click(await screen.findByRole('button',{name:/^Workspace/}));
     expect(await screen.findByText(/No saved demonstrations/)).toBeInTheDocument();
     expect(screen.getByRole('button',{name:'Create fictional demonstration'})).toBeEnabled();
     expect(screen.getByText(/No authentication/)).toBeInTheDocument();
@@ -55,24 +58,24 @@ it.each([null,'FV-17-EVIDENCE'])('offers only events registered for saved varian
     const response=path.endsWith('/health')?{schema_version:'1',ready:true,agent_mode:'STUB'}:path.endsWith('/catalogue')?{schema_version:'1',catalogue_version:'release-0.1',variant_ids:['FV-17-EVIDENCE'],events}:path.endsWith('/demonstrations')?{schema_version:'1',demonstrations:[{...demo,selected_variant_id:selectedVariant}]}:path.endsWith('/cases')?{schema_version:'1',demonstration_id:did,clock_mode:'REFERENCE',evaluation_at:caseView.evaluation_at,cases:[{...caseView,currency:'INR',due_at:null,has_previous_investigation:false}]}:path.includes('/history')?{schema_version:'1',events:[],next_cursor:null}:caseView;
     return new Response(JSON.stringify(response));
   });
-  render(<App api={api}/>);await screen.findByRole('heading',{name:'Studio North'});
+  window.location.hash=`#/cases/${cid}`;render(<App api={api}/>);await screen.findByRole('heading',{name:'Studio North'});
   fireEvent.click(screen.getByRole('button',{name:'History'}));
   expect(screen.getByRole('option',{name:/PK-001-U1/})).toBeInTheDocument();
   if(selectedVariant===null)expect(screen.queryByRole('option',{name:/FV-17-EVIDENCE-RUN-START/})).not.toBeInTheDocument();
   else expect(screen.getByRole('option',{name:/FV-17-EVIDENCE-RUN-START/})).toBeInTheDocument();
 });
-it('keeps the saved detail visible when the selected case is clicked again', async () => {
+it('keeps the saved detail visible when the open case is opened again from the case list', async () => {
   const summaries=['PK-001','PK-002','PK-003'].map((code,index)=>({id:index===0?cid:`case-${index}`,catalogue_case_id:code,client:index===0?'Studio North':`Studio ${index}`,invoice_id:`INV-${index+1}`,currency:'INR',due_at:caseView.financial_facts.due_at,lifecycle:'OPEN',case_revision:0,has_previous_investigation:false,review_required:false}));
   const api=new ApiClient(async(url)=>{
     const path=String(url);
     const response=path.endsWith('/health')?{schema_version:'1',ready:true,agent_mode:'STUB'}:path.endsWith('/catalogue')?{schema_version:'1',catalogue_version:'release-0.1',variant_ids:[]}:path.endsWith('/demonstrations')?{schema_version:'1',demonstrations:[demo]}:path.endsWith('/cases')?{schema_version:'1',demonstration_id:did,clock_mode:'REFERENCE',evaluation_at:caseView.evaluation_at,cases:summaries}:caseView;
     return new Response(JSON.stringify(response));
   });
-  render(<App api={api}/>);
+  window.location.hash=`#/cases/${cid}`;render(<App api={api}/>);
   expect(await screen.findByRole('heading',{name:'Studio North'})).toBeInTheDocument();
-  fireEvent.click(screen.getByRole('button',{name:/PK-001.*Studio North/}));
-  expect(screen.getByRole('heading',{name:'Studio North'})).toBeInTheDocument();
-  expect(screen.getByRole('button',{name:'Findings'})).toBeInTheDocument();
+  openCasesPage();fireEvent.click(screen.getByRole('button',{name:/Show all \d+ cases/}));fireEvent.click(screen.getByRole('button',{name:/PK-001.*Studio North/}));
+  expect(await screen.findByRole('heading',{name:'Studio North'})).toBeInTheDocument();
+  expect(screen.getByRole('button',{name:'Overview'})).toBeInTheDocument();
 });
 it('discards a delayed source reply after navigating away and back within the same copy', async () => {
   let resolveSource!:(value:Response)=>void;
@@ -84,12 +87,14 @@ it('discards a delayed source reply after navigating away and back within the sa
     const response=path.endsWith('/health')?{schema_version:'1',ready:true,agent_mode:'STUB'}:path.endsWith('/catalogue')?{schema_version:'1',catalogue_version:'release-0.1',variant_ids:[]}:path.endsWith('/demonstrations')?{schema_version:'1',demonstrations:[demo]}:path.endsWith('/cases')?{schema_version:'1',demonstration_id:did,clock_mode:'REFERENCE',evaluation_at:caseView.evaluation_at,cases:summaries}:path.includes(secondId)?{...caseView,id:secondId,client:'Second Studio'}:caseView;
     return new Response(JSON.stringify(response));
   });
-  render(<App api={api}/>);
+  window.location.hash=`#/cases/${cid}`;render(<App api={api}/>);
   await screen.findByRole('heading',{name:'Studio North'});
+  fireEvent.click(screen.getByRole('button',{name:/^Evidence \(\d+\)$/}));
   fireEvent.click(screen.getByRole('button',{name:/^Inspect exact source version: message-1/}));
-  fireEvent.click(screen.getByRole('button',{name:/Show all \d+ cases/}));
+  openCasesPage();fireEvent.click(screen.getByRole('button',{name:/Show all \d+ cases/}));
   fireEvent.click(screen.getByRole('button',{name:/PK-002.*Second Studio/}));
   await screen.findByRole('heading',{name:'Second Studio'});
+  openCasesPage();fireEvent.click(screen.getByRole('button',{name:/Show all \d+ cases/}));
   fireEvent.click(screen.getByRole('button',{name:/PK-001.*Studio North/}));
   await screen.findByRole('heading',{name:'Studio North'});
   await act(async()=>{resolveSource(new Response(JSON.stringify(source)));});
@@ -106,11 +111,11 @@ it('does not append a delayed history page under another case', async () => {
     const response=path.includes('/history')?{schema_version:'1',events:[event(path.includes(secondId)?secondId:cid,path.includes(secondId)?'SECOND_CASE_EVENT':'FIRST_CASE_EVENT')],next_cursor:path.includes(secondId)?null:10}:path.endsWith('/health')?{schema_version:'1',ready:true,agent_mode:'STUB'}:path.endsWith('/catalogue')?{schema_version:'1',catalogue_version:'release-0.1',variant_ids:[]}:path.endsWith('/demonstrations')?{schema_version:'1',demonstrations:[demo]}:path.endsWith('/cases')?{schema_version:'1',demonstration_id:did,clock_mode:'REFERENCE',evaluation_at:caseView.evaluation_at,cases:summaries}:path.includes(secondId)?{...caseView,id:secondId,client:'Second Studio'}:caseView;
     return new Response(JSON.stringify(response));
   });
-  render(<App api={api}/>);
+  window.location.hash=`#/cases/${cid}`;render(<App api={api}/>);
   await screen.findByRole('heading',{name:'Studio North'});
   fireEvent.click(screen.getByRole('button',{name:'History'}));
   fireEvent.click(await screen.findByRole('button',{name:'Load more history'}));
-  fireEvent.click(screen.getByRole('button',{name:/Show all \d+ cases/}));
+  openCasesPage();fireEvent.click(screen.getByRole('button',{name:/Show all \d+ cases/}));
   fireEvent.click(screen.getByRole('button',{name:/PK-002.*Second Studio/}));
   await screen.findByRole('heading',{name:'Second Studio'});
   fireEvent.click(screen.getByRole('button',{name:'History'}));

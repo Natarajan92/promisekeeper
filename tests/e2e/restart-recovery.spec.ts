@@ -62,8 +62,8 @@ for(const boundary of ['start','result','draft','approval','closure'] as const) 
         expect((await caseView(request,copy.id,cid)).review_state).toBe('INVALIDATED');
         events=await history(request,copy.id,cid);
       } else expect(after.review_state).not.toBe('APPROVED');
-      await page.addInitScript(id=>localStorage.setItem('selected_demonstration_id',id),copy.id);await page.goto(server.url);
-      if(boundary==='closure'){await showAllCases(page);await page.getByRole('button',{name:/PK-003/}).first().click();}
+      await page.addInitScript(id=>localStorage.setItem('selected_demonstration_id',id),copy.id);await page.goto(boundary==='closure'?server.url:`${server.url}/#/cases/${cid}`);
+      if(boundary==='closure'){await page.getByRole('link',{name:/^Cases/}).click();await showAllCases(page);await page.getByRole('button',{name:/PK-003/}).first().click();}
       await expect(page.getByRole('button',{name:'History',exact:true})).toBeVisible();
       await server.kill();await server.start();
       expect(await history(request,copy.id,cid)).toEqual(events);
@@ -80,14 +80,14 @@ test('unsaved browser wording survives actual backend hard restart without a sav
     const copy=await createCopy(request);const cid=copy.cases[0].id;
     await investigate(request,copy.id,cid);const before=await readyDraft(request,copy.id,cid);
     const beforeHistory=await history(request,copy.id,cid);
-    await page.addInitScript(id=>localStorage.setItem('selected_demonstration_id',id),copy.id);await page.goto(server.url);
-    await page.getByRole('button',{name:'Review',exact:true}).click();
+    await page.addInitScript(id=>localStorage.setItem('selected_demonstration_id',id),copy.id);await page.goto(`${server.url}/#/cases/${cid}`);
+    await page.getByRole('button',{name:'Overview',exact:true}).click();
     const unsaved=before.draft.exact_text.replace('Hello ','Hi ');
     expect(unsaved).not.toBe(before.draft.exact_text);
     await page.getByLabel('Draft text').fill(unsaved);
     await expect(page.getByText('Unsaved wording. Save it as a new unapproved version before approval.',{exact:true})).toBeVisible();
     await server.kill();await server.start();await page.reload();
-    await page.getByRole('button',{name:'Review',exact:true}).click();
+    await page.getByRole('button',{name:'Overview',exact:true}).click();
     await expect(page.getByLabel('Draft text')).toHaveValue(unsaved);
     await expect(page.getByText('Unsaved wording. Save it as a new unapproved version before approval.',{exact:true})).toBeVisible();
     await expect(page.getByRole('button',{name:'Approve exact saved version'})).toBeDisabled();

@@ -6,13 +6,16 @@ test('guided follow-up shows a useful overview and copies only the approved exac
   const copy=await createCopy(request);
   await page.addInitScript(id=>localStorage.setItem('selected_demonstration_id',id),copy.id);
   await context.grantPermissions(['clipboard-read','clipboard-write']);
-  await page.goto('/');
+  await page.goto('/#/cases');
   const card=page.getByRole('button',{name:/PK-001.*Northstar Analytics/});
-  await expect(card).toContainText('INR 80,000.00');
+  await expect(card).toContainText('₹80,000.00');
   await expect(card).toContainText('Not investigated');
+  await card.click();
   await page.getByRole('button',{name:'Investigate case',exact:true}).click();
   await expect(page.getByText('COMPLETE result saved.',{exact:true})).toBeVisible();
+  await page.getByRole('link',{name:/^Cases/}).click();
   await expect(card).toContainText('Follow up');
+  await card.click();
   await page.getByRole('button',{name:'View recommendation',exact:true}).click();
   await expect(page.getByRole('heading',{name:'Follow up on the overdue balance',exact:true})).toBeVisible();
   await expect(page.getByRole('button',{name:'Accept recommendation',exact:true})).toBeVisible();
@@ -35,12 +38,13 @@ test('wait and verification journeys explain the next action in IST without dema
   await investigate(request,copy.id,copy.cases[1].id);
   await investigate(request,copy.id,copy.cases[2].id);
   await page.addInitScript(id=>localStorage.setItem('selected_demonstration_id',id),copy.id);
-  await page.goto('/');await page.getByRole('button',{name:/Show all \d+ cases/}).click();await page.getByRole('button',{name:/PK-002.*Meridian Software/}).click();
+  await page.goto('/#/cases');await page.getByRole('button',{name:/Show all \d+ cases/}).click();await page.getByRole('button',{name:/PK-002.*Meridian Software/}).click();
   await page.getByRole('button',{name:'View recommendation',exact:true}).click();
   await expect(page.getByRole('heading',{name:'Wait until the review date'})).toBeVisible();
   await expect(page.locator('.next-step')).toContainText('26 Oct 2026, 00:00 IST');
   await expect(page.locator('.next-step')).not.toContainText('T18:30');
   await expect(page.getByRole('button',{name:'Review suggested message'})).toHaveCount(0);
+  await page.getByRole('link',{name:/^Cases/}).click();
   await page.getByRole('button',{name:/PK-003.*Cedar Retail Labs/}).click();
   await page.getByRole('button',{name:'View recommendation',exact:true}).click();
   await expect(page.getByRole('heading',{name:'Verify the payment'})).toBeVisible();
@@ -56,9 +60,10 @@ test('changed evidence labels old advice as previous and clears its overview act
   const copy=await createCopy(request);await investigate(request,copy.id,copy.cases[0].id);
   await confirmScenarioEvent(request,copy.id,copy.cases[0].id,'PK-001-U1');
   await page.addInitScript(id=>localStorage.setItem('selected_demonstration_id',id),copy.id);
-  await page.goto('/');
+  await page.goto('/#/cases');
   const card=page.getByRole('button',{name:/PK-001.*Northstar Analytics/});
   await expect(card).toContainText('Review required');await expect(card).not.toContainText('Follow up');
+  await card.click();
   await page.getByRole('button',{name:'View previous recommendation'}).click();
   await expect(page.getByText(/Historical result:/)).toBeVisible();
   await expect(page.getByRole('button',{name:'Review suggested message'})).toHaveCount(0);
@@ -68,7 +73,7 @@ test('changed evidence labels old advice as previous and clears its overview act
 test('a lost investigation start response keeps the earlier approved message fenced',async({page,request})=>{
   const copy=await createCopy(request);await investigate(request,copy.id,copy.cases[0].id);
   await page.addInitScript(id=>localStorage.setItem('selected_demonstration_id',id),copy.id);
-  await page.goto('/');await page.getByRole('button',{name:'Review',exact:true}).click();
+  await page.goto(`/#/cases/${copy.cases[0].id}`);await page.getByRole('button',{name:'Overview',exact:true}).click();
   await page.getByRole('button',{name:'Approve exact saved version'}).click();
   await expect(page.getByRole('button',{name:'Copy approved message'})).toBeEnabled();
   const pattern=`**/api/v1/cases/${copy.cases[0].id}/investigations?*`;
@@ -77,7 +82,7 @@ test('a lost investigation start response keeps the earlier approved message fen
   await expect(page.getByText(/Connection unavailable/).first()).toBeVisible();
   await expect(page.getByRole('button',{name:'Copy approved message'})).toBeDisabled();
   await page.unroute(pattern);await page.reload();
-  await page.getByRole('button',{name:'Review',exact:true}).click();
+  await page.getByRole('button',{name:'Overview',exact:true}).click();
   await expect(page.getByLabel('Draft text')).toBeVisible();
   await expect(page.getByRole('button',{name:'Copy approved message'})).toHaveCount(0);
 });
@@ -85,13 +90,13 @@ test('a lost investigation start response keeps the earlier approved message fen
 test('a rejection receipt with a failed case refresh cannot revive approved copying',async({page,request})=>{
   const copy=await createCopy(request);await investigate(request,copy.id,copy.cases[0].id);
   await page.addInitScript(id=>localStorage.setItem('selected_demonstration_id',id),copy.id);
-  await page.goto('/');await page.getByRole('button',{name:'Review',exact:true}).click();
+  await page.goto(`/#/cases/${copy.cases[0].id}`);await page.getByRole('button',{name:'Overview',exact:true}).click();
   await page.getByRole('button',{name:'Approve exact saved version'}).click();
   await expect(page.getByRole('button',{name:'Copy approved message'})).toBeEnabled();
   const pattern=`**/api/v1/cases/${copy.cases[0].id}?*`;
   await page.route(pattern,route=>route.abort('connectionreset'));
   await page.getByRole('button',{name:'Reject exact saved version'}).click();
-  await expect(page.getByText(/Rejection recorded/)).toBeVisible();
+  await expect(page.locator('#case-draft').getByText(/Rejection recorded/)).toBeVisible();
   await expect(page.getByRole('button',{name:'Refresh saved case'})).toBeVisible();
   await expect(page.getByRole('button',{name:'Copy approved message'})).toBeDisabled();
   await page.unroute(pattern);await page.getByRole('button',{name:'Refresh saved case'}).click();

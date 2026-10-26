@@ -1,0 +1,219 @@
+{
+  "schema_version": 1,
+  "as_of": "2026-10-26",
+  "fictional": true,
+  "customers": [
+    {
+      "customer_id": "MEERA",
+      "customer_name": "Meera Textiles",
+      "customer_alias": "Meera Tex",
+      "address": "14, Avinashi Road, Peelamedu, Coimbatore 641004"
+    },
+    {
+      "customer_id": "ARUN",
+      "customer_name": "Arun Traders",
+      "customer_alias": "Arun",
+      "address": "7, Netaji Subhash Road, Kolkata 700001"
+    },
+    {
+      "customer_id": "SUNRISE",
+      "customer_name": "Sunrise Foods",
+      "customer_alias": "Sunrise",
+      "address": "22, MIDC Industrial Area, Andheri East, Mumbai 400093"
+    },
+    {
+      "customer_id": "KAVERI",
+      "customer_name": "Kaveri Packaging",
+      "customer_alias": "Kaveri Pack",
+      "address": "5, Hebbal Industrial Area, Mysuru 570016"
+    },
+    {
+      "customer_id": "LOTUS",
+      "customer_name": "Lotus Electricals",
+      "customer_alias": "Lotus Elec",
+      "address": "31, Relief Road, Ahmedabad 380001"
+    },
+    {
+      "customer_id": "PATEL",
+      "customer_name": "Patel Hardware",
+      "customer_alias": "Patel HW",
+      "address": "9, Station Road, Vadodara 390002"
+    }
+  ],
+  "invoices": [
+    {
+      "invoice_id": "MT-1001",
+      "customer_id": "MEERA",
+      "amount": "60000",
+      "issued_at": "2026-09-16",
+      "due_at": "2026-10-10"
+    },
+    {
+      "invoice_id": "AT-1002",
+      "customer_id": "ARUN",
+      "amount": "32500",
+      "issued_at": "2026-09-26",
+      "due_at": "2026-10-16"
+    },
+    {
+      "invoice_id": "SF-1003",
+      "customer_id": "SUNRISE",
+      "amount": "40000",
+      "issued_at": "2026-10-01",
+      "due_at": "2026-10-21"
+    },
+    {
+      "invoice_id": "KP-1004",
+      "customer_id": "KAVERI",
+      "amount": "75000",
+      "issued_at": "2026-09-24",
+      "due_at": "2026-10-24"
+    },
+    {
+      "invoice_id": "LE-1005",
+      "customer_id": "LOTUS",
+      "amount": "80000",
+      "issued_at": "2026-09-17",
+      "due_at": "2026-10-17"
+    },
+    {
+      "invoice_id": "PH-1006",
+      "customer_id": "PATEL",
+      "amount": "25000",
+      "issued_at": "2026-09-14",
+      "due_at": "2026-10-14"
+    }
+  ],
+  "documents": [
+    {
+      "path": "04-messages/meera-whatsapp-hinglish.txt",
+      "kind": "whatsapp",
+      "invoice_id": "MT-1001",
+      "sender_role": "CUSTOMER",
+      "story": "Hinglish WhatsApp promise of INR 48,000 that has already passed."
+    },
+    {
+      "path": "04-messages/arun-payment-claim.eml",
+      "kind": "customer_email",
+      "invoice_id": "AT-1002",
+      "sender_role": "CUSTOMER",
+      "story": "Claims INR 32,500 was paid (UTR ARUN-T9); no matching bank credit yet."
+    },
+    {
+      "path": "04-messages/kaveri-promise.eml",
+      "kind": "customer_email",
+      "invoice_id": "KP-1004",
+      "sender_role": "CUSTOMER",
+      "story": "Polite email promising INR 75,000 next week, with greeting and signature."
+    }
+  ],
+  "allocations": [
+    {
+      "transaction_ref": "UPI-552104",
+      "bank_description": "UPI MEERA TEXTILES",
+      "invoice_id": "MT-1001",
+      "amount": "12000",
+      "hint_required": true,
+      "note": "Partial payment; INR 48,000 remains."
+    },
+    {
+      "transaction_ref": "NEFT-883107",
+      "bank_description": "NEFT SUNRISE FOODS",
+      "invoice_id": "SF-1003",
+      "amount": "40000",
+      "hint_required": true,
+      "note": "Pays the invoice in full."
+    },
+    {
+      "transaction_ref": "NEFT-304172",
+      "bank_description": "NEFT PATEL HW",
+      "invoice_id": "PH-1006",
+      "amount": "10000",
+      "hint_required": true,
+      "note": "No invoice reference on the credit; match it by the Patel HW name hint. INR 15,000 remains."
+    }
+  ],
+  "expected": [
+    {
+      "invoice_id": "MT-1001",
+      "customer_name": "Meera Textiles",
+      "action": "FOLLOW_UP",
+      "balance_minor": "4800000",
+      "why": "Hinglish promise for 18 October 2026 has passed; INR 48,000 still open after the INR 12,000 part payment."
+    },
+    {
+      "invoice_id": "AT-1002",
+      "customer_name": "Arun Traders",
+      "action": "VERIFY_PAYMENT",
+      "balance_minor": "3250000",
+      "why": "Customer says it paid (UTR ARUN-T9) but no matching bank credit is allocated yet."
+    },
+    {
+      "invoice_id": "SF-1003",
+      "customer_name": "Sunrise Foods",
+      "action": "CLOSE",
+      "balance_minor": "0",
+      "why": "Full INR 40,000 bank credit allocated by the owner; closure still needs the owner's confirmation."
+    },
+    {
+      "invoice_id": "KP-1004",
+      "customer_name": "Kaveri Packaging",
+      "action": "WAIT",
+      "balance_minor": "7500000",
+      "promise_by": "2026-11-02",
+      "why": "Promise to pay INR 75,000 by 2 November 2026; review again when that day ends."
+    },
+    {
+      "invoice_id": "LE-1005",
+      "customer_name": "Lotus Electricals",
+      "action": "FOLLOW_UP",
+      "balance_minor": "8000000",
+      "why": "Overdue, no payment and no message."
+    },
+    {
+      "invoice_id": "PH-1006",
+      "customer_name": "Patel Hardware",
+      "action": "FOLLOW_UP",
+      "balance_minor": "1500000",
+      "why": "INR 10,000 part payment matched by hint; INR 15,000 overdue. The conditional message is refused, not imported."
+    }
+  ],
+  "refused": [
+    {
+      "path": "06-refused/patel-conditional.txt",
+      "kind": "whatsapp",
+      "invoice_id": "PH-1006",
+      "sender_role": "CUSTOMER",
+      "reason": "Conditional wording (\"if the goods are replaced\") is not a firm promise; preview refuses it and nothing is saved."
+    }
+  ],
+  "finale": {
+    "path": "05-later/payments-later.csv",
+    "kind": "payments",
+    "invoice_id": "AT-1002",
+    "action": "CLOSE",
+    "balance_minor": "0",
+    "allocations": [
+      {
+        "transaction_ref": "ARUN-T9",
+        "bank_description": "NEFT ARUN TRADERS",
+        "invoice_id": "AT-1002",
+        "amount": "32500",
+        "hint_required": true,
+        "note": "The claimed UTR now appears in the bank statement."
+      }
+    ]
+  },
+  "files": [
+    "01-customers.csv",
+    "02-invoices.csv",
+    "03-bank-statement.csv",
+    "04-messages/arun-payment-claim.eml",
+    "04-messages/kaveri-promise.eml",
+    "04-messages/meera-whatsapp-hinglish.txt",
+    "05-later/payments-later.csv",
+    "06-refused/patel-conditional.txt",
+    "EXPECTED-RESULTS.json",
+    "START-HERE.md"
+  ]
+}

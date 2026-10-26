@@ -1,0 +1,2 @@
+transaction_ref,payer_name,payer_alias,address,amount,currency,paid_at,invoice_reference,status
+ECON-T3,Econ Private Limited,ECONC,,60000,INR,2026-10-23,ECON-101,SETTLED

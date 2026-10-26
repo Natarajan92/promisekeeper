@@ -1,0 +1,4 @@
+Sender: ECON fictional accounts
+Sent: 2026-10-24T10:00:00+05:30
+
+For invoice ECON-101, we paid INR 60000 on 23 October 2026. UTR: ECON-T3.

@@ -1,5 +1,5 @@
 import {afterEach,expect,it,vi} from 'vitest';
-import {act,cleanup,fireEvent,render,screen,within} from '@testing-library/react';
+import {act,cleanup,fireEvent,render,screen,waitFor,within} from '@testing-library/react';
 import '@testing-library/jest-dom/vitest';
 import App from '../src/App';
 import {ApiClient} from '../src/api/client';
@@ -9,7 +9,9 @@ import {OwnerDecisions} from '../src/history/OwnerDecisions';
 import {caseView, demo, did, cid, facts} from './fixtures';
 import type {Result,FinancialFacts} from '../src/api/types';
 
-afterEach(()=>{cleanup();localStorage.clear();vi.restoreAllMocks();});
+afterEach(()=>{cleanup();localStorage.clear();vi.restoreAllMocks();window.location.hash='';});
+// Pages are separate routes: the case list is on the Dashboard and Cases pages, each case on its own page.
+const openPage=(name:RegExp)=>fireEvent.click(screen.getByRole('link',{name}));
 const saved:Result={investigation_id:'44444444-4444-4444-8444-444444444444',snapshot_id:'55555555-5555-4555-8555-555555555555',snapshot_hash:'a'.repeat(64),evaluation_at:caseView.evaluation_at,status:'COMPLETE',financial_facts:facts as FinancialFacts,financial_label:'VERIFIED_REMAINDER',commitments:[],claims:[],timeline:[],contradictions:[],unresolved_questions:[],limitations:[],action:'FOLLOW_UP',reason_code:'EXPIRED_PROMISE',explanation:{text:'Follow up on the verified balance.',sources:[]},next_step:'Review a follow-up draft.',review_at:null,result_hash:'b'.repeat(64)};
 const summary={...caseView,currency:'INR',has_previous_investigation:true,balance:facts.balance,balance_label:'VERIFIED_REMAINDER',recommended_action:'FOLLOW_UP',review_at:null};
 
@@ -27,7 +29,7 @@ it('requires a current result for decisions beside findings while retaining hist
 it('shows balances and current actions in the case overview, with unknown kept distinct',()=>{
   render(<CaseList cases={[summary,{...summary,id:'other',client:'Missing ledger',balance:null,balance_label:'UNKNOWN_REMAINDER',recommended_action:null,review_required:true}] as any} selected={cid} onSelect={()=>{}}/>);
   const first=screen.getByRole('button',{name:/Studio North/});
-  expect(within(first).getByText('INR 30,000.00')).toBeInTheDocument();
+  expect(within(first).getByText('₹30,000.00')).toBeInTheDocument();
   expect(within(first).getByText('Follow up')).toBeInTheDocument();
   expect(within(screen.getByRole('button',{name:/Missing ledger/})).getByText('Unknown')).toBeInTheDocument();
 });
@@ -48,7 +50,7 @@ it('guides a completed investigation to findings and keeps decisions beside the 
     const body=url.endsWith('/health')?{schema_version:'1',ready:true,agent_mode:'STUB'}:url.endsWith('/catalogue')?{schema_version:'1',catalogue_version:'release-0.1',variant_ids:[]}:url.endsWith('/demonstrations')?{schema_version:'1',demonstrations:[demo]}:url.endsWith('/cases')?{schema_version:'1',demonstration_id:did,clock_mode:'REFERENCE',evaluation_at:caseView.evaluation_at,cases:[summary]}:view;
     return new Response(JSON.stringify(Object.assign({schema_version:"1"},body)));
   });
-  render(<App api={api}/>);
+  window.location.hash=`#/cases/${cid}`;render(<App api={api}/>);
   fireEvent.click(await screen.findByRole('button',{name:'View recommendation'}));
   expect(screen.getByRole('heading',{name:'Follow up on the overdue balance'})).toBeInTheDocument();
   expect(screen.getByRole('button',{name:'Accept recommendation'})).toBeInTheDocument();
@@ -68,31 +70,35 @@ it('refreshes a waiting overview at its review time even when a different case i
   });
   try {
     await act(async()=>{render(<App api={api}/>);});
-    fireEvent.click(screen.getByRole('button',{name:/Show all \d+ cases/}));
-    const evidence=screen.getByRole('button',{name:'Evidence'});evidence.focus();
+    openPage(/^Cases/);fireEvent.click(screen.getByRole('button',{name:/Show all \d+ cases/}));
     expect(within(screen.getByRole('button',{name:/Waiting client/})).getByText('Wait until the review date')).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button',{name:/Studio North/}));
+    await act(async()=>{});
+    const evidence=screen.getByRole('button',{name:/^Evidence \(\d+\)$/});evidence.focus();
     await act(async()=>{await vi.advanceTimersByTimeAsync(1_000);});
-    expect(within(screen.getByRole('button',{name:/Waiting client/})).getByText('Review required')).toBeInTheDocument();
     expect(evidence).toHaveFocus();
+    openPage(/^Cases/);fireEvent.click(screen.getByRole('button',{name:/Show all \d+ cases/}));
+    expect(within(screen.getByRole('button',{name:/Waiting client/})).getByText('Review required')).toBeInTheDocument();
   }finally {vi.useRealTimers();}
 });
 
-it('focuses the case heading on explicit selection, including an already-selected briefing case',async()=>{
+it('focuses the case heading when a case is opened from the briefing or the case list, never on a refreshed deep link',async()=>{
   const other='77777777-7777-4777-8777-777777777777';
   const api=new ApiClient(async input=>{
     const url=String(input);
     const body=url.endsWith('/health')?{ready:true,agent_mode:'STUB'}:url.endsWith('/catalogue')?{catalogue_version:'release-0.1',variant_ids:[]}:url.endsWith('/demonstrations')?{demonstrations:[demo]}:url.endsWith('/cases')?{demonstration_id:did,clock_mode:'REFERENCE',evaluation_at:caseView.evaluation_at,cases:[summary,{...summary,id:other,client:'Second studio'}]}:url.endsWith('/morning-reviews/latest')?{morning_review:{status:'COMPLETE',briefing:'Saved summary',agent_activity:[],outcomes:[{case_id:cid,client:'Studio North',action:'FOLLOW_UP',outcome:'INVESTIGATED'}]}}:{...caseView,id:url.includes(`/cases/${other}?`)?other:cid,client:url.includes(`/cases/${other}?`)?'Second studio':'Studio North'};
     return new Response(JSON.stringify({schema_version:'1',...body}));
   });
-  render(<App api={api}/>);
+  window.location.hash=`#/cases/${cid}`;render(<App api={api}/>);
   const heading=await screen.findByRole('heading',{name:'Studio North'});
   expect(heading).not.toHaveFocus();
-  fireEvent.click(screen.getByRole('button',{name:/Studio North.*Follow up.*investigated now/}));
-  expect(heading).toHaveFocus();
-  fireEvent.click(screen.getByRole('button',{name:/Second studio/}));
-  expect(await screen.findByRole('heading',{name:'Second studio'})).toHaveFocus();
-  fireEvent.click(screen.getByRole('button',{name:/Second studio/}));
-  expect(screen.getByRole('heading',{name:'Second studio'})).toHaveFocus();
+  openPage(/^Dashboard/);
+  fireEvent.click(await screen.findByRole('button',{name:/Studio North.*Follow up.*investigated now/}));
+  await waitFor(()=>expect(screen.getByRole('heading',{name:'Studio North'})).toHaveFocus());
+  openPage(/^Cases/);fireEvent.click(await screen.findByRole('button',{name:/Second studio/}));
+  await waitFor(()=>expect(screen.getByRole('heading',{name:'Second studio'})).toHaveFocus());
+  openPage(/^Cases/);fireEvent.click(await screen.findByRole('button',{name:/Second studio/}));
+  await waitFor(()=>expect(screen.getByRole('heading',{name:'Second studio'})).toHaveFocus());
 });
 
 it('does not focus a delayed case after the owner has selected another case',async()=>{
@@ -104,11 +110,11 @@ it('does not focus a delayed case after the owner has selected another case',asy
     const body=url.endsWith('/health')?{ready:true,agent_mode:'STUB'}:url.endsWith('/catalogue')?{catalogue_version:'release-0.1',variant_ids:[]}:url.endsWith('/demonstrations')?{demonstrations:[demo]}:url.endsWith('/cases')?{demonstration_id:did,clock_mode:'REFERENCE',evaluation_at:caseView.evaluation_at,cases:[summary,{...summary,id:other,client:'Delayed studio'}]}:url.endsWith('/morning-reviews/latest')?{morning_review:null}:caseView;
     return new Response(JSON.stringify({schema_version:'1',...body}));
   });
-  render(<App api={api}/>);await screen.findByRole('heading',{name:'Studio North'});
-  fireEvent.click(screen.getByRole('button',{name:/Delayed studio/}));
-  fireEvent.click(screen.getByRole('button',{name:/Studio North/}));
-  const heading=await screen.findByRole('heading',{name:'Studio North'});expect(heading).toHaveFocus();
-  const evidence=screen.getByRole('button',{name:'Evidence'});evidence.focus();
+  render(<App api={api}/>);
+  openPage(/^Cases/);fireEvent.click(await screen.findByRole('button',{name:/Delayed studio/}));
+  openPage(/^Cases/);fireEvent.click(await screen.findByRole('button',{name:/Studio North/}));
+  await waitFor(()=>expect(screen.getByRole('heading',{name:'Studio North'})).toHaveFocus());
+  const evidence=screen.getByRole('button',{name:/^Evidence \(\d+\)$/});evidence.focus();
   await act(async()=>finish(new Response(JSON.stringify({...caseView,id:other,client:'Delayed studio'}))));
   expect(evidence).toHaveFocus();expect(screen.queryByRole('heading',{name:'Delayed studio'})).not.toBeInTheDocument();
 });
@@ -121,6 +127,7 @@ it('suppresses already-expired overview advice and makes only one immediate reco
     return new Response(JSON.stringify(Object.assign({schema_version:'1'},body)));
   });
   await act(async()=>{render(<App api={api}/>);});
+  openPage(/^Cases/);
   expect(within(screen.getByRole('button',{name:/Expired client/})).getByText('Review required')).toBeInTheDocument();
   expect(lists).toBe(2);
 });

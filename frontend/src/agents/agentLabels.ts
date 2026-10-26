@@ -35,3 +35,21 @@ export function usage(latencyMs: number | null, inputTokens: number | null, outp
   if (tokens) parts.push(`${tokens.toLocaleString('en-US')} tokens`);
   return parts;
 }
+
+/** Whether a step is an AI model, rule-based code, or the business owner. */
+export const AGENT_KIND: Record<AgentName, 'AI' | 'RULES' | 'YOU'> = {
+  SUPERVISOR: 'AI', INTAKE: 'RULES', EXTRACTOR: 'AI', RULES_ENGINE: 'RULES', MEMORY: 'RULES',
+  COMMUNICATOR: 'AI', SAFETY_CHECK: 'RULES', TONE_REVIEWER: 'AI', BRIEFING: 'AI', OWNER: 'YOU',
+};
+
+export const KIND_LABEL: Record<'AI' | 'RULES' | 'YOU', string> = {AI: 'AI', RULES: 'Rules (code)', YOU: 'You'};
+
+/** Pipeline order: the supervisor plans, each case runs intake to tone review, the briefing reports, you decide. */
+export const AGENT_ORDER: readonly AgentName[] = [
+  'SUPERVISOR', 'INTAKE', 'EXTRACTOR', 'RULES_ENGINE', 'MEMORY', 'COMMUNICATOR', 'SAFETY_CHECK', 'TONE_REVIEWER', 'BRIEFING', 'OWNER',
+];
+
+/** The health-configuration role behind each agent; steps without one have no provider or model to show. */
+export const HEALTH_ROLE: Partial<Record<AgentName, string>> = {
+  SUPERVISOR: 'Supervisor', EXTRACTOR: 'Extractor', COMMUNICATOR: 'Communicator', TONE_REVIEWER: 'Tone Reviewer', BRIEFING: 'Briefing', MEMORY: 'Memory',
+};

@@ -1,6 +1,7 @@
 """Planning supervisor: an agent chooses the next step, code validates every choice and falls back to rule order."""
 import json
 from uuid import uuid4
+import pytest
 
 from promisekeeper.agents.briefing import ScriptedBriefing
 from promisekeeper.agents.communicator import ScriptedCommunicator
@@ -160,3 +161,18 @@ def test_cli_supervisor_suite_runs_offline_and_rejects_bad_model_names(tmp_path)
     assert report['suite'] == 'supervisor' and report['metrics']['validity'] == 1.0
     with pytest.raises(ValueError):
         run_agent_suite(Settings('LIVE', 'm', tmp_path / 'x.sqlite', 'k'), 'supervisor', repeats=1, models=['bad model; rm'])
+
+
+@pytest.mark.parametrize('days,phrase', [(1, 'overdue 1 day.'), (2, 'overdue 2 days.'), (17, 'overdue 17 days.')])
+def test_scripted_reason_pluralises_overdue_days(days, phrase):
+    # Regression: the reason read "overdue 1 days".
+    item = dict(case='PK-001', client='C', balance_text='INR 10.00', days_overdue=days, recommended_action=None,
+                review_required=False, must_investigate=True)
+    assert scripted_choice(dict(pending=[item]))['reason'].endswith(phrase)
+
+
+def test_scripted_reason_omits_overdue_when_not_overdue_or_unknown():
+    item = dict(case='PK-001', client='C', balance_text='INR 10.00', days_overdue=0, recommended_action=None,
+                review_required=False, must_investigate=True)
+    reason = scripted_choice(dict(pending=[item]))['reason']
+    assert 'overdue' not in reason and reason == 'Largest open balance still waiting (INR 10.00).'

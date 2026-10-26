@@ -1,0 +1,2 @@
+invoice_id,customer_id,customer_name,customer_alias,address,amount,currency,issued_at,due_at
+EXTRA-702,UNKNOWN,,,,1,INR,2026-09-25,2026-10-24

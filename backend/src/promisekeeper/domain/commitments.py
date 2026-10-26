@@ -8,6 +8,7 @@ import re
 from promisekeeper.domain.dates import IST, deadline, source_day
 from promisekeeper.domain.evidence import Availability, Issue, require_same_case
 from promisekeeper.domain.money import parse_money
+from promisekeeper.domain.quoted_money import uploaded_money,quoted_currency,quoted_currency_token,quoted_amount_token
 
 
 def _whole_token(token, text):
@@ -75,9 +76,16 @@ def reconcile_commitments(case, extraction, financial):
         for token in (candidate.amount_text, candidate.currency_text):
             if token is not None and token not in candidate.quote:
                 raise ValueError("Candidate token is unsupported by its quote")
-        if not amount_supported(candidate.amount_text, candidate.quote):
+        uploaded='-UPLOAD-CUSTOMER-' in candidate.source.source_id
+        if not (amount_supported(candidate.amount_text, candidate.quote) or
+                (uploaded and quoted_amount_token(candidate.currency_text,candidate.amount_text,candidate.quote))):
             raise ValueError("Candidate amount token is incomplete")
-        if not _whole_token(candidate.currency_text, candidate.quote):
+        uploaded='-UPLOAD-' in candidate.source.source_id
+        if uploaded and '-UPLOAD-CUSTOMER-' not in candidate.source.source_id:
+            raise ValueError('Uploaded sender role was not reviewed as customer')
+        currency_ok=(_whole_token(candidate.currency_text,candidate.quote) or
+            (uploaded and candidate.currency_text is not None and quoted_currency(candidate.currency_text)=='INR' and quoted_currency_token(candidate.currency_text,candidate.quote)))
+        if not currency_ok:
             raise ValueError("Candidate currency token is incomplete")
         if candidate.speaker is not None and candidate.speaker not in {original.speaker, case.client}:
             raise ValueError("Candidate speaker is unsupported")
@@ -145,7 +153,8 @@ def reconcile_commitments(case, extraction, financial):
         for token in (candidate.amount_text, candidate.currency_text, candidate.date_text):
             if token is not None and (token not in candidate.quote or token not in clause):
                 raise ValueError("Commitment token is unsupported by its anchored clause")
-        if not amount_supported(candidate.amount_text, clause):
+        if not (amount_supported(candidate.amount_text, clause) or
+                ('-UPLOAD-CUSTOMER-' in candidate.source.source_id and quoted_amount_token(candidate.currency_text,candidate.amount_text,clause))):
             raise ValueError("Commitment amount token is incomplete")
         if not _whole_token(candidate.date_text, clause) or not _whole_token(candidate.date_text, candidate.quote):
             raise ValueError("Commitment date token is incomplete")
@@ -157,10 +166,10 @@ def reconcile_commitments(case, extraction, financial):
             raise ValueError("Duplicate commitment candidate for one anchor")
         if anchor:
             seen_anchors.add(anchor.id)
-        money = parse_money(candidate.amount_text, candidate.currency_text)
+        money = uploaded_money(candidate)
         if candidate.amount_text is not None and money.error:
             issue("INVALID_PROMISE_AMOUNT", (candidate.source.source_id,), "Review the promised amount/currency.")
-        expires = deadline(candidate.date_text, original_at=candidate.source.event_at).expires_at
+        expires = deadline(candidate.date_text, original_at=candidate.source.event_at,allow_weekday='-UPLOAD-CUSTOMER-' in candidate.source.source_id).expires_at
         identity = anchor.id if anchor else None
         credit = credits.get(identity, 0)
         fulfilled = money.minor_units is not None and credit >= money.minor_units
@@ -210,18 +219,22 @@ def reconcile_commitments(case, extraction, financial):
         omitted_date = candidate.payment_date_text is None and _has_stated_date(candidate.source.original_content)
         if omitted_date:
             issue("MISSING_EXTRACTION", (candidate.source.source_id,), "A stated payment date was not extracted.")
-        amount = parse_money(candidate.amount_text, candidate.currency_text).minor_units
+        amount = uploaded_money(candidate).minor_units
         stated_day = source_day(candidate.payment_date_text, original_at=candidate.source.event_at)
         matching = [payment for payment in financial.eligible_payments
                     if candidate.transaction_reference_text is not None
-                    and payment.transaction_ref == candidate.transaction_reference_text]
+                    and (payment.original_transaction_ref or payment.transaction_ref) == candidate.transaction_reference_text]
         resolved = False
-        if len(matching) == 1 and amount is not None:
-            payment = matching[0]
-            actual_day = payment.source.event_at.astimezone(candidate.source.event_at.tzinfo if candidate.source.event_at else IST).date() if payment.source.event_at else None
-            compatible_day = not omitted_date and (candidate.payment_date_text is None or
-                                                   (stated_day is not None and stated_day == actual_day))
-            resolved = (parse_money(payment.amount_text, payment.currency_text).minor_units == amount and compatible_day)
+        if matching and amount is not None:
+            # Imported receipt pieces keep unique allocation identities, while their
+            # original bank reference connects the claim to the confirmed pieces.
+            compatible = len(matching)==1 or all(p.original_transaction_ref==candidate.transaction_reference_text for p in matching)
+            actual_days={p.source.event_at.astimezone(candidate.source.event_at.tzinfo if candidate.source.event_at else IST).date()
+                         if p.source.event_at else None for p in matching}
+            compatible_day = not omitted_date and len(actual_days)==1 and (candidate.payment_date_text is None or
+                              (stated_day is not None and stated_day in actual_days))
+            paid=sum(parse_money(p.amount_text,p.currency_text).minor_units for p in matching)
+            resolved = compatible and len({p.currency_text for p in matching})==1 and paid==amount and compatible_day
         claims.append(ClaimState(candidate.source.source_id, resolved, candidate.transaction_reference_text is None))
     for message in case.messages:
         require_same_case(case, message)

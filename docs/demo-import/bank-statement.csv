@@ -1,0 +1,4 @@
+Date,Description,Credit,Debit,Reference,Currency,Balance
+2026-10-20,Econ Private Limited transfer,40000,,BANK-ECON-001,INR,100000
+2026-10-21,Office supplies,,2500,EXPENSE-001,INR,97500
+2026-10-22,Unidentified deposit,12500,,,INR,110000

@@ -35,19 +35,22 @@ export function FindingsView({result,view,onSource,onNavigate,actions,team}:{res
       ? `Source ${observation.source.source_id} has no readable original content.`
       : `Source ${observation.source.source_id} availability: ${words(observation.value)}.`;
   }
-  return <section className="findings" aria-labelledby={headingId}>
-    <div className="findings-heading">
-      <div><p>Saved recommendation · {words(result.status)}</p><h2 id={headingId}>{actionTitle(result.action)}</h2></div>
-      <p>Evaluated {instant(result.evaluation_at)}</p>
+  return <section className="findings suggestion-card" aria-labelledby={headingId}>
+    <div className="suggestion-hero">
+      <div className="findings-heading">
+        <div><p className="suggestion-eyebrow">{view.freshness==='CURRENT'?'Our suggestion':'Earlier suggestion'}</p><p>Saved recommendation · {words(result.status)}</p><h2 id={headingId}>{actionTitle(result.action)}</h2></div>
+        <p>Evaluated {instant(result.evaluation_at)}</p>
+      </div>
+      {view.freshness!=='CURRENT'&&<p className="notice">Historical result: {words(view.freshness)}. Inspect current evidence before acting.</p>}
+      {!result.findings_version&&<p className="notice">Legacy findings: saved before the current findings profile. Reinvestigate to include source-linked issues and evidence observations.</p>}
+      {result.status==='LIMITED'&&<p className="notice">Limited investigation. Review the missing or unresolved evidence below.</p>}
+      <FinancialSummary facts={{...result.financial_facts,label:words(result.financial_label)}} showIssues={false}/>
+      <p className="explanation">{localDates(result.explanation.text)}</p>
+      {result.explanation.sources.length>0&&<details className="suggestion-why"><summary>Why we think so: based on these saved records</summary><div className="source-links">{result.explanation.sources.map(sourceButton)}</div></details>}
     </div>
-    {view.freshness!=='CURRENT'&&<p className="notice">Historical result: {words(view.freshness)}. Inspect current evidence before acting.</p>}
-    {!result.findings_version&&<p className="notice">Legacy findings: saved before the current findings profile. Reinvestigate to include source-linked issues and evidence observations.</p>}
-    {result.status==='LIMITED'&&<p className="notice">Limited investigation. Review the missing or unresolved evidence below.</p>}
-    <FinancialSummary facts={{...result.financial_facts,label:words(result.financial_label)}} showIssues={false}/>
-    <p className="explanation">{localDates(result.explanation.text)}</p>
-    <div className="source-links">{result.explanation.sources.map(sourceButton)}</div>
+    <div className="suggestion-body">
     {view.freshness==='CURRENT'&&draftState==='RUNNING'&&<p className="notice">Recommendation saved. Your message is still being prepared.</p>}
-    {view.freshness==='CURRENT'&&draftState==='FAILED'&&<p className="notice">Recommendation saved. Message preparation needs attention. Open Review to check recovery options.</p>}
+    {view.freshness==='CURRENT'&&draftState==='FAILED'&&<p className="notice">Recommendation saved. Message preparation needs attention. Open the reminder draft to check recovery options.</p>}
     <div className="next-step"><h3>Next step</h3><p>{localDates(result.next_step)}</p>
       {onNavigate&&view.freshness==='CURRENT'&&!view.running_attempt&&<div className="decision-actions">
         {(result.action==='FOLLOW_UP'||!!view.draft)&&<button className="primary" onClick={()=>onNavigate('review')}>{messageAction}</button>}
@@ -96,5 +99,6 @@ export function FindingsView({result,view,onSource,onNavigate,actions,team}:{res
       <p>Findings profile: {result.findings_version ?? 'legacy'}</p>
       <p>Recorded action: {result.action}</p>
     </details>
+    </div>
   </section>;
 }

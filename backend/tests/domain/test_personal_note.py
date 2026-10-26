@@ -1,5 +1,6 @@
 """One safety-checked personal-note paragraph after the greeting; facts stay template-owned."""
 import pytest
+import re
 from promisekeeper.domain.personal_note import compose_with_note, note_reasons
 from support.drafts import build, case_view, validate
 
@@ -88,3 +89,15 @@ def test_warm_relationship_notes_still_pass(note):
 @pytest.mark.parametrize("note", ["We are glad to cancel this for you.", "Our lawyer will be in touch.", "We may take this to court."])
 def test_cancellation_and_legal_words_are_blocked(note):
     assert note_reasons(note) != ()
+
+
+def test_stub_default_note_is_true_for_every_case_and_passes_note_safety():
+    # Regression: the STUB note thanked every customer "for keeping us informed
+    # about the project", a false statement for customers who sent no message.
+    from promisekeeper.agents.communicator import DEFAULT_STUB_NOTE, ScriptedCommunicator
+    note = ScriptedCommunicator().write_note(None, timeout=1).value['note']
+    assert note == DEFAULT_STUB_NOTE
+    assert note_reasons(note) == ()
+    assert not re.search(r'\b(?:informed|inform|update[sd]?|message|messages|project|told|letting|replied|reply|kind words|promise\w*)\b', note, re.I)
+    p = plan()
+    assert validate(p, compose_with_note(p.exact_text, note)) == ()

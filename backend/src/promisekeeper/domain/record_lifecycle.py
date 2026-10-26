@@ -112,7 +112,7 @@ def _effective_reversed_ids(active, excluded, reversal_ids):
         # either a known reversal or a compatible original settlement.
         fingerprints = {(parse_money(record.amount_text, record.currency_text).minor_units, record.currency_text,
                          record.invoice_id, record.verification_status, record.settled,
-                         record.source.event_at, record.reverses_payment_version_id) for record in records}
+                         record.source.event_at, record.reverses_payment_version_id, record.original_transaction_ref) for record in records}
         if len(fingerprints) != 1:
             continue
         record = records[0]

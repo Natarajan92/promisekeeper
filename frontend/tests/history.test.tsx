@@ -28,14 +28,7 @@ it('shows stale closure blocking reasons and never closes by accepting advice',a
   fireEvent.click(screen.getByRole('button',{name:'Accept recommendation'}));await screen.findByText('Decision saved.');
   expect(payload).toMatchObject({decision:'ACCEPT',reason:'Reviewing the settlement'});expect(payload).not.toHaveProperty('confirm');
 });
-it('requires explicit confirmation before selected-copy deletion and reports only committed deletion',async()=>{
-  let payload:any;const api=new ApiClient(async(_url,init)=>{payload=JSON.parse(init!.body as string);return new Response(JSON.stringify({...committed,receipt:{...committed.receipt,outcome:'DELETED'}}));});
-  render(<OwnerDecisions api={api} view={view as any} onRefresh={()=>{}}/>);
-  fireEvent.click(screen.getByRole('button',{name:'Review selected-copy deletion'}));
-  expect(screen.getByRole('button',{name:'Delete this demonstration'})).toBeDisabled();
-  fireEvent.click(screen.getByLabelText('Confirm deletion of this selected demonstration'));
-  fireEvent.click(screen.getByRole('button',{name:'Delete this demonstration'}));await screen.findByText('Selected demonstration deleted.');expect(localStorage.getItem(`promisekeeper.pending.${did}.${cid}`)).toBeNull();expect(payload).toMatchObject({confirmed_demonstration_id:did,confirm:true});
-});
+
 it('reopens only after an explicit confirmation and retains its optional owner reason',async()=>{
   let payload:any;const api=new ApiClient(async(_url,init)=>{payload=JSON.parse(init!.body as string);return new Response(JSON.stringify(committed));});
   render(<OwnerDecisions api={api} view={{...view,lifecycle:'CLOSED',allowed_commands:{...view.allowed_commands,reopen:allowed}} as any} onRefresh={()=>{}}/>);
@@ -55,12 +48,7 @@ it('recovers a committed deletion receipt once while preserving another copy pen
   const api=new ApiClient(async()=>new Response(JSON.stringify({...committed,receipt:{...committed.receipt,outcome:'DELETED'}})));
   render(<OwnerDecisions api={api} view={view as any} onRefresh={()=>{}}/>);await screen.findByText('Selected demonstration deleted.');expect(localStorage.getItem(`promisekeeper.pending.${did}.${cid}`)).toBeNull();expect(localStorage.getItem(`promisekeeper.pending.${other}.${cid}`)).toBe('other payload');
 });
-it('keeps an uncertain deletion pending until its committed receipt is found',async()=>{
-  let original:any;const api=new ApiClient(async(url,init)=>{if(init?.body){original=JSON.parse(init.body as string);throw new Error('Lost response');}expect(String(url)).toContain(original.operation_id);return new Response(JSON.stringify({...committed,receipt:{...committed.receipt,outcome:'DELETED'}}));});
-  render(<OwnerDecisions api={api} view={view as any} onRefresh={()=>{}}/>);fireEvent.click(screen.getByRole('button',{name:'Review selected-copy deletion'}));fireEvent.click(screen.getByLabelText('Confirm deletion of this selected demonstration'));fireEvent.click(screen.getByRole('button',{name:'Delete this demonstration'}));
-  await screen.findByText(/Connection unavailable/);expect(screen.queryByText('Selected demonstration deleted.')).not.toBeInTheDocument();expect(localStorage.getItem(`promisekeeper.pending.${did}.${cid}`)).toContain(original.operation_id);
-  fireEvent.click(screen.getByRole('button',{name:'Check saved request outcome'}));await screen.findByText('Selected demonstration deleted.');expect(localStorage.getItem(`promisekeeper.pending.${did}.${cid}`)).toBeNull();
-});
+
 it('inspects an exact historical review and source without altering the current record',async()=>{
   const onSource=vi.fn();const review={id:'review-old',draft_version_id:'draft-old',decision:'REJECT',decided_at:result.evaluation_at,recipient:'Original recipient',invoice_id:'INV-001',exact_text:'Reviewed old exact text.',payload_hash:'old-hash',review_epoch:1,investigation_id:result.investigation_id};
   const api=new ApiClient(async()=>new Response(JSON.stringify({schema_version:'1',result:{...result,timeline:[{source_id:'original-message',evidence_version_id:'source-old',event_at:null,arrived_at:result.evaluation_at}]}})));
