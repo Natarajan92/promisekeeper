@@ -86,13 +86,13 @@ function server(copy:{selected_variant_id:string|null}|null,data:IntakeOverview=
 }
 
 describe('Upload page',()=>{
-  it('starts a separate workspace from New upload workspace even when an imported workspace is selected',async()=>{
+  it('starts a separate workspace from New workspace even when an imported workspace is selected',async()=>{
     const fetcher=server({selected_variant_id:'csv-demo'});
     window.location.hash='#/upload?step=3';render(<App api={new ApiClient(fetcher)}/>);
     await waitFor(()=>expect(screen.getByLabelText('File type')).toHaveValue('payments'));
     expect(localStorage.getItem('selected_demonstration_id')).toBe(workspace);
     fireEvent.click(screen.getByRole('button',{name:/^Workspace/}));
-    fireEvent.click(screen.getByRole('link',{name:'New upload workspace'}));
+    fireEvent.click(screen.getByRole('link',{name:'New workspace'}));
     expect(await screen.findByRole('heading',{level:2,name:'Step 1 · Customers'})).toBeInTheDocument();
     expect(screen.getByText('Confirming a customer or invoice file creates a separate imported workspace.')).toBeInTheDocument();
     expect(localStorage.getItem('selected_demonstration_id')).toBeNull();
@@ -106,7 +106,7 @@ describe('Upload page',()=>{
     const steps=screen.getByRole('navigation',{name:'Upload steps'});
     await waitFor(()=>expect(within(steps).getByRole('link',{name:/^Step 1/})).toHaveTextContent('Creates a new upload workspace'));
     expect(screen.getByText('Confirming a customer or invoice file creates a separate imported workspace.')).toBeInTheDocument();
-    expect(screen.getByText('Demo files: docs/demo-import/course-demo (see START-HERE.md)')).toBeInTheDocument();
+    expect(screen.queryByText(/Demo files:/)).not.toBeInTheDocument();
     expect(fetcher.mock.calls.some(call=>String(call[0]).endsWith('/intake'))).toBe(false);
   });
   it('never opens the workspace chooser by itself, so the Upload step card stays clear',async()=>{
@@ -115,12 +115,12 @@ describe('Upload page',()=>{
     const toggle=screen.getByRole('button',{name:/^Workspace/});
     expect(toggle).toHaveTextContent('None selected');
     expect(toggle).toBeEnabled();expect(toggle).toHaveAttribute('aria-expanded','false');
-    expect(screen.queryByText(/No saved demonstrations/)).not.toBeInTheDocument();
+    expect(screen.queryByText(/No saved workspaces/)).not.toBeInTheDocument();
     expect(document.getElementById('workspace-panel')).toBeNull();
     fireEvent.click(toggle);
     expect(toggle).toHaveAttribute('aria-expanded','true');
-    expect(await screen.findByText(/No saved demonstrations/)).toBeInTheDocument();
-    expect(screen.getByRole('button',{name:'Create fictional demonstration'})).toBeInTheDocument();
+    expect(await screen.findByText(/No saved workspaces/)).toBeInTheDocument();
+    expect(screen.getByRole('link',{name:'New workspace'})).toBeInTheDocument();
   });
   it('presets the bank receipts kind at step 3 and moves with Back and Continue',async()=>{
     window.location.hash='#/upload?step=3';render(<App api={new ApiClient(server({selected_variant_id:'csv-demo'}))}/>);

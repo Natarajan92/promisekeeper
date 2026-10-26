@@ -4,6 +4,7 @@ import json
 from uuid import UUID,uuid4,uuid5
 
 from promisekeeper.application.document_extraction import extract_document
+from promisekeeper.domain.document_extraction import DocumentReviewRequired
 from promisekeeper.application.bank_import import parse_upload,generated_overlap
 from promisekeeper.application.intake_parsing import amount_minor,evidence_amount,facts,parse_csv,stored_facts,MAX_FILE_BYTES
 from promisekeeper.application.operations import CommandError,canonical,digest,instant,replay,save_receipt,utcnow
@@ -70,7 +71,8 @@ def _preview(con,request):
                 warnings.extend(extraction['warnings'])
                 duplicates=int(con.execute('SELECT 1 FROM intake_documents WHERE demonstration_id=? AND case_id=? AND kind=? AND content_hash=?',
                                           (did,request['case_id'],kind,digest(request['content']))).fetchone() is not None)
-            except (ValueError,TypeError,OverflowError) as error:errors.append(dict(row=0,message=str(error)))
+            except (ValueError,TypeError,OverflowError) as error:
+                errors.append(dict(row=0,message=str(error),**({'code':error.code} if isinstance(error,DocumentReviewRequired) else {})))
     else:
         rows,errors,bank_warnings=parse_upload(kind,request['content']);warnings.extend(bank_warnings)
         if not did and kind in {'payments','allocations'}:errors.append(dict(row=0,message='Import customers or invoices into a new workspace first.'))
@@ -120,7 +122,7 @@ def _preview(con,request):
             except (ValueError,TypeError) as error:errors.append(dict(row=row['_row'],message=str(error)))
         if kind=='invoices':
             count=con.execute('SELECT count(*) FROM cases WHERE demonstration_id=?',(did,)).fetchone()[0] if did else 0
-            if count+new_invoices>len(CASE_IDS):errors.append(dict(row=0,message='This demonstration supports up to six invoices per workspace.'))
+            if count+new_invoices>len(CASE_IDS):errors.append(dict(row=0,message='Up to six invoices are supported per workspace.'))
     state=_state(con,did)
     identity={k:request.get(k) for k in ('kind','filename','content','demonstration_id','case_id','event_at','context_only','sender_role')}
     result=dict(schema_version='1',kind=kind,rows=rows,errors=errors,warnings=warnings,duplicates=duplicates,
@@ -157,7 +159,7 @@ def _source(row,kind,original,data,event_at,arrived_at,*,suffix=None,authoritati
 
 
 def _row_text(request,row):
-    return f"Uploaded fictional file: {request['filename']}\nOriginal CSV row {row['_row']}:\n{row['_original']}"
+    return f"Uploaded file: {request['filename']}\nOriginal CSV row {row['_row']}:\n{row['_original']}"
 
 
 def _allocate(con,did,payment_id,cid,minor,operation_id,now,*,import_key=None):
@@ -173,7 +175,7 @@ def _allocate(con,did,payment_id,cid,minor,operation_id,now,*,import_key=None):
     if minor<=0 or used+minor>payment['amount_minor'] or paid+minor>json.loads(invoice['data_json'])['amount_minor']:
         raise CommandError('ALLOCATION_EXCEEDS_REMAINDER')
     aid=str(uuid4());batch=con.execute('SELECT * FROM intake_batches WHERE id=?',(payment['batch_id'],)).fetchone()
-    original=(f"Owner-confirmed fictional receipt allocation: INR {minor//100}.{minor%100:02d} to invoice {row['invoice_id']}.\n"
+    original=(f"Owner-confirmed receipt allocation: INR {minor//100}.{minor%100:02d} to invoice {row['invoice_id']}.\n"
               f"Original transaction reference: {payment['transaction_ref']}\nReceipt file: {batch['filename']}\n"
               f"Raw receipt: {canonical(source)}\nAllocation confirmed at {now}. This is not an independent bank verification.")
     record=_source(row,'LEDGER',original,dict(transaction_ref='CSV-ALLOCATION:'+aid,

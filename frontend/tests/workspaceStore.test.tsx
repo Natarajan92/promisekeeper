@@ -37,7 +37,6 @@ it('loads the case list and then every saved case view for the selected workspac
   expect(result.current.cases.map(entry=>entry.view?.client)).toEqual(['Client case-a','Client case-b','Client case-c']);
   expect(result.current.detailsLoading).toBe(false);
   expect(result.current.health?.agent_mode).toBe('STUB');
-  expect(result.current.catalogue?.catalogue_version).toBe('release-0.1');
   expect(result.current.imported).toBe(false);
   expect(result.current.evaluationAt).toBe(caseView.evaluation_at);
   expect(calls.views.sort()).toEqual([...ids].sort());

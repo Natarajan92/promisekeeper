@@ -15,8 +15,8 @@ async function closeCase(request:APIRequestContext,did:string,cid:string){const 
 test('PK-003 preview, settlement, advice disposition and explicit closure preserve the original result',async({page,request})=>{
   const copy=await createCopy(request);const cid=copy.cases[2].id;const earlier=await investigate(request,copy.id,cid);
   await openCase(page,copy.id);await expect(page.getByRole('button',{name:'Review case closure',exact:true})).toBeDisabled();
-  await page.getByLabel('Fictional update').selectOption('PK-003-U1');await page.getByRole('button',{name:'Preview selected fictional update'}).click();
-  await expect(page.getByText(/Exact update preview/)).toBeVisible();await page.getByLabel('I reviewed this exact fictional update').check();await page.getByRole('button',{name:'Confirm fictional update'}).click();
+  await expect(page.getByRole('button',{name:'Preview selected fictional update'})).toHaveCount(0);
+  await confirmScenarioEvent(request,copy.id,cid,'PK-003-U1');await page.reload();
   await expect(page.getByText(/evidence changed/i).first()).toBeVisible();await expect(page.getByRole('button',{name:'Review case closure',exact:true})).toBeDisabled();
   await page.getByRole('button',{name:'Investigate case',exact:true}).click();await expect(page.getByRole('button',{name:'Review case closure',exact:true})).toBeEnabled();
   await page.getByLabel('Advice decision reason (optional)').fill('The settlement evidence is clear.');await page.getByRole('button',{name:'Accept recommendation'}).click();await expect(page.getByText('Decision saved.').first()).toBeVisible();
@@ -58,7 +58,7 @@ test('history preserves exact drafts, decisions and source versions through real
 
 test('deleting the selected copy clears its browser selection and preserves another copy and receipts',async({page,request})=>{
   const removed=await createCopy(request);const kept=await createCopy(request);await openCase(page,removed.id,'PK-001');
-  await page.getByRole('button',{name:/^Workspace/}).click();await page.getByText('Delete selected demonstration',{exact:true}).click();await page.getByRole('button',{name:'Review selected-copy deletion'}).click();await page.getByLabel('Confirm deletion of this selected demonstration').check();await page.getByRole('button',{name:'Delete this demonstration'}).click();
+  await page.getByRole('button',{name:/^Workspace/}).click();await page.getByText('Delete workspace',{exact:true}).click();await page.getByRole('button',{name:'Review workspace deletion'}).click();await page.getByLabel('Confirm deletion of this workspace').check();await page.getByRole('button',{name:'Delete this workspace'}).click();
   await expect.poll(()=>page.evaluate(()=>localStorage.getItem('selected_demonstration_id'))).not.toBe(removed.id);
   const copies=await (await request.get('/api/v1/demonstrations')).json();expect(copies.demonstrations.some((d:any)=>d.id===removed.id)).toBe(false);expect(copies.demonstrations.some((d:any)=>d.id===kept.id)).toBe(true);
   expect((await request.get(`/api/v1/demonstrations/${kept.id}/cases`)).status()).toBe(200);
@@ -67,7 +67,7 @@ test('later conflicting evidence on a closed case requires explicit reopening an
   const server=await isolatedServer(0,'closed-conflict');await server.start();const request=await playwright.request.newContext({baseURL:server.url});
   try{
     const copy=await createCopy(request);const cid=copy.cases[2].id;await confirmScenarioEvent(request,copy.id,cid,'PK-003-U1');const settled=await investigate(request,copy.id,cid);await closeCase(request,copy.id,cid);
-    await openCase(page,copy.id,'PK-003',server.url);await page.getByLabel('Fictional update').selectOption('TEST-PK-003-CONFLICT');await page.getByRole('button',{name:'Preview selected fictional update'}).click();await page.getByLabel('I reviewed this exact fictional update').check();await page.getByRole('button',{name:'Confirm fictional update'}).click();
+    await openCase(page,copy.id,'PK-003',server.url);await confirmScenarioEvent(request,copy.id,cid,'TEST-PK-003-CONFLICT');await page.reload();
     await expect(page.getByText(/Review required:.*evidence changed/i)).toBeVisible();let view=await detail(request,copy.id,cid);expect(view.lifecycle).toBe('CLOSED');expect(view.current_result).toBeNull();expect(view.latest_completed_result.result_hash).toBe(settled.result.result_hash);await expect(page.getByRole('button',{name:'Investigate case',exact:true})).toBeDisabled();
     await page.getByRole('button',{name:'Review case reopening'}).click();await page.getByLabel('Confirm reopening of invoice CR-312').check();await page.getByRole('button',{name:'Confirm case reopening'}).click();await expect(page.getByRole('button',{name:'Investigate case',exact:true})).toBeEnabled();
     await page.getByRole('button',{name:'Investigate case',exact:true}).click();await expect.poll(async()=>{view=await detail(request,copy.id,cid);return view.current_result?.action;}).toBe('VERIFY_PAYMENT');expect(view.current_result.financial_facts.certainty).toBe('UNKNOWN');
@@ -87,9 +87,9 @@ for(const destination of ['Overview','another copy'] as const){
       return handler;
     });
     try{
-      await page.getByRole('button',{name:/^Workspace/}).click();await page.getByText('Delete selected demonstration',{exact:true}).click();await page.getByRole('button',{name:'Review selected-copy deletion'}).click();await page.getByLabel('Confirm deletion of this selected demonstration').check();await page.getByRole('button',{name:'Delete this demonstration'}).click();
+      await page.getByRole('button',{name:/^Workspace/}).click();await page.getByText('Delete workspace',{exact:true}).click();await page.getByRole('button',{name:'Review workspace deletion'}).click();await page.getByLabel('Confirm deletion of this workspace').check();await page.getByRole('button',{name:'Delete this workspace'}).click();
       await routeEntered;
-      if(destination==='Overview')await page.getByRole('button',{name:'Overview',exact:true}).click();else await page.getByRole('combobox',{name:'Demonstration copy'}).selectOption(kept.id);
+      if(destination==='Overview')await page.getByRole('button',{name:'Overview',exact:true}).click();else await page.getByRole('combobox',{name:'Workspace'}).selectOption(kept.id);
       release();const listingDeadline=Date.now()+7_000;await expect.poll(async()=>{
         const observed=await readAvailable(request,'/api/v1/demonstrations',readErrors,Math.max(1,listingDeadline-Date.now()));
         if(observed===null)return 'UNOBSERVED';

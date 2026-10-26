@@ -1,7 +1,7 @@
 import {mkdirSync} from 'node:fs';
 import {fileURLToPath} from 'node:url';
 import {test,expect} from './support/test';
-import {createCopy,investigate} from './support/scenarioEvents';
+import {createCopy,investigate,confirmScenarioEvent} from './support/scenarioEvents';
 import {caseView,history} from './support/fixtures';
 
 test('Cedar compares original claim and verified settlement without writes, then requires explicit closure',async({page,request})=>{
@@ -13,11 +13,9 @@ test('Cedar compares original claim and verified settlement without writes, then
   await page.getByRole('button',{name:'Overview',exact:true}).click();
   await expect(page.getByText(/Check your bank statement or accounting records outside PromiseKeeper/)).toBeVisible();
   await page.getByRole('button',{name:'History',exact:true}).click();
-  await page.getByLabel('Fictional update').selectOption('PK-003-U1');
-  await page.getByRole('button',{name:'Preview selected fictional update'}).click();
-  await expect(page.getByRole('heading',{name:'Exact update preview'})).toBeVisible();
-  await page.getByLabel('I reviewed this exact fictional update').check();
-  await page.getByRole('button',{name:'Confirm fictional update'}).click();
+  await expect(page.getByRole('button',{name:'Preview selected fictional update'})).toHaveCount(0);
+  await confirmScenarioEvent(request,copy.id,cid,'PK-003-U1');
+  await page.reload();
   await expect(page.getByText(/evidence changed/i).first()).toBeVisible();
   await page.getByRole('button',{name:'Investigate case',exact:true}).click();
   await expect(page.getByRole('button',{name:'Review case closure',exact:true})).toBeEnabled();

@@ -34,7 +34,7 @@ def numeric(raw):
     if result.error=='INVALID_PRECISION':raise ValueError('A bank credit/debit has more than two decimal places; paise cannot be rounded.')
     if result.error=='NEGATIVE_AMOUNT':raise ValueError('Bank credits/debits must be nonnegative: a value starting with "-" is not supported (a lone "-" means empty). Put money received in Credit and money paid out in Debit.')
     if result.error or result.minor_units is None:raise ValueError('Bank credit/debit: '+AMOUNT_HELP)
-    if not 0<=result.minor_units<=MAX_MINOR:raise ValueError('A bank credit/debit exceeds the demo limit.')
+    if not 0<=result.minor_units<=MAX_MINOR:raise ValueError('A bank credit/debit exceeds the supported import limit.')
     return result.minor_units
 
 
@@ -67,7 +67,7 @@ def parse_upload(kind,content):
         return [],[dict(row=0,message='Bank file contains NUL bytes or exceeds 256 KiB.')],[]
     rows=[];errors=[]
     warnings=['Bank profile: dates use YYYY-MM-DD or DD/MM/YYYY (day first). Review the interpreted rows. Imported receipts remain UNKNOWN until you check settlement; no customer or invoice is assigned.']
-    if 'currency' not in headers:warnings.append('No Currency column: this INR-only demo interprets credits as INR. Check the statement currency before confirming.')
+    if 'currency' not in headers:warnings.append('No Currency column: credits are interpreted as INR. Check the statement currency before confirming.')
     lines=content.splitlines(keepends=True);previous=reader.line_num;generated=False;data_rows=0
     try:
         for number,raw in enumerate(reader,2):

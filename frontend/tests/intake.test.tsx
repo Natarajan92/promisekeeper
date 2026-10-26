@@ -10,15 +10,14 @@ import {IntakePanel} from '../src/intake/IntakePanel';
 
 afterEach(()=>{cleanup();localStorage.clear();vi.restoreAllMocks();window.location.hash='';});
 
-it('offers separate file samples and never creates a workspace or imports on opening',async()=>{
+it('offers file requirements and never creates a workspace or imports on opening',async()=>{
   const fetcher=vi.fn(async(url:RequestInfo|URL,_init?:RequestInit)=>new Response(JSON.stringify(String(url).endsWith('/health')?
     {schema_version:'1',ready:true,agent_mode:'STUB'}:String(url).endsWith('/catalogue')?
     {schema_version:'1',catalogue_version:'release-0.1',variant_ids:[]}:{schema_version:'1',demonstrations:[]})));
   window.location.hash='#/upload?step=1';render(<App api={new ApiClient(fetcher)}/>);
-  fireEvent.click(await screen.findByText('Download separate sample files'));
-  expect(screen.getByRole('link',{name:'Customers CSV'})).toHaveAttribute('href','/api/v1/intake/samples/customers.csv');
-  expect(screen.getByRole('link',{name:'Remittance email'})).toHaveAttribute('href','/api/v1/intake/samples/remittance-email.eml');
-  expect(screen.getByRole('link',{name:'WhatsApp payment claim'})).toHaveAttribute('href','/api/v1/intake/samples/whatsapp-paid.txt');
+  fireEvent.click(await screen.findByText('File requirements'));
+  expect(screen.getByText(/customer_id, customer_name/)).toBeVisible();
+  expect(screen.queryByRole('link',{name:'Customers CSV'})).not.toBeInTheDocument();
   expect(screen.getByLabelText('Upload file')).toBeInTheDocument();
   expect(fetcher.mock.calls.every(call=>call.length===1 || !(call[1] as RequestInit|undefined)?.method)).toBe(true);
 });
@@ -137,7 +136,7 @@ it('reads an actual file and sends only a preview before explicit import confirm
   expect(writes).toHaveLength(1);expect(writes[0].path).toBe('/api/v1/intake/previews');
   expect(writes[0].body.content).toBe(text);
   expect(screen.getByRole('button',{name:'Confirm import'})).toBeDisabled();
-  fireEvent.click(screen.getByLabelText('I reviewed this preview and confirm these are fictional sample records.'));
+  fireEvent.click(screen.getByLabelText('I reviewed this preview and confirm the records are correct.'));
   expect(screen.getByRole('button',{name:'Confirm import'})).toBeEnabled();
   fireEvent.change(screen.getByLabelText('File type'),{target:{value:'invoices'}});
   expect(screen.queryByRole('button',{name:'Confirm import'})).not.toBeInTheDocument();

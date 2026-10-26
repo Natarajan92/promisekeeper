@@ -131,7 +131,7 @@ test('pending save outcome survives Review to History navigation and unlocks eve
   try{
     await page.getByRole('button',{name:'Save unapproved version'}).click();await page.getByRole('button',{name:'History',exact:true}).click();
     await expect(page.getByRole('button',{name:'Accept recommendation'})).toBeDisabled();release();
-    await expect(page.getByRole('button',{name:'Accept recommendation'})).toBeEnabled();await expect(page.getByRole('button',{name:'Preview selected fictional update'})).toBeEnabled();
+    await expect(page.getByRole('button',{name:'Accept recommendation'})).toBeEnabled();await expect(page.getByRole('button',{name:'Preview selected fictional update'})).toHaveCount(0);
     await page.getByRole('button',{name:'Overview',exact:true}).click();await expect(page.getByLabel('Draft text')).toHaveValue(text);await expect(page.getByRole('button',{name:'Approve exact saved version'})).toBeEnabled();expect((await caseView(request,copy.id,cid)).draft.version).toBe(2);
   }finally{release();await page.unroute(pattern);}
 });

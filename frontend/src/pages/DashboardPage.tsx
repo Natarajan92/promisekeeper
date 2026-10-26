@@ -39,13 +39,13 @@ function DashboardLayout({ws,cases,parts,navigate}:{ws:Workspace;cases:CaseSumma
   return <>
     <section className="dash-hero" aria-labelledby="dashboard-title">
       <div className="dash-hero-main">
-        <p className="dash-eyebrow"><span aria-hidden="true">🙏</span> Namaste · records as of {instant(ws.evaluationAt)}</p>
+        <p className="dash-eyebrow"><span aria-hidden="true">🙏</span> Namaste Anand · records as of {instant(ws.evaluationAt)}</p>
         <h1 id="dashboard-title">Your payment casebook</h1>
         <p className="dash-summary">{urgent.length
           ?`${plural(urgent.length,'case')} of ${cases.length} ${urgent.length===1?'needs':'need'} your attention today. Your assistant does the homework; nothing is sent without you.`
           :`Nothing needs your attention right now across ${plural(cases.length,'case')}. Run the morning check to look again.`}</p>
         <div className="dash-morning">
-          <div className="dash-morning-action">{parts.button}<span className="dash-mode">{ws.health?`${ws.health.agent_mode} agents`:'Agent mode unknown'}</span></div>
+          <div className="dash-morning-action">{parts.button}</div>
           {parts.description}
           {parts.live}
         </div>
@@ -148,7 +148,7 @@ function EmptyDashboard({ws,navigate}:PageProps) {
   return <div className="dashboard">
     <section className="dash-hero dash-hero-empty" aria-labelledby="dashboard-title">
       <div className="dash-hero-main">
-        <p className="dash-eyebrow"><span aria-hidden="true">🙏</span> Namaste</p>
+        <p className="dash-eyebrow"><span aria-hidden="true">🙏</span> Namaste Anand</p>
         <h1 id="dashboard-title">Your payment casebook</h1>
         <p className="dash-summary">PromiseKeeper reads your invoices, bank receipts and customer messages, then tells you who to follow up today. Nothing is ever sent without you.</p>
       </div>
@@ -160,7 +160,7 @@ function EmptyDashboard({ws,navigate}:PageProps) {
         <h2 id="empty-heading">Start by uploading your records</h2>
         <p>Bring in your customers, invoices, bank receipts and customer messages in six short steps. You check every file before it is saved.</p>
         <p><a className="pk-button" {...routeLink({page:'upload'},navigate)}>Upload your records</a></p>
-        <p className="pk-card-sub">or open a ready-made demonstration: choose <strong>Workspace</strong> at the top of the page.</p>
+        <p className="pk-card-sub">Already uploaded records? Choose <strong>Workspace</strong> to return to your saved work.</p>
       </div>
     </section>
   </div>;

@@ -14,7 +14,7 @@ export function CaseList({cases,selected,onSelect,evaluationAt,plan}:{cases:Case
   // The open case stays visible even when it does not need attention, so opening it from the review never hides it.
   const visible=showAll?ordered:ordered.filter(item=>needsAttention(item,evaluationAt)||item.id===selected);
   const hidden=cases.length-visible.length;
-  return <nav aria-label="Fictional cases" className="case-list">
+  return <nav aria-label="Cases" className="case-list">
     <h2>Case overview <span>{showAll?`${cases.length} cases`:`${urgent.length} need attention`}</span></h2>
     <p className="case-filter-note">{showAll?'Showing every case; those needing attention come first.':`Showing cases that need your attention${hidden?`; ${hidden} more can wait`:''}.`}</p>
     <button className="text-button case-filter" aria-pressed={showAll} onClick={()=>setShowAll(value=>!value)}>{showAll?'Show only cases needing attention':`Show all ${cases.length} cases`}</button>

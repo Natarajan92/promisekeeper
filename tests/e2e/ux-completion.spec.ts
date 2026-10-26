@@ -1,7 +1,7 @@
 import {mkdirSync,writeFileSync} from 'node:fs';
 import {fileURLToPath} from 'node:url';
 import {test,expect} from './support/test';
-import {createCopy} from './support/scenarioEvents';
+import {createCopy,confirmScenarioEvent} from './support/scenarioEvents';
 import {caseView,history,showAllCases} from './support/fixtures';
 
 test('Phase 3 STUB rehearsal: morning briefing, exact approval, Cedar comparison, closure and saved fallback',async({page,request})=>{
@@ -14,8 +14,8 @@ test('Phase 3 STUB rehearsal: morning briefing, exact approval, Cedar comparison
   const view=(cid:string)=>caseView(request,copy.id,cid);
   await page.setViewportSize({width:1280,height:800});
   await page.addInitScript(id=>localStorage.setItem('selected_demonstration_id',id),copy.id);
-  await page.goto('/');await expect(page.getByText('Scripted sample (STUB)',{exact:true})).toBeVisible();
-  await expect(page.getByText('Fixed sample date (REFERENCE)',{exact:true})).toBeVisible();
+  await page.goto('/');await expect(page.getByText('AI providers disabled',{exact:true})).toBeVisible();
+  await expect(page.getByText('Saved review date',{exact:true})).toBeVisible();
   await page.screenshot({path:`${folder}workspace-desktop.png`});checkpoint('Fictional STUB/REFERENCE scope visible');
 
   await page.getByRole('button',{name:'Start morning review'}).click();
@@ -50,9 +50,9 @@ test('Phase 3 STUB rehearsal: morning briefing, exact approval, Cedar comparison
   await expect(page.getByRole('dialog').locator('pre')).toHaveText(claim.original_content);await page.keyboard.press('Escape');
   checkpoint('Cedar payment claim distinguished from verified ledger evidence');
   await page.getByRole('button',{name:'History',exact:true}).click();
-  await page.getByLabel('Fictional update').selectOption('PK-003-U1');await page.getByRole('button',{name:'Preview selected fictional update'}).click();
-  await expect(page.locator('.confirmation-panel pre')).toContainText('CR-T2');
-  await page.getByLabel('I reviewed this exact fictional update').check();await page.getByRole('button',{name:'Confirm fictional update'}).click();
+  await expect(page.getByRole('button',{name:'Preview selected fictional update'})).toHaveCount(0);
+  await confirmScenarioEvent(request,copy.id,cedar,'PK-003-U1');
+  await page.reload();
   await expect(page.getByText(/evidence changed/i).first()).toBeVisible();
   await page.getByRole('button',{name:'Overview',exact:true}).click();await expect(page.getByText(/Historical result: evidence changed/i)).toBeVisible();
   await page.getByRole('button',{name:'Investigate case',exact:true}).click();

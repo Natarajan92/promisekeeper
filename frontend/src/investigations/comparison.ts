@@ -3,7 +3,7 @@ import type {HistoryEvent,Result} from '../api/types';
 export interface SourceDifference {source_id:string;before:string[];after:string[]}
 export interface ResultComparison {kind:'action'|'evidence'|'findings'|'time'|'identical'|'limited';sources:SourceDifference[];changed:string[];limitations:string[]}
 export function completedInvestigations(events:HistoryEvent[],did:string,cid:string):string[] {
-  if(events.some(event=>event.demonstration_id!==did||event.case_id!==cid))throw new Error('History belongs to another copy or case.');
+  if(events.some(event=>event.demonstration_id!==did||event.case_id!==cid))throw new Error('History belongs to another workspace or case.');
   const ids=new Set<string>();
   return [...events].sort((a,b)=>a.sequence-b.sequence).flatMap(event=>{
     const id=event.payload.investigation_id;

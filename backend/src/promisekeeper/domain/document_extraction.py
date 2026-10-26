@@ -17,6 +17,13 @@ PLAIN_TRANSFER={'7bit','8bit','binary'}
 UTF8_COMPATIBLE={'utf-8','utf8','us-ascii','ascii'}
 
 
+class DocumentReviewRequired(ValueError):
+    """An explicit review-mode correction is needed before this document can be saved."""
+    def __init__(self,code,message):
+        super().__init__(message)
+        self.code=code
+
+
 def _plain_text(part,content):
     """The text/plain body exactly as written, so every quote stays verbatim in the original."""
     transfer=str(part.get('Content-Transfer-Encoding','7bit')).strip().lower()
@@ -147,9 +154,10 @@ def extract_document(content,kind,*,event_at=None,context_only=False,sender_role
         signature_ok=all(i>last for i,_ in loose) and (not loose or is_signature_block([line for _,line in loose]))
         if not signature_ok or any(raw.lstrip().startswith('>') for raw in body.splitlines()):
             raise ValueError('Surrounding prose or quoted history could qualify this promise. Upload the individual unambiguous customer message; no text was silently ignored.')
-    if context_only and candidates:raise ValueError('Recognized payment wording must be reviewed as a claim/promise, not hidden as context.')
+    if context_only and candidates:
+        raise DocumentReviewRequired('PAYMENT_REVIEW_REQUIRED','This message contains payment wording. Review the claim or promise before adding it to the workspace.')
     if not candidates and not context_only:
-        raise ValueError('No supported payment claim or promise found. Review the original and explicitly choose supporting context only if appropriate.')
+        raise DocumentReviewRequired('CONTEXT_REVIEW_REQUIRED','No supported payment claim or promise found. Review the original and explicitly choose supporting context only if appropriate.')
     if not candidates:warnings.append('Supporting context only: no payment claim or promise was extracted.')
     for c in candidates:
         if (c.get('date_text') or '').lower().startswith('next '):

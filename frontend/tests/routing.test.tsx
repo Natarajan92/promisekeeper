@@ -111,12 +111,12 @@ it('switching workspace from a case page returns to the Cases list of the new wo
   await screen.findByRole('heading',{level:1,name:'Studio North'});
   const toggle=screen.getByRole('button',{name:/^Workspace/});
   expect(toggle).toHaveAttribute('aria-expanded','false');
-  expect(screen.queryByLabelText('Demonstration copy')).not.toBeInTheDocument();
+  expect(screen.queryByLabelText('Workspace')).not.toBeInTheDocument();
   fireEvent.click(toggle);
   expect(toggle).toHaveAttribute('aria-expanded','true');
-  expect(screen.getByRole('link',{name:'New upload workspace'})).toHaveAttribute('href','#/upload?step=1');
-  expect(screen.getByText('Delete selected demonstration')).toBeInTheDocument();
-  fireEvent.change(screen.getByLabelText('Demonstration copy'),{target:{value:second}});
+  expect(screen.getByRole('link',{name:'New workspace'})).toHaveAttribute('href','#/upload?step=1');
+  expect(screen.getByText('Delete workspace')).toBeInTheDocument();
+  fireEvent.change(screen.getByLabelText('Workspace'),{target:{value:second}});
   expect(await screen.findByRole('heading',{level:1,name:'Cases'})).toBeInTheDocument();
   expect(window.location.hash).toBe('#/cases');
   expect(localStorage.getItem('selected_demonstration_id')).toBe(second);
@@ -126,11 +126,11 @@ it('switching workspace from a case page returns to the Cases list of the new wo
 // Controller ruling (Task 5 follow-up): the chooser never opens by itself; it stays one click away.
 it('keeps the workspace chooser reachable, but closed, while no workspace is selected',async()=>{
   render(<App api={appApi([demo,{...demo,id:second}])}/>);
-  expect(await screen.findByText('Choose a saved demonstration to inspect its cases.')).toBeInTheDocument();
+  expect(await screen.findByText('Choose a workspace to inspect its cases.')).toBeInTheDocument();
   const toggle=screen.getByRole('button',{name:/^Workspace/});
   expect(toggle).toHaveAttribute('aria-expanded','false');expect(toggle).toBeEnabled();
-  expect(screen.queryByLabelText('Demonstration copy')).not.toBeInTheDocument();
+  expect(screen.queryByLabelText('Workspace')).not.toBeInTheDocument();
   fireEvent.click(toggle);
-  expect(await screen.findByLabelText('Demonstration copy')).toBeInTheDocument();
+  expect(await screen.findByLabelText('Workspace')).toBeInTheDocument();
   expect(toggle).toHaveAttribute('aria-expanded','true');
 });

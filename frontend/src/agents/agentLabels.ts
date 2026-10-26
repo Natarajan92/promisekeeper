@@ -25,7 +25,7 @@ export const MESSAGE_LABEL: Record<string, string> = {
 };
 
 export const PROVIDER_LABEL: Record<string, string> = {
-  SCRIPTED: 'offline stand-in', NEBIUS: 'Nebius', FIREWORKS: 'Fireworks', MEM0: 'mem0', LOCAL: 'local store',
+  SCRIPTED: 'predefined responses', NEBIUS: 'Nebius', FIREWORKS: 'Fireworks', MEM0: 'mem0', LOCAL: 'local store',
 };
 
 export function usage(latencyMs: number | null, inputTokens: number | null, outputTokens: number | null) {

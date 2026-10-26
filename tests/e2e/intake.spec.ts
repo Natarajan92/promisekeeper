@@ -13,7 +13,7 @@ async function upload(page:Page,kind:string,file:string,cid?:string){
   await expect(page.getByRole('heading',{name:'Import preview'})).toBeVisible();
   await expect(page.locator('.intake-preview [role=alert]')).toHaveCount(0);
   if(['customer_email','remittance_email','whatsapp'].includes(kind))await expect(page.locator('.intake-extracted blockquote').first()).toBeVisible();
-  await page.getByLabel('I reviewed this preview and confirm these are fictional sample records.').check();
+  await page.getByLabel('I reviewed this preview and confirm the records are correct.').check();
   if(kind==='allocations')await page.getByLabel('I checked the settled receipts and the existing invoice allocations in this export.').check();
   await page.getByRole('button',{name:'Confirm import',exact:true}).click();
   await expect(page.getByRole('heading',{name:'Import preview'})).toHaveCount(0);
@@ -117,6 +117,6 @@ test('separate files cover onboarding, matching, messages, morning review, appro
   await page.locator('.confirmation-panel').getByRole('checkbox').check();
   await page.getByRole('button',{name:'Confirm case closure',exact:true}).click();
   await expect.poll(async()=>(await read(econ)).lifecycle).toBe('CLOSED');
-  await page.reload();await expect(page.getByText('Imported data cutoff (REFERENCE)',{exact:true})).toBeVisible();
+  await page.reload();await expect(page.getByText('Imported data cutoff',{exact:true})).toBeVisible();
   expect((await (await request.get(endpoint)).json()).documents).toHaveLength(5);
 });

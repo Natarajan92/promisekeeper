@@ -36,7 +36,7 @@ function fakeApi(latest:MorningReviewView|null=review) {
 }
 function workspace(api:ApiClient,changes:Partial<Workspace>={}):Workspace {
   const cases=[entry('c1','Northstar Analytics'),entry('c2','Meridian Studio')];
-  return {api,health,catalogue:null,copies:[],selected:did,imported:false,discovering:false,discoveryError:'',
+  return {api,health,copies:[],selected:did,imported:false,discovering:false,discoveryError:'',
     list:{schema_version:'1',demonstration_id:did,clock_mode:'REFERENCE',evaluation_at:caseView.evaluation_at,cases:cases.map(item=>item.summary)},
     evaluationAt:caseView.evaluation_at,plan:{},cases,detailsLoading:false,refreshTick:0,listLoading:false,listError:'',
     select:()=>{},discover:async()=>{},refresh:vi.fn(),setPlan:()=>{},...changes} as unknown as Workspace;

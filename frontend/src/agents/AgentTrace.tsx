@@ -17,7 +17,7 @@ export function AgentTrace({api, did, investigationId, agents, compact=false, ti
   const [error, setError] = useState('');
   const [state,setState]=useState<{status:string;draft:string}|null>(null);
   const [paused,setPaused]=useState(false);
-  const [developerOpen,setDeveloperOpen]=useState(false);
+  const [processingOpen,setProcessingOpen]=useState(false);
   useEffect(() => {
     let cancelled = false;
     let timer: ReturnType<typeof setTimeout>;
@@ -68,7 +68,7 @@ export function AgentTrace({api, did, investigationId, agents, compact=false, ti
     {compact&&<div aria-live="polite"><p>{progress}</p><p className="subtle">{last?`Last confirmed: ${AGENT_LABEL[last.agent]} — ${OUTCOME_LABEL[last.outcome]}.`:'Waiting for a confirmed activity update.'}</p></div>}
     {compact&&error&&<p className="notice">Progress updates unavailable. The server outcome is unknown; check saved investigation status.</p>}
     {paused&&<p className="notice">Activity updates paused. This is the last confirmed status; check saved investigation status for a newer result.</p>}
-    {compact?<details className="developer-insights" onToggle={event=>setDeveloperOpen(event.currentTarget.open)}><summary>Developer insights</summary>{developerOpen&&detail}</details>:detail}
+    {compact?<details className="processing-details" onToggle={event=>setProcessingOpen(event.currentTarget.open)}><summary>Processing details</summary>{processingOpen&&detail}</details>:detail}
     {!compact&&<p className="visually-hidden" aria-live="polite">{last ? `${AGENT_LABEL[last.agent]}: ${OUTCOME_LABEL[last.outcome]}` : ''}</p>}
   </section>;
 }

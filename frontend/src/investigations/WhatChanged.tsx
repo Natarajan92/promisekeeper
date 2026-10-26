@@ -66,7 +66,7 @@ function ComparisonPanel({api,view,onSource,initialInvestigationId}:Props){
     if(!validChoice){setPairLoading(false);return;}
     let cancelled=false;setPairLoading(true);setError('');
     function validate(record:Attempt,id:string){
-      if(record.demonstration_id!==did||record.case_id!==cid||record.id!==id||record.investigation_id!==id)throw new Error('Investigation belongs to another copy, case or saved identity.');
+      if(record.demonstration_id!==did||record.case_id!==cid||record.id!==id||record.investigation_id!==id)throw new Error('Investigation belongs to another workspace, case or saved identity.');
       if(!['COMPLETE','LIMITED'].includes(record.status)||!record.result||record.result.status!==record.status)throw new Error('This investigation has no completed result.');
       if(record.result.investigation_id!==id||record.result.snapshot_id!==record.snapshot_id||record.result.snapshot_hash!==record.snapshot_hash)throw new Error('Saved result identity does not match its investigation.');
       return record.result;

@@ -3,8 +3,6 @@
 .upload-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:8px 24px}
 .upload-head h1{margin:0}
 .upload-head p{margin:6px 0 0;color:var(--muted);max-width:62ch}
-.upload-page .upload-samples{margin:0;padding:8px 14px;border-radius:var(--radius-pill);background:var(--lav);color:var(--indigo);font-size:.85rem;font-weight:700;overflow-wrap:anywhere}
-.upload-page .upload-fictional{margin:0;color:var(--muted);font-size:.82rem}
 .upload-layout{display:grid;grid-template-columns:minmax(230px,280px) minmax(0,1fr);gap:20px;align-items:start}
 .upload-steps-card,.upload-step-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius-card);min-width:0}
 .upload-steps-card{position:sticky;top:16px;padding:12px}
@@ -31,8 +29,6 @@
 /* Current step */
 .upload-step-head h2{margin:0;font:800 1.4rem/1.2 var(--font);letter-spacing:-.01em}
 .upload-step-head p{margin:8px 0 0;color:var(--muted);max-width:70ch}
-.upload-page .upload-file-hint{display:inline-block;margin-top:12px;padding:6px 12px;border-radius:10px;background:var(--bg);color:var(--ink);font-size:.85rem}
-.upload-file-hint code{font-weight:700;color:var(--indigo);overflow-wrap:anywhere}
 .upload-page .upload-kind-note{margin-top:12px;padding:10px 14px;border-radius:12px;background:var(--amber-bg);color:var(--amber);font-weight:600;font-size:.88rem}
 .upload-needs-workspace{margin-top:20px}
 .upload-page .upload-ready{margin-top:12px;padding:10px 14px;border-radius:12px;background:var(--green-bg);color:var(--green);font-weight:700;font-size:.9rem}
@@ -46,8 +42,7 @@
 .upload-page .intake-receipt,.upload-page .intake-invoice{border:1px solid var(--line);border-radius:14px}
 .upload-page .intake-badge{border-radius:var(--radius-pill);border:0;background:var(--lav);color:var(--indigo);font-weight:700;font-size:.78rem}
 .upload-page .intake-reviewed{border-radius:10px;border-left:0;background:var(--green-bg);color:var(--green)}
-.upload-page .intake-preview th{background:var(--lav);color:var(--indigo)}
-.upload-page .intake-samples summary,.upload-page .intake-files>summary,.upload-page .intake-original summary,.upload-page .intake-optional>summary{color:var(--indigo)}
+.upload-page .intake-preview th{background:var(--lav);color:var(--indigo)}.upload-page .intake-files>summary,.upload-page .intake-original summary,.upload-page .intake-optional>summary{color:var(--indigo)}
 .upload-page .intake-optional{margin:16px 0;padding:12px 16px;border:1px solid var(--line);border-radius:14px;background:var(--bg)}
 .upload-page .intake-optional>summary{cursor:pointer;font-weight:700}
 .upload-page .intake-confirm input[type=checkbox]{accent-color:var(--indigo)}

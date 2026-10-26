@@ -15,7 +15,7 @@ it('shows confirmed progress without exposing model telemetry until requested', 
   expect(await screen.findByText('Recommendation saved. Message ready for review.')).toBeInTheDocument();
   expect(screen.getByText(/Last confirmed: Promise extractor/)).toBeInTheDocument();
   expect(screen.queryByText(/internal-model/)).not.toBeInTheDocument();
-  const details=screen.getByText('Developer insights').closest('details')!;
+  const details=screen.getByText('Processing details').closest('details')!;
   details.open=true;fireEvent(details,new Event('toggle'));
   expect(container.textContent).toContain('internal-model');
 });

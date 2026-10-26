@@ -29,13 +29,12 @@ export function AppShell({ws,route,navigate,approvals=null,children}:PageProps&{
     </header>
     <StatusBanner imported={ws.imported} health={ws.health} clock={ws.list?.clock_mode}/>
     <main id="main" tabIndex={-1}>
-      {ws.discovering&&<p role="status">Loading saved demonstrations…</p>}
-      {ws.discoveryError&&<div className="notice" role="alert"><p>{ws.discoveryError}</p><button onClick={()=>void ws.discover()}>Retry saved-copy discovery</button></div>}
-      {!ws.catalogue&&!ws.discovering&&!ws.discoveryError&&<p className="notice">Fixture catalogue unavailable. Refresh to enable explicit creation.</p>}
-      {ws.copies.length>1&&!ws.selected&&!ws.discoveryError&&<p className="empty-state">Choose a saved demonstration to inspect its cases.</p>}
+      {ws.discovering&&<p role="status">Loading saved workspaces…</p>}
+      {ws.discoveryError&&<div className="notice" role="alert"><p>{ws.discoveryError}</p><button onClick={()=>void ws.discover()}>Retry loading workspaces</button></div>}
+      {ws.copies.length>1&&!ws.selected&&!ws.discoveryError&&<p className="empty-state">Choose a workspace to inspect its cases.</p>}
       <WorkspaceDeletionNotice deletion={deletion}/>
       {children}
     </main>
-    <footer>Fictional demonstration. No customer messages are sent.</footer>
+    <footer>No customer messages are sent. Copy approved messages to your own communication tool.</footer>
   </>;
 }

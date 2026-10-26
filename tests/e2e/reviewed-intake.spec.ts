@@ -16,7 +16,7 @@ async function step(page:Page,n:number){
 async function preview(page:Page){await page.getByRole('button',{name:'Preview file',exact:true}).click();await expect(page.getByRole('heading',{name:'Import preview'})).toBeVisible();}
 async function confirm(page:Page){
   await expect(page.locator('.intake-preview [role=alert]')).toHaveCount(0);
-  await page.getByLabel('I reviewed this preview and confirm these are fictional sample records.').check();
+  await page.getByLabel('I reviewed this preview and confirm the records are correct.').check();
   await page.getByRole('button',{name:'Confirm import',exact:true}).click();
   await expect(page.getByRole('heading',{name:'Import preview'})).toHaveCount(0);
 }
@@ -24,7 +24,7 @@ async function confirm(page:Page){
 test('reviewed senders, raw bank credit, unsafe wording, rupee weekday and Hinglish reach trustworthy saved advice',async({page,request})=>{
   test.setTimeout(120_000);
   const discovered=page.waitForResponse(r=>r.url().endsWith('/api/v1/demonstrations')&&r.request().method()==='GET');
-  await page.goto('/#/upload?step=1');await discovered;await expect(page.getByText('Loading saved demonstrations…',{exact:true})).toHaveCount(0);
+  await page.goto('/#/upload?step=1');await discovered;await expect(page.getByText('Loading saved workspaces…',{exact:true})).toHaveCount(0);
   await expect(page.getByRole('combobox',{name:'File type',exact:true})).toBeVisible();
   const fresh=page.getByLabel('Create a new imported workspace instead');if(await fresh.count())await fresh.check();
   await file(page,'customers','customer_id,customer_name\nECON,Econcity Private Limited\n');await preview(page);await confirm(page);

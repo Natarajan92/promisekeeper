@@ -30,12 +30,12 @@ def amount_text(text):
 
 
 def amount_minor(text,currency='INR'):
-    if currency!='INR':raise ValueError('Only INR is supported in this demo.')
+    if currency!='INR':raise ValueError('Only INR is supported for imports.')
     value=parse_money(amount_text(text),currency)
     if value.error=='INVALID_PRECISION':raise ValueError('Amount has more than two decimal places; paise cannot be rounded. Correct the amount.')
     if value.error=='NEGATIVE_AMOUNT' or value.minor_units==0:raise ValueError('Amount must be positive.')
     if value.error or value.minor_units is None:raise ValueError(AMOUNT_HELP)
-    if not 0<value.minor_units<=MAX_MINOR:raise ValueError('Amount exceeds the demo limit.')
+    if not 0<value.minor_units<=MAX_MINOR:raise ValueError('Amount exceeds the supported import limit.')
     return value.minor_units
 
 
