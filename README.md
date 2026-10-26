@@ -1,165 +1,272 @@
 # PromiseKeeper
 
-**A team of AI agents that helps a small agency owner chase overdue invoices without ever chasing money that was already paid.**
+**A source-grounded assistant for invoice follow-ups and payment reconciliation.**
 
-Every morning the owner asks: *what happened with this invoice, what can I trust, and what should I do next?* Today that means digging through invoices, bank records and WhatsApp-style promises ("we'll pay 80,000 by the 20th"). PromiseKeeper's agents do that reading, code decides the money, and the owner approves every message. Nothing is ever sent automatically.
+PromiseKeeper brings invoices, bank receipts and customer messages into one workspace so a business owner can answer three questions: **What happened? What can I trust? What should I do next?** AI agents interpret evidence and prepare wording; deterministic code calculates balances, chooses the supported next step and validates command eligibility; the owner reviews every action.
 
-## How it works
+## What it does
+
+- Imports customer, invoice, receipt and allocation CSV files, plus plain-text email and WhatsApp records.
+- Previews and validates files before an explicit import confirmation.
+- Suggests payment matches while keeping invoice allocation and settlement confirmation under owner control.
+- Tracks partial payments, expired promises, future commitments and unsupported payment claims.
+- Plans a morning review, investigates eligible cases and prepares a source-linked briefing.
+- Preserves exact source versions, investigation history, draft versions and owner decisions.
+- Supports exact-version draft approval and manual copying, with separate confirmation for case closure.
+
+## User workflow
+
+### 1. Bring in the records
+
+The **Upload** page guides the owner through six steps:
+
+| Step | Owner action | Result |
+|---|---|---|
+| Customers | Upload customer identities, aliases and addresses | A separate upload workspace |
+| Invoices | Add invoices associated with those customers | One case per invoice |
+| Bank receipts | Upload a receipt export or supported bank CSV | Receipts retained independently of invoices |
+| Customer messages | Attach email or WhatsApp text to an invoice and review the sender | Source-linked promises, claims or supporting context |
+| Match payments | Review hints and explicitly allocate receipts | Confirmed partial, full or split allocations |
+| Confirm & check | Confirm payment-record coverage and start Morning Review | Current recommendations and eligible reminder drafts |
+
+Every file has a read-only preview. Name or address similarity is a hint, not an automatic allocation. Uncertain receipts can remain unallocated.
+
+### 2. Review the next step
+
+Run **Start morning review** for a planned review of eligible cases, or **Investigate case** to check one invoice. Each completed investigation recommends one action:
+
+| Action | Meaning |
+|---|---|
+| **Follow up** | Review a reminder for an overdue, supported remainder |
+| **Wait** | Return at the next review boundary, such as a future promise date |
+| **Verify payment** | Resolve a claim, missing record or conflicting evidence before a demand |
+| **Review case closure** | Verified settlement supports an explicit closure decision |
+
+A recommendation does not approve a message or close a case. Accepting advice, approving wording and confirming closure are separate decisions.
+
+### 3. Work across the workspace
+
+| Page | Purpose |
+|---|---|
+| **Dashboard** | See balances, urgent cases, pending decisions and the latest morning review |
+| **Upload** | Add records, match payments and confirm coverage |
+| **Cases** | Open an invoice's story, evidence, history and saved-investigation comparison |
+| **Assistant** | Inspect the team's plan, case activity and optional technical details |
+| **Approvals** | Review reminder drafts, recommendations, payment checks and closures in one queue |
+
+Edit a reminder if needed, save a new version, then approve that exact saved version before copying it to your communication tool. **Approval never sends a customer message.** New evidence, changed wording or a new investigation can invalidate earlier approval and require a fresh review.
+
+When a later receipt arrives, import it, allocate it, reconfirm coverage and investigate again. Earlier results remain available in **History** and **Compare**.
+
+## Architecture
+
+### Application and data boundaries
 
 ```mermaid
-flowchart LR
-  SUP[Planning supervisor<br/>LLM picks the next case, re-plans<br/>code validates each choice] -->|next case| IN
-  SUP -->|case outcomes| BRF[Briefing agent<br/>numbers checked against facts]
-  BRF --> OWN([You])
-  subgraph CASE[Case graph, one per invoice]
-    IN[Evidence intake<br/>screens untrusted text] --> EX[Promise extractor<br/>LLM, exact quotes]
-    EX --> RU[Payment rules<br/>code: money, dates, one action]
-    RU -->|draft needed| ME[Client memory<br/>past promises]
-    ME --> CO[Communicator<br/>LLM: one friendly note]
-    CO --> SC[Safety check<br/>code: no amounts, fees, claims]
-    SC -->|blocked| CO
-    SC --> TR[Tone reviewer<br/>LLM, can run on another provider]
-    TR -->|revise, max 2| CO
-    TR --> OW[Your approval<br/>LangGraph pause and resume]
-    RU -->|wait / verify / close| OW
-  end
+flowchart TB
+    UI["React web workspace<br/>Dashboard / Upload / Cases / Assistant / Approvals"]
+
+    subgraph BACKEND["FastAPI backend"]
+        API["HTTP API<br/>Typed commands and validation"]
+        INTAKE["File intake<br/>Preview, normalize and parse sources"]
+        MATCH["Owner-confirmed imports<br/>Allocations and ledger coverage"]
+        SUP["Planning supervisor<br/>Eligible-case and step-budget guardrails"]
+        GRAPH["LangGraph<br/>Case investigation workflow"]
+        BRIEF["Briefing writer<br/>Numbers validated against saved facts"]
+        REVIEW["Owner decisions<br/>Exact-version review and case lifecycle"]
+        API --> INTAKE --> MATCH
+        API --> SUP
+        API -->|"Investigate one case"| GRAPH
+        SUP <-->|"Investigate and re-plan"| GRAPH
+        SUP --> BRIEF
+        API --> REVIEW
+    end
+
+    UI <-->|"JSON over HTTP"| API
+    MATCH --> DATA[("SQLite records<br/>Evidence, receipts, results, drafts and history")]
+    GRAPH <--> DATA
+    DATA -->|"Saved workspace views"| API
+    BRIEF --> DATA
+    REVIEW <--> DATA
+    REVIEW -->|"Resume saved draft review"| GRAPH
+    GRAPH <--> CHECKPOINTS[("SQLite graph checkpoints<br/>Paused owner reviews")]
+    GRAPH <--> MODELS["Backend AI adapters<br/>Nebius and optional Fireworks tone review"]
+    SUP <--> MODELS
+    BRIEF <--> MODELS
+    GRAPH -.-> TRACES["Optional LangSmith tracing"]
 ```
 
-| Agent | Kind | Can change data? |
-|---|---|---|
-| Promise extractor | LLM (Nebius) | No: proposes quotes, validated against exact source text |
-| Payment rules | Deterministic code | Saves the recommendation |
-| Client memory | Store (SQLite, or mem0 when configured) | Only client payment notes |
-| Communicator | LLM (Nebius) | No: writes one personal-note paragraph |
-| Safety check | Deterministic code | No: blocks numbers, fees, payment claims, instructions |
-| Tone reviewer | LLM (Nebius or Fireworks) | No: accepts or asks for a revision |
-| Briefing writer | LLM (Nebius) | No: falls back to a plain summary if it states an unsupported number |
-| Planning supervisor | LLM (Nebius, own model setting) + code guardrails | Chooses which due case to investigate next or when to finish; never sends, approves or closes |
+The frontend uses hash routes so individual case links survive refresh. A shared workspace store keeps the Dashboard, case pages and approval queue aligned after decisions. FastAPI serves both the built interface and the API; SQLite stores the business records, with a separate SQLite checkpoint file for paused graph execution.
 
-**Why it is built this way.** In a finance product the AI reads and writes words; code owns every amount, date and action; the owner approves. The agents talk through a typed hand-off protocol (a note can never skip the safety check), every step is recorded with time and tokens in a visible trace, provider outages trip a circuit breaker and fall back to the standard template, and the owner's draft approval resumes the paused LangGraph run, even after a restart.
+### Case investigation and writing pipeline
 
-The owner accepted UX Phases 1 and 2, including read-only comparison of saved investigations and guidance to verify Cedar's payment in external bank/accounting records. [Phase 3](specs/003-owner-experience/phase3-spec.md) completes the presentation with a consistent casebook layout, readable saved-copy and history labels, and a rehearsed fictional STUB demonstration. Its [verification report](reports/owner-experience-phase-iii.md) records the implementation, browser checks and limits of the automated rehearsal. The owner authorized publishing and merging the UX work on 25 October 2026; formal human acceptance remains pending.
-
-## Try separate files
-
-The [file-driven walkthrough](docs/demo-import/README.md) covers customer and invoice imports, independent receipts, explained matching, owner-confirmed partial/split allocations, separate email/WhatsApp documents and Morning Review. Open **Upload** for the six guided steps. The compact [course-demo script and files](docs/demo-import/course-demo/START-HERE.md) cover every recommendation and can be regenerated for the demo day. Preview each file, confirm coverage and review the exact draft before copying. The offline parser uses actual text; intake calls no live model or external source. Fixed CSV headers, INR, six invoices and plain-text communication are demo limits. This local build has no authentication; use fictional records only.
-
-The new [multi-page UX report](reports/multi-page-ux.md) records the Dashboard, Upload, Cases, Assistant and Approvals changes, recovery fixes and verification. The [single LIVE rehearsal](reports/course-demo-live-rehearsal.md) records a Meera recommendation difference; it is not agent qualification.
-
-## Try it in three commands
-
-```powershell
-$env:PK_AGENT_MODE = 'STUB'   # offline stand-ins, no keys needed
-uv run --project backend python -m promisekeeper.cli init-demo --catalogue release-0.1 --clock REFERENCE
-uv run --project backend python -m promisekeeper.cli serve --host 127.0.0.1 --port 8000 --workers 1
+```mermaid
+flowchart TB
+    SNAP["Saved evidence snapshot"] --> IN["Evidence intake - code"]
+    IN --> EX["Promise extractor - AI"]
+    EX --> RULES["Exact-quote validation and payment rules - code"]
+    RULES --> RESULT["Save recommendation and financial facts"]
+    RESULT -->|"Customer draft not required"| VIEW["Show evidence and the next step"]
+    RESULT -->|"Draft required"| MEMORY["Recall client payment history - local store"]
+    MEMORY --> WRITE["Communicator - AI<br/>One personal-note paragraph"]
+    WRITE --> SAFE["Safety check - code"]
+    SAFE -->|"Valid"| TONE["Tone reviewer - AI"]
+    SAFE -->|"Bounded revision"| WRITE
+    TONE -->|"Bounded revision"| WRITE
+    TONE -->|"Accepted"| SAVE["Save unapproved draft version"]
+    WRITE -->|"Provider failure"| FALLBACK["Code-owned template"]
+    SAFE -->|"Retry limit"| FALLBACK
+    TONE -->|"Unavailable or retry limit"| FALLBACK
+    FALLBACK --> SAVE
+    SAVE --> PAUSE["Checkpoint and pause<br/>Await exact-version owner review"]
 ```
 
-Build the UI once (`npm.cmd --prefix frontend ci; npm.cmd --prefix frontend run build`), open `http://127.0.0.1:8000`, and choose **Start morning review**. Then open a case to see the recommendation, the AI team trace and the draft.
+AI roles use scripted stand-ins in **STUB** mode and configured providers in **LIVE** mode. Intake's supported communication parser runs locally without a model call. During investigation, extractor proposals still pass exact-source validation before the rules engine uses them.
 
-The demo has six fictional cases: follow-ups, a promise still in date, two unverified payment claims and a settled invoice. Two customers write in Hinglish. The case overview shows the cases that need attention first; choose **Show all** for the rest.
+The recommendation is saved before message preparation, so a writing failure does not erase an investigation result. Note generation is bounded to two attempts; unsupported wording or writing-provider failure falls back to a validated template. Extraction failures remain visible rather than producing invented financial facts.
 
-For real models, set `PK_AGENT_MODE=LIVE` and `NEBIUS_API_KEY` in `.env`. Optional: `PK_SUPERVISOR_MODEL` (a separate, possibly smaller, model for the planning supervisor), `PK_REVIEWER_PROVIDER=FIREWORKS` with `FIREWORKS_API_KEY` (an independent tone reviewer), `LANGSMITH_TRACING=true` with `LANGSMITH_API_KEY` (traces and owner feedback in LangSmith), `MEM0_API_KEY` (hosted client memory), `PK_AUTONOMOUS_REVIEW_MINUTES=30` (the supervisor starts reviews on its own), and `PK_TOKEN_RATES` (cost in the trace). See [.env.example](.env.example).
+### Responsibilities
 
-## Status, honestly
+| Component | Responsibility |
+|---|---|
+| Planning supervisor | Select the next eligible case and re-plan after each outcome; code validates every move |
+| Promise extractor | Propose promises and payment claims anchored to exact source spans |
+| Payment rules | Reconcile amounts, dates, allocations and evidence into one next action |
+| Client memory | Recall saved payment history within the selected workspace |
+| Communicator | Write a personal note while factual clauses remain code-owned |
+| Safety check | Validate the draft against supported amounts, claims, wording and recipient |
+| Tone reviewer | Accept the note or request a bounded revision |
+| Briefing writer | Summarize outcomes with numeric validation and a fallback summary |
+| Owner | Confirm imports and allocations, review advice and drafts, and explicitly close or reopen cases |
 
-- The fictional engineering build is published; formal Gate V / Release 0.1 acceptance remains pending the actual five-owner study. Historical single-extractor qualification recorded 152 correct returns from 153 attempts, with one provider availability gap, under frozen criteria. That evidence does not qualify the new agents.
-- The multi-agent upgrade (branch `002-multi-agent-upgrade`) passes its offline tests: backend, frontend, browser, and six simulated persona walkthroughs ([report](reports/persona-walkthroughs.md)). **The new agents have not yet been measured on live models.** Run `evaluate --suite agents` and `--suite hinglish` in LIVE mode to measure them ([upgrade report](reports/multi-agent-upgrade.md)).
-- The planning supervisor ([ADR-011](specs/001-payment-case-mvp/research.md)) passes its offline scenario suite, which proves the harness and guardrails only. **It has not been measured on live models.** Compare candidate models with `evaluate --suite supervisor --catalogue release-0.1 --models <large>,<small>` in LIVE mode ([report](reports/dynamic-supervisor.md)).
-- The five-owner usability study has not been run. All data is fictional; there is no authentication and no sending capability.
+## Technology stack
 
-To try the product by hand, use the [hands-on guide](docs/user-testing/README.md), the [test cases](docs/user-testing/test-cases.md) and the [fictional sample data](docs/user-testing/sample-data.json). The [small-business explanation](docs/user-testing/small-business-pitch.md) has a short pitch and honest answers about current limits.
+| Layer | Technology |
+|---|---|
+| Interface | React 19, TypeScript, Vite, CSS |
+| API and contracts | Python 3.12, FastAPI, Pydantic |
+| Agent orchestration | LangGraph with SQLite checkpoints |
+| Persistence | SQLite, migrations, versioned evidence and operation receipts |
+| AI integration | Nebius; optional Fireworks tone reviewer |
+| Observability | Saved agent activity; optional LangSmith traces |
+| Verification | pytest, Vitest, Testing Library and Playwright with Chrome |
 
-## Project documents
+## Getting started
 
-- [Specification](specs/001-payment-case-mvp/spec.md)
-- [Implementation plan and human gates](specs/001-payment-case-mvp/plan.md)
-- [Tasks](specs/001-payment-case-mvp/tasks.md)
-- [Requirements-quality safety review](specs/001-payment-case-mvp/checklists/safety.md)
-- [Setup and validation guide](specs/001-payment-case-mvp/quickstart.md)
-- [Gate I review and verification evidence](reports/phase-i.md)
-- [Gate II review and verification evidence](reports/phase-ii.md)
-- [Gate III implementation and acceptance status](reports/phase-iii.md)
-- [Gate IV implementation and verification status](reports/phase-iv.md)
-- [Live qualification criteria](reports/live-evaluation-criteria.md)
-- [Gate V implementation and verification](reports/phase-v.md)
-- [Requirement evidence matrix](reports/acceptance-matrix.md)
-- [Release acceptance decision](reports/release-acceptance.md)
-- [Multi-agent upgrade plan](docs/superpowers/plans/2026-10-24-multi-agent-upgrade.md) and [ADR-010](specs/001-payment-case-mvp/research.md#adr-010-multi-agent-orchestration-with-langgraph)
-- [Multi-agent upgrade report](reports/multi-agent-upgrade.md)
-- [Persona walkthroughs (simulated)](reports/persona-walkthroughs.md)
+### Prerequisites
 
-## Development
+- Python **3.12** and **uv**.
+- Node.js **24** and npm.
+- Google Chrome for browser tests.
 
-Use Windows PowerShell, Python 3.12 managed by uv, Node 24, and npm.cmd. Direct local caches into this ignored workspace directory before setup:
+The commands below run from the repository root in Windows PowerShell.
+
+### Install and build
 
 ```powershell
 $repoPath = (Get-Location).Path
+New-Item -ItemType Directory -Force -Path (Join-Path $repoPath '.runtime') | Out-Null
 $env:UV_CACHE_DIR = Join-Path $repoPath '.runtime\uv-cache'
 $env:UV_PYTHON_INSTALL_DIR = Join-Path $repoPath '.runtime\python'
 $env:npm_config_cache = Join-Path $repoPath '.runtime\npm-cache'
 $env:PLAYWRIGHT_BROWSERS_PATH = Join-Path $repoPath '.runtime\playwright'
+
 uv sync --project backend --frozen
 npm.cmd --prefix frontend ci
-uv run --project backend pytest
-npm.cmd --prefix frontend run typecheck
 npm.cmd --prefix frontend run build
-npm.cmd --prefix frontend run test:unit
-npm.cmd --prefix frontend run test:e2e
 ```
 
-Use the frozen lockfiles. Browser tests use the installed Chrome channel and start a separate loopback server with a fresh temporary database. Do not run tests against retained demonstration data. Credentials, databases, virtual environments, caches, and build output are excluded from Git.
-
-## Run the case workspace
-
-Create a new fictional copy explicitly, then start the one-worker service:
+### Start the application
 
 ```powershell
 $env:PK_AGENT_MODE = 'STUB'
-$env:PK_DB_PATH = Join-Path (Get-Location).Path '.runtime\promisekeeper.sqlite'
-uv run --project backend python -m promisekeeper.cli init-demo --catalogue release-0.1 --clock REFERENCE
+$env:PK_DB_PATH = Join-Path $repoPath '.runtime\promisekeeper.sqlite'
 uv run --project backend python -m promisekeeper.cli serve --host 127.0.0.1 --port 8000 --workers 1
 ```
 
-`init-demo` always creates a fresh copy; restarting `serve` preserves existing copies. Only one process may own a database. `/api/v1/health`, `/api/v1/demonstrations` and the generated `/docs` expose the current API. Case, source, history and scenario routes require a `demonstration_id` query parameter. Mutations require JSON and `X-PromiseKeeper-Request: 1`; obtain the exact case-bound fixture preview before confirming an event. Keep the same operation ID and payload when reconciling an unknown outcome.
+Open **http://127.0.0.1:8000** and choose **Upload** to create a workspace from fictional records. Storage and migrations initialize on startup; restarting the service preserves existing workspaces. Only one process may own a database.
 
-Build the frontend before serving, then open `http://127.0.0.1:8000`. Choose a retained copy through **Workspace**, open **Cases** to inspect its invoices and source versions, and explicitly investigate when ready. **Dashboard** runs Morning Review; **Assistant** explains the team and its plan. For seeded demos, STUB uses approved extraction packets. Imported communication uses bounded offline parsing of the actual uploaded text. Both pass through source-quote validation and deterministic money rules.
+- Interactive API reference: **http://127.0.0.1:8000/docs**
+- Readiness and safe configuration: **http://127.0.0.1:8000/api/v1/health**
 
-Use the case **Overview** or **Approvals** to edit and explicitly approve or reject an exact saved draft. Case **History** provides prior results and source versions, advice decisions, fictional update previews and explicit closure/reopening; **Compare** shows changes between saved investigations. Selected-copy deletion is in **Workspace**. Each confirmation rechecks the saved case; approval never sends a message.
+**STUB** mode needs no provider key. For provider-backed execution, use the [configuration template](.env.example), set `PK_AGENT_MODE=LIVE`, supply the required backend credentials and restart the service. Credentials stay in the ignored `.env` or process environment, never in frontend code; process variables take precedence.
 
-For Nebius configuration, copy [.env.example](.env.example) to the ignored `.env` and set `NEBIUS_API_KEY`. The backend reads this file; existing process variables take precedence. Keys stay outside frontend code. `PK_NEBIUS_MODEL` selects one explicit Nebius model; there is no automatic provider/model fallback. Keep `PK_AGENT_MODE=STUB` for offline demonstrations. A live candidate must pass the recorded extraction evaluation before Gate III acceptance:
+## Configuration
 
-```powershell
-uv run --project backend python -m promisekeeper.cli evaluate --suite live --catalogue release-0.1 --repeats 3 --output reports/live-evaluation-new.json
-```
+| Setting | Purpose |
+|---|---|
+| `PK_AGENT_MODE` | `STUB` for offline execution or `LIVE` for provider-backed agents |
+| `PK_DB_PATH` | Absolute SQLite path inside the repository workspace |
+| `PK_NEBIUS_MODEL` | Explicit Nebius model for the main AI roles |
+| `NEBIUS_API_KEY` | Backend credential required for LIVE Nebius calls |
+| `PK_SUPERVISOR_MODEL` | Optional separate planning model; otherwise uses the main model |
+| `PK_REVIEWER_PROVIDER` | `NEBIUS` or `FIREWORKS` for tone review |
+| `PK_FIREWORKS_MODEL`, `FIREWORKS_API_KEY` | Model and backend credential for the optional Fireworks reviewer |
+| `LANGSMITH_TRACING`, `LANGSMITH_API_KEY` | Optional external tracing |
+| `PK_AUTONOMOUS_REVIEW_MINUTES` | Periodic morning reviews; `0` disables scheduling |
 
-This explicit command makes real Nebius calls even when the interactive workspace is configured STUB. See the Gate III report for actual results and unexecuted checks. The owner approved and committed Gate II as `9b0da8f`, then authorized Gate III and selected Nebius. The owner authorized Gate IV publication and Gate V implementation on 24 October 2026; release acceptance still requires the recorded checks and actual human observations.
+Scheduled reviews still retain the same owner decision controls. They do not approve wording, allocate receipts or close cases on the owner's behalf.
 
-## Gate V verification commands
+## Verification
 
-The [system eval set](evals/system/README.md) exercises fictional uploads, payment allocations, message grounding and owner controls through the real app. Run `backend/.venv/Scripts/python.exe scripts/evaluate_system.py --output reports/system-evaluation/my-new-run` from the repository root. The [original gap report](reports/system-evaluation.md) and [fix verification](reports/system-eval-fixes.md) distinguish supported behavior, unsafe advice and remaining limits; they do not qualify LIVE agents.
-
-Run the fixture report offline without credentials. Each output path must be new; preserve earlier failed reports.
-
-```powershell
-uv run --project backend python -m promisekeeper.cli evaluate --suite fixtures --catalogue release-0.1 --output reports/fixture-evaluation-new.json
-```
-
-The following measurement commands require the explicitly configured LIVE Nebius model and make real provider calls in isolated temporary copies. HTTP timing is separate from browser display timing; neither establishes extraction qualification.
-
-```powershell
-$env:PK_AGENT_MODE = 'LIVE'
-$env:PK_NEBIUS_MODEL = 'zai-org/GLM-5.3-Flash'
-uv run --project backend python -m promisekeeper.cli measure --suite responsiveness --trials-per-case 10 --report reports/responsiveness-new.json
-uv run --project backend python -m promisekeeper.cli measure --suite preservation --cycles 10 --report reports/preservation-new.json
-```
-
-For the opt-in real browser measurement, after building the UI:
+Run the offline checks after building the interface:
 
 ```powershell
-$env:PROMISEKEEPER_LIVE_MEASUREMENT = '1'
-$env:PROMISEKEEPER_LIVE_BROWSER_REPORT = Join-Path (Get-Location).Path 'reports/live-browser-responsiveness-new.json'
-node frontend/node_modules/@playwright/test/cli.js test --config tests/e2e/live.playwright.config.ts
-Remove-Item Env:\PROMISEKEEPER_LIVE_MEASUREMENT
+uv run --project backend pytest -p no:cacheprovider --basetemp=.runtime/pytest-readme-check
+npm.cmd --prefix frontend run test:unit
+npm.cmd --prefix frontend run typecheck
+npm.cmd --prefix frontend run build
+npm.cmd --prefix frontend run test:e2e
 ```
 
-Default browser tests skip the LIVE measurement. The [owner-study protocol](reports/owner-evaluation-protocol.md) and [blank observations](reports/owner-observations.csv) require actual participants. Automated passes cannot populate those results or authorize a production release. See the final acceptance reports for executed outcomes.
+Browser checks use an isolated loopback server and a fresh database. Run builds and browser suites sequentially because they share the built frontend. LIVE evaluations are separate, opt-in operations.
+
+Latest recorded verification, **26 October 2026**:
+
+| Check | Result |
+|---|---|
+| Backend | 1,382 passed; one intentional LIVE skip |
+| Frontend unit | 226 passed |
+| TypeScript and production build | Passed |
+| Full serial Chrome | 95 passed; one intentional LIVE skip |
+| Independent offline scenarios | Primary set 65/65; extended set 90/90, at the checkpoints documented in the report |
+
+The [verification report](reports/multi-page-ux.md) preserves original failures, fixes and the exact sequence of checks. [System evaluation findings](reports/system-eval-fixes.md) distinguish supported behavior, safety failures that were corrected and remaining limits. These results establish offline engineering behavior, not broad LIVE qualification or human usability acceptance.
+
+## Reliability and decision boundaries
+
+- **Source grounding:** original files and exact evidence versions remain inspectable; customer claims are kept distinct from verified payment records.
+- **Deterministic money:** code handles monetary precision, invoice allocation, payment status and review dates. Unknown balances are shown as unknown and excluded from known totals.
+- **Explicit decisions:** imports, settlement assertions, allocations, exact draft versions and case closure each retain their own confirmation.
+- **Recovery:** retained operation IDs and receipts reconcile uncertain outcomes without duplicating writes; graph checkpoints preserve paused reviews across restarts.
+- **Traceability:** saved investigations and draft versions remain available for comparison after new evidence or later payment.
+- **Bounded autonomy:** supervisor choices are validated against eligible cases and execution budgets, with rule-order fallback when planning fails.
+
+## Current limitations
+
+This is a local prototype without authentication. Use fictional records only. Upload workspaces support INR, up to six invoice cases, documented CSV profiles, files up to 256 KiB and at most 100 CSV data rows. Communication intake accepts supported plain-text forms; unfamiliar signatures, conditional wording, encoded bodies and ambiguous source spans can be refused.
+
+Records are uploaded manually; there are no active bank, email or WhatsApp connectors. Matching hints do not establish ownership, coverage confirmation is an owner assertion, and the application has no customer-sending capability. Broader LIVE qualification and a formal human usability study remain outstanding.
+
+## Repository layout
+
+```text
+backend/src/promisekeeper/   API, application services, agents, rules and persistence
+backend/tests/              Contract, domain, integration and evaluation checks
+frontend/src/               Pages, shared workspace state and review components
+frontend/tests/             Interface and state-transition checks
+tests/e2e/                  Browser journeys, accessibility and restart recovery
+evals/system/               Independent scenario definitions
+scripts/                    Offline evaluation tooling
+docs/                       Workflow and design documentation
+reports/                    Verification evidence and known limitations
+specs/                      Requirements, plans and architecture decisions
+```
+
+## Further reading
+
+- [Core requirements](specs/001-payment-case-mvp/spec.md)
+- [Architecture decisions](specs/001-payment-case-mvp/research.md)
+- [Workspace design](docs/superpowers/specs/2026-10-26-multi-page-ux-design.md)
+- [Independent scenario guide](evals/system/README.md)
+- [Requirement evidence matrix](reports/acceptance-matrix.md)
