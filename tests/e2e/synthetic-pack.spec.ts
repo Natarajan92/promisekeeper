@@ -22,13 +22,16 @@ async function preview(page:Page,kind:string,name:string,cid?:string,contextOnly
   if(cid)await page.getByRole('combobox',{name:'Attach communication to invoice',exact:true}).selectOption(cid);
   await page.getByLabel('Upload file').setInputFiles(path.join(folder,name));
   if(['customer_email','remittance_email','whatsapp'].includes(kind))await page.getByRole('combobox',{name:'Who sent this message?',exact:true}).selectOption('CUSTOMER');
-  if(contextOnly)await page.getByLabel(/I reviewed unsupported wording as supporting context only/).check();
+  if(contextOnly){
+    await page.getByText('Optional: supporting context only',{exact:true}).click();
+    await page.getByLabel(/I reviewed unsupported wording as supporting context only/).check();
+  }
   await page.getByRole('button',{name:'Preview file',exact:true}).click();
   await expect(page.getByRole('heading',{name:'Import preview'})).toBeVisible();
 }
 async function upload(page:Page,kind:string,name:string,cid?:string,contextOnly=false){
   await preview(page,kind,name,cid,contextOnly);await expect(page.locator('.intake-preview [role=alert]')).toHaveCount(0);
-  await page.getByLabel('I reviewed this preview and confirm these are fictional sample records.').check();
+  await page.getByLabel('I reviewed this preview and confirm the records are correct.').check();
   if(kind==='allocations')await page.getByLabel('I checked the settled receipts and the existing invoice allocations in this export.').check();
   await page.getByRole('button',{name:'Confirm import',exact:true}).click();
   await expect(page.getByRole('heading',{name:'Import preview'})).toHaveCount(0);
@@ -54,7 +57,7 @@ async function cover(page:Page){
 async function startNew(page:Page){
   const discovered=page.waitForResponse(response=>response.url().endsWith('/api/v1/demonstrations')&&response.request().method()==='GET');
   await page.goto('/#/upload?step=1');await discovered;
-  await expect(page.getByText('Loading saved demonstrations…',{exact:true})).toHaveCount(0);
+  await expect(page.getByText('Loading saved workspaces…',{exact:true})).toHaveCount(0);
   await expect(page.getByRole('combobox',{name:'File type',exact:true})).toBeVisible();
   const fresh=page.getByLabel('Create a new imported workspace instead');
   if(await fresh.count())await fresh.check();

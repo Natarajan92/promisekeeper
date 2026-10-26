@@ -7,6 +7,16 @@ from test_common_api import HEADERS, app_for
 from support.intake import CUSTOMERS, INVOICES, PAYMENTS, EMAIL, PROMISE, operation, preview, commit, workspace, overview, allocate
 
 
+def test_invoice_limit_preview_uses_product_wording_without_saving_rows(tmp_path):
+    with TestClient(app_for(tmp_path/'invoice-limit.sqlite'), base_url='http://127.0.0.1') as client:
+        invoices = 'invoice_id,customer_name,amount,currency,issued_at,due_at\n' + '\n'.join(
+            f'INV-{index},Cobalt Services,1200,INR,2026-10-01,2026-10-20' for index in range(7)
+        )
+        _, view = preview(client, 'invoices', invoices)
+        assert any(error['message'] == 'Up to six invoices are supported per workspace.' for error in view['errors'])
+        assert client.get('/api/v1/demonstrations').json()['demonstrations'] == []
+
+
 def test_preview_is_read_only_and_separate_inputs_create_actual_customer_invoices(tmp_path):
     with TestClient(app_for(tmp_path/'intake.sqlite'), base_url='http://127.0.0.1') as client:
         _, view = preview(client, 'customers', CUSTOMERS)

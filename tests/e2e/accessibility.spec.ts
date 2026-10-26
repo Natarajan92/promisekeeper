@@ -1,5 +1,5 @@
 import { test, expect, type Page } from './support/test';
-import { createCopy, investigate } from './support/scenarioEvents';
+import { createCopy, investigate, confirmScenarioEvent } from './support/scenarioEvents';
 import { fileURLToPath } from 'node:url';
 
 // Reach every control by Tab; activation and editing use keyboard input only.
@@ -48,10 +48,10 @@ test('keyboard-only evidence, investigation, exact review, history and lifecycle
   await expect(page.getByText('Decision saved.').first()).toBeVisible();
   await keyControl(page,'link',/^Cases/);await keyControl(page,'button',/PK-003/);await keyControl(page,'button','Investigate case');
   await expect(page.getByText(/COMPLETE result saved/).first()).toBeVisible();
-  await keyControl(page,'button','History');await keyControl(page,'button','Preview selected fictional update');
-  await expect(page.getByRole('heading',{name:'Exact update preview'})).toBeVisible();
-  await keyControl(page,'checkbox','I reviewed this exact fictional update','Space');
-  await keyControl(page,'button','Confirm fictional update');await expect(page.getByText('Decision saved.').first()).toBeVisible();
+  await keyControl(page,'button','History');
+  await expect(page.getByRole('button',{name:'Preview selected fictional update'})).toHaveCount(0);
+  await confirmScenarioEvent(request,copy.id,copy.cases[2].id,'PK-003-U1');
+  await page.reload();
   await keyControl(page,'button','Investigate case');await expect(page.getByText(/COMPLETE result saved/).first()).toBeVisible();
   await keyControl(page,'button','Overview');await keyControl(page,'button','Review case closure');await keyControl(page,'checkbox','Confirm closure of invoice CR-312','Space');
   await keyControl(page,'button','Confirm case closure');await expect(page.locator('.case-heading')).toContainText('CLOSED');
@@ -73,7 +73,7 @@ test('all case sections remain readable at 200 percent text with textual status'
   await page.getByRole('button',{name:'Overview',exact:true}).click();
   await expect(page.getByRole('heading',{name:'Follow up on the overdue balance',exact:true})).toBeVisible();
   await expect(page.getByText(/Saved recommendation/).first()).toBeVisible();
-  await expect(page.getByText(/Fictional demonstration/).first()).toBeVisible();
+  await expect(page.getByText(/Internal verification environment/).first()).toBeVisible();
   await expect(page.getByText(/No customer messages are sent/).first()).toBeVisible();
 });
 

@@ -2,13 +2,13 @@ import {useCallback, useEffect, useRef, useState} from 'react';
 import type {ApiClient} from '../api/client';
 import {resolveSelection, selectionKey} from '../api/demonstrationSelection';
 import {subscribeCommitted} from '../api/pendingOperations';
-import type {CaseListResponse, CaseSummary, CaseView, Catalogue, Demonstration, Health} from '../api/types';
+import type {CaseListResponse, CaseSummary, CaseView, Demonstration, Health} from '../api/types';
 import {clearIntakeState} from '../intake/commands';
 import type {Route} from '../routing';
 
 export interface CaseEntry {summary:CaseSummary; view:CaseView|null; error:string|null}
 export interface Workspace {
-  api:ApiClient; health:Health|null; catalogue:Catalogue|null;
+  api:ApiClient; health:Health|null;
   copies:Demonstration[]; selected:string|null; imported:boolean; discovering:boolean; discoveryError:string;
   list:CaseListResponse|null; evaluationAt:string|undefined; plan:Record<string,number>;
   cases:CaseEntry[]; detailsLoading:boolean; refreshTick:number;
@@ -23,7 +23,7 @@ const failure=(error:unknown,fallback:string)=>error instanceof Error?error.mess
 // Owns everything the single-page App did for the workspace: discovery, the case list, every case view,
 // review-boundary timers for REAL clock, committed-operation reconciliation and deletion.
 export function useWorkspace(api:ApiClient):Workspace {
-  const [health,setHealth]=useState<Health|null>(null);const [catalogue,setCatalogue]=useState<Catalogue|null>(null);
+  const [health,setHealth]=useState<Health|null>(null);
   const [copies,setCopies]=useState<Demonstration[]>([]);const [selected,setSelected]=useState<string|null>(null);
   const [discovering,setDiscovering]=useState(true);const [discoveryError,setDiscoveryError]=useState('');
   const [list,setList]=useState<CaseListResponse|null>(null);const [listLoading,setListLoading]=useState(false);const [listError,setListError]=useState('');
@@ -43,7 +43,7 @@ export function useWorkspace(api:ApiClient):Workspace {
   const discover=useCallback(async (created?:string)=>{
     setDiscovering(true);setDiscoveryError('');
     try {const response=await api.demonstrations();setCopies(response.demonstrations);const id=resolveSelection(response.demonstrations,created??localStorage.getItem(selectionKey));setSelected(id);if(id)localStorage.setItem(selectionKey,id);else localStorage.removeItem(selectionKey);}
-    catch(error){setDiscoveryError(failure(error,'Saved copies could not be loaded.'));}finally{setDiscovering(false);}
+    catch(error){setDiscoveryError(failure(error,'Saved workspaces could not be loaded.'));}finally{setDiscovering(false);}
   },[api]);
   useEffect(()=>subscribeCommitted(outcome=>{
     if(outcome.command.kind==='deletion'&&outcome.response.receipt.outcome==='DELETED') {
@@ -55,7 +55,7 @@ export function useWorkspace(api:ApiClient):Workspace {
       void discover();
     }else if(selectedCopy.current===outcome.did)refresh();
   }),[discover,refresh,clear]);
-  useEffect(()=>{void discover();void api.health().then(setHealth).catch(()=>setHealth(null));void api.catalogue().then(setCatalogue).catch(()=>setCatalogue(null));},[api,discover]);
+  useEffect(()=>{void discover();void api.health().then(setHealth).catch(()=>setHealth(null));},[api,discover]);
   useEffect(()=>{
     if(!selected)return;
     let cancelled=false;setListLoading(true);setListError('');
@@ -98,7 +98,7 @@ export function useWorkspace(api:ApiClient):Workspace {
   const entries=views.did===selected?views.entries:{};
   const cases:CaseEntry[]=current?current.cases.map(summary=>({summary,view:entries[summary.id]?.view?.id===summary.id?entries[summary.id].view:null,error:entries[summary.id]?.error??null})):[];
   return {
-    api,health,catalogue,copies,selected,discovering,discoveryError,
+    api,health,copies,selected,discovering,discoveryError,
     imported:copies.find(copy=>copy.id===selected)?.selected_variant_id==='csv-demo',
     list:current,evaluationAt:current?(overviewCutoff?.did===current.demonstration_id?overviewCutoff.at:current.evaluation_at):undefined,
     plan,cases,detailsLoading:!!current&&detailsLoading,refreshTick,listLoading,listError,

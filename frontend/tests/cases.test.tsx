@@ -27,13 +27,13 @@ describe('saved demonstration discovery', () => {
     expect(localStorage.getItem('selected_demonstration_id')).toBe(did);
     expect(fetcher.mock.calls.every(call => !(call[1] as RequestInit | undefined)?.method)).toBe(true);
   });
-  it('requires an explicit create action when no copies exist', async () => {
+  it('guides to an explicit upload when no workspaces exist', async () => {
     const fetcher = vi.fn(async (url: RequestInfo | URL, _init?:RequestInit) => new Response(JSON.stringify(String(url).endsWith('/health') ? {schema_version:'1',ready:true,agent_mode:'STUB'} : String(url).endsWith('/catalogue') ? {schema_version:'1',catalogue_version:'release-0.1',variant_ids:[]} : {schema_version:'1',demonstrations:[]})));
     render(<App api={new ApiClient(fetcher)} />);
     fireEvent.click(await screen.findByRole('button',{name:/^Workspace/}));
-    expect(await screen.findByText(/No saved demonstrations/)).toBeInTheDocument();
-    expect(screen.getByRole('button',{name:'Create fictional demonstration'})).toBeEnabled();
-    expect(screen.getByText(/No authentication/)).toBeInTheDocument();
+    expect(await screen.findByText(/No saved workspaces/)).toBeInTheDocument();
+    expect(screen.getByRole('link',{name:'New workspace'})).toBeInTheDocument();
+    expect(screen.getByText(/Internal verification environment/)).toBeInTheDocument();
     expect(fetcher.mock.calls.every(call => !(call[1] as RequestInit | undefined)?.method)).toBe(true);
   });
 });
@@ -50,19 +50,6 @@ it('binds all case and evidence reads to the selected copy', async () => {
   const api = new ApiClient(fetcher);
   await api.case(did,cid); await api.evidence(did,source.id); await api.history(did,cid);
   expect(fetcher.mock.calls.every(call => String(call[0]).includes(`demonstration_id=${did}`))).toBe(true);
-});
-it.each([null,'FV-17-EVIDENCE'])('offers only events registered for saved variant %s',async(selectedVariant)=>{
-  const api=new ApiClient(async(url)=>{
-    const path=String(url);
-    const events=[{id:'PK-001-U1',kind:'EVIDENCE',case_id:'PK-001',evaluation_at:caseView.evaluation_at,eligible_variant_ids:[null,'FV-17-EVIDENCE']},{id:'FV-17-EVIDENCE-RUN-START',kind:'CLOCK',case_id:'PK-001',evaluation_at:caseView.evaluation_at,eligible_variant_ids:['FV-17-EVIDENCE']}];
-    const response=path.endsWith('/health')?{schema_version:'1',ready:true,agent_mode:'STUB'}:path.endsWith('/catalogue')?{schema_version:'1',catalogue_version:'release-0.1',variant_ids:['FV-17-EVIDENCE'],events}:path.endsWith('/demonstrations')?{schema_version:'1',demonstrations:[{...demo,selected_variant_id:selectedVariant}]}:path.endsWith('/cases')?{schema_version:'1',demonstration_id:did,clock_mode:'REFERENCE',evaluation_at:caseView.evaluation_at,cases:[{...caseView,currency:'INR',due_at:null,has_previous_investigation:false}]}:path.includes('/history')?{schema_version:'1',events:[],next_cursor:null}:caseView;
-    return new Response(JSON.stringify(response));
-  });
-  window.location.hash=`#/cases/${cid}`;render(<App api={api}/>);await screen.findByRole('heading',{name:'Studio North'});
-  fireEvent.click(screen.getByRole('button',{name:'History'}));
-  expect(screen.getByRole('option',{name:/PK-001-U1/})).toBeInTheDocument();
-  if(selectedVariant===null)expect(screen.queryByRole('option',{name:/FV-17-EVIDENCE-RUN-START/})).not.toBeInTheDocument();
-  else expect(screen.getByRole('option',{name:/FV-17-EVIDENCE-RUN-START/})).toBeInTheDocument();
 });
 it('keeps the saved detail visible when the open case is opened again from the case list', async () => {
   const summaries=['PK-001','PK-002','PK-003'].map((code,index)=>({id:index===0?cid:`case-${index}`,catalogue_case_id:code,client:index===0?'Studio North':`Studio ${index}`,invoice_id:`INV-${index+1}`,currency:'INR',due_at:caseView.financial_facts.due_at,lifecycle:'OPEN',case_revision:0,has_previous_investigation:false,review_required:false}));

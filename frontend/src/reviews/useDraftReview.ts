@@ -5,7 +5,7 @@ import type { ReceiptResponse } from '../api/types';
 import { completePending, forgetPending, readFencingPending, readPending, retainPending, subscribeCommitted, subscribePending, WORKSPACE_SCOPE, type PendingCommand } from '../api/pendingOperations';
 
 function committedMessage(command:PendingCommand,response:ReceiptResponse) {
-  if(response.receipt.outcome==='DELETED')return 'Selected demonstration deleted.';
+  if(response.receipt.outcome==='DELETED')return 'Selected workspace deleted.';
   if(command.kind==='edit')return 'New unapproved version saved.';
   if(command.kind==='review')return command.operation.decision==='APPROVE'?'Approval recorded for the exact saved version. No message was sent.':'Rejection recorded. The draft remains in history.';
   if(command.kind==='retry')return 'Draft retry acknowledged. Check saved draft status.';

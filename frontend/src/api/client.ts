@@ -1,4 +1,4 @@
-import type { Attempt, CaseListResponse, FeedbackRecorded, MorningReviewView, CaseView, Catalogue, Demonstration, Evidence, Health, HistoryEvent, ReceiptResponse } from './types';
+import type { Attempt, CaseListResponse, FeedbackRecorded, MorningReviewView, CaseView, Demonstration, Evidence, Health, HistoryEvent, ReceiptResponse } from './types';
 import {notifyCaseActivity} from './caseActivity';
 import type {IntakeOverview,IntakePreview,IntakeReceipt} from '../intake/types';
 export class ApiError extends Error {
@@ -10,7 +10,7 @@ const keyFor = (did:string,cid:string,kind:string) => `promisekeeper.operation.$
 export function pendingOperation(did:string,cid:string,kind:string):Operation|null {
   const raw = localStorage.getItem(keyFor(did,cid,kind));
   if (!raw) return null;
-  try {const parsed=JSON.parse(raw); return typeof parsed.operation_id==='string' && parsed.schema_version==='1' ? parsed : null;} catch {throw new Error('The pending operation cannot be read. Keep this copy selected and recover the browser record.');}
+  try {const parsed=JSON.parse(raw); return typeof parsed.operation_id==='string' && parsed.schema_version==='1' ? parsed : null;} catch {throw new Error('The pending operation cannot be read. Keep this workspace selected and recover the browser record.');}
 }
 export function stableOperation(did:string,cid:string,kind:string,payload:Record<string,unknown>):Operation {
   const existing=pendingOperation(did,cid,kind);
@@ -41,7 +41,6 @@ export class ApiClient {
     return data as T;
   }
   health() {return this.request<Health>('/health');}
-  catalogue() {return this.request<Catalogue>('/catalogue');}
   demonstrations() {return this.request<{schema_version:'1';demonstrations:Demonstration[]}>('/demonstrations');}
   cases(did:string) {return this.request<CaseListResponse>(`/demonstrations/${encodeURIComponent(did)}/cases`);}
   case(did:string,cid:string) {return this.request<CaseView>(`/cases/${encodeURIComponent(cid)}${this.scope(did)}`);}
@@ -50,7 +49,6 @@ export class ApiClient {
   start(did:string,cid:string,operation:Operation) {return this.request<ReceiptResponse>(`/cases/${encodeURIComponent(cid)}/investigations${this.scope(did)}`,operation);}
   attempt(did:string,iid:string) {return this.request<Attempt>(`/investigations/${encodeURIComponent(iid)}${this.scope(did)}`);}
   operation(did:string,oid:string) {return this.request<ReceiptResponse>(`/operations/${encodeURIComponent(oid)}${this.scope(did)}`);}
-  create(operation:Operation) {return this.request<ReceiptResponse>('/demonstrations',operation);}
   intakePreview(operation:Operation){return this.request<IntakePreview>('/intake/previews',operation);}
   intakeCommit(operation:Operation){return this.request<IntakeReceipt>('/intake/commits',operation);}
   intakeOverview(did:string){return this.request<IntakeOverview>(`/demonstrations/${encodeURIComponent(did)}/intake`);}

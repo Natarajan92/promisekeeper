@@ -225,13 +225,13 @@ Latest recorded verification, **26 October 2026**:
 
 | Check | Result |
 |---|---|
-| Backend | 1,382 passed; one intentional LIVE skip |
-| Frontend unit | 226 passed |
+| Backend, final full publication rerun | 1,391 passed; one intentional LIVE skip |
+| Frontend unit | 240 passed |
 | TypeScript and production build | Passed |
-| Full serial Chrome | 95 passed; one intentional LIVE skip |
-| Independent offline scenarios | Primary set 65/65; extended set 90/90, at the checkpoints documented in the report |
+| Full serial Chrome | 100 passed; one intentional LIVE skip |
+| Historical offline evaluation | Primary set 65/65; expanded set 90/90 (includes the primary set), at the [documented checkpoints](reports/system-eval-fixes.md) |
 
-The [verification report](reports/multi-page-ux.md) preserves original failures, fixes and the exact sequence of checks. [System evaluation findings](reports/system-eval-fixes.md) distinguish supported behavior, safety failures that were corrected and remaining limits. These results establish offline engineering behavior, not broad LIVE qualification or human usability acceptance.
+The [publication verification report](reports/product-007-publication.md) records the combined changes and preserves the initial SQLite writer-lock failure, unchanged passing rechecks and final full rerun. [Earlier verification](reports/multi-page-ux.md) retains its original failures and fixes. [System evaluation findings](reports/system-eval-fixes.md) distinguish supported behavior, safety failures that were corrected and remaining limits. These results establish offline engineering behavior, not broad LIVE qualification or human usability acceptance.
 
 ## Reliability and decision boundaries
 

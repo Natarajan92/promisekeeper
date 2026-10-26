@@ -2,19 +2,14 @@ import {useEffect, useRef, useState} from 'react';
 import {pendingOperation} from '../api/client';
 import {subscribeCaseActivity} from '../api/caseActivity';
 import {readPending, subscribeCommitted, subscribePending, WORKSPACE_SCOPE} from '../api/pendingOperations';
-import type {Demonstration} from '../api/types';
-import {DemonstrationPicker} from '../cases/DemonstrationPicker';
+import {WorkspacePicker,workspaceName} from '../cases/WorkspacePicker';
 import {DeleteWorkspace} from '../history/DeleteWorkspace';
 import {useDraftReview} from '../reviews/useDraftReview';
 import {routeLink, type Route} from '../routing';
 import type {PageProps, Workspace} from '../store/useWorkspace';
 
-export {WORKSPACE_SCOPE};
+export {WORKSPACE_SCOPE,workspaceName};
 
-export function workspaceName(copy:Demonstration|undefined):string {
-  if(!copy)return 'None selected';
-  return copy.selected_variant_id==='csv-demo'?'Uploaded sample files':copy.selected_variant_id??'Standard payment examples';
-}
 
 // Any retained case request (a draft, decision or investigation start) must be reconciled before its copy is deleted.
 function casePending(did:string,caseIds:string[]):boolean {
@@ -40,14 +35,14 @@ export function useWorkspaceDeletion(ws:Workspace):WorkspaceDeletion {
     return ()=>unwatch.forEach(stop=>stop());
   },[did,caseKey]);
   useEffect(()=>subscribeCommitted(outcome=>{
-    if(outcome.command.kind==='deletion'&&outcome.response.receipt.outcome==='DELETED')setDeleted('Selected demonstration deleted.');
+    if(outcome.command.kind==='deletion'&&outcome.response.receipt.outcome==='DELETED')setDeleted('Selected workspace deleted.');
   }),[]);
   const locked=commands.busy||!!commands.pending||(!!did&&casePending(did,caseIds));
   return {did,commands,locked,blocked,status:commands.message||deleted,
     remove:()=>{
       if(!did)return;
       // Checked again at click time: a case request may have been retained since this control rendered.
-      if(casePending(did,caseIds)){setBlocked('Reconcile the pending case request before deleting this copy.');return;}
+      if(casePending(did,caseIds)){setBlocked('Reconcile the pending case request before deleting this workspace.');return;}
       setBlocked('');setDeleted('');
       void commands.execute('deletion',`/demonstrations/${encodeURIComponent(did)}/deletion`,{confirm:true,confirmed_demonstration_id:did});
     },
@@ -59,7 +54,7 @@ export function useWorkspaceDeletion(ws:Workspace):WorkspaceDeletion {
 export function WorkspaceDeletionNotice({deletion}:{deletion:WorkspaceDeletion}) {
   const {commands}=deletion;
   return <>
-    {commands.pending&&<section className="notice workspace-pending" aria-label="Pending demonstration deletion"><p>A deletion of this demonstration is pending. Its exact payload is retained, and case actions stay locked until its outcome is known.</p><button disabled={commands.busy} onClick={()=>void commands.reconcile()}>Check saved request outcome</button> <button disabled={commands.busy} onClick={()=>void commands.retryOriginal()}>Retry original request</button></section>}
+    {commands.pending&&<section className="notice workspace-pending" aria-label="Pending workspace deletion"><p>A deletion of this workspace is pending. Its exact payload is retained, and case actions stay locked until its outcome is known.</p><button disabled={commands.busy} onClick={()=>void commands.reconcile()}>Check saved request outcome</button> <button disabled={commands.busy} onClick={()=>void commands.retryOriginal()}>Retry original request</button></section>}
     {commands.error&&<p className="notice" role="alert">{commands.error}</p>}
     {deletion.status&&<p className="workspace-deletion-status" role="status" aria-live="polite">{deletion.status}</p>}
   </>;
@@ -99,8 +94,8 @@ export function WorkspaceSwitcher({ws,route,navigate,deletion}:PageProps&{deleti
       <span className="workspace-toggle-label">Workspace</span> <strong>{ws.discovering&&!current?'Loading…':workspaceName(current)}</strong>{current&&<> <span className="workspace-toggle-id">{current.id.slice(0,8)}</span></>}
     </button>
     {expanded&&!ws.discovering&&!ws.discoveryError&&<div id="workspace-panel" className="workspace-panel">
-      <DemonstrationPicker api={ws.api} copies={ws.copies} selected={ws.selected} catalogue={ws.catalogue} onSelect={id=>{leave(id);ws.select(id);}} onCreated={id=>{leave(id);ws.select(id);void ws.discover(id);}}/>
-      <p className="workspace-upload"><a {...routeLink({page:'upload',step:1},navigate,()=>{ws.select(null);deletion.clear();setOpen(false);})}>New upload workspace</a><span className="subtle"> Start a separate imported workspace from your own fictional files.</span></p>
+      <WorkspacePicker workspaces={ws.copies} selected={ws.selected} onSelect={id=>{leave(id);ws.select(id);}}/>
+      <p className="workspace-upload"><a {...routeLink({page:'upload',step:1},navigate,()=>{ws.select(null);deletion.clear();setOpen(false);})}>New workspace</a><span className="subtle"> Upload records into a separate workspace.</span></p>
       {ws.selected&&<SwitcherDeletion key={ws.selected} deletion={deletion}/>}
     </div>}
   </div>;

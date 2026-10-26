@@ -91,7 +91,7 @@ it('shows a later incomplete attempt separately and preserves null money as unkn
 it('explains external verification for Cedar while retaining the exact saved next step',()=>{
   render(<FindingsView result={before} view={{...comparisonView,current_result:before,latest_completed_result:before}} onSource={()=>{}}/>);
   expect(screen.getByText(before.next_step)).toBeInTheDocument();expect(screen.getByText(/Check your bank statement or accounting records outside PromiseKeeper/)).toBeInTheDocument();
-  expect(screen.getByText(/fictional settlement update/i)).toBeInTheDocument();
+  expect(screen.queryByText(/fictional settlement update/i)).not.toBeInTheDocument();
 });
 it('links a completed History record to comparison without starting another investigation',()=>{
   const {api,calls}=harness();const compare=vi.fn();

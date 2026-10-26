@@ -95,7 +95,7 @@ function AssistantBody({ws,route,navigate,parts}:PageProps&{parts:MorningReviewP
         <h1>Assistant at work</h1>
         <p className="assistant-lead">See how your digital team checks each case. AI agents read and draft; code decides money and next steps; you approve everything.</p>
         <p className="assistant-status">{did?statusLine(review,running):'Choose a workspace to see your assistant at work.'}</p>
-        <p className="assistant-mode"><span className={`mode-pill mode-${(mode??'unknown').toLowerCase()}`}>{mode==='LIVE'?'LIVE':mode==='STUB'?'STUB':'Mode unknown'}</span> {mode==='LIVE'?'Real AI providers are answering in this run.':mode==='STUB'?'A scripted offline sample stands in for the AI. No AI provider is called.':'The server mode is not known yet.'}</p>
+        <p className="assistant-mode"><span className={`mode-pill mode-${(mode??'unknown').toLowerCase()}`}>{mode==='LIVE'?'AI providers enabled':mode==='STUB'?'AI providers disabled':'AI status unavailable'}</span> {mode==='LIVE'?'Configured AI providers handle analysis and writing.':mode==='STUB'?'Checks use predefined responses in this environment. No AI provider is called.':'Provider availability is not known yet.'}</p>
         {parts&&<div className="assistant-hero-description">{parts.description}</div>}
       </div>
       {parts&&<div className="assistant-hero-actions">{parts.button}</div>}

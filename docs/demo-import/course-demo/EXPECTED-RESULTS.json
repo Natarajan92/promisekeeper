@@ -105,6 +105,13 @@
       "invoice_id": "KP-1004",
       "sender_role": "CUSTOMER",
       "story": "Polite email promising INR 75,000 next week, with greeting and signature."
+    },
+    {
+      "path": "04-messages/lotus-promise.eml",
+      "kind": "customer_email",
+      "invoice_id": "LE-1005",
+      "sender_role": "CUSTOMER",
+      "story": "Clear customer promise for INR 80,000; its date has passed. Main happy-path case for review, approval and later payment."
     }
   ],
   "allocations": [
@@ -168,7 +175,7 @@
       "customer_name": "Lotus Electricals",
       "action": "FOLLOW_UP",
       "balance_minor": "8000000",
-      "why": "Overdue, no payment and no message."
+      "why": "Clear customer promise for 24 October 2026 has passed; INR 80,000 remains. Review the supported reminder before using it."
     },
     {
       "invoice_id": "PH-1006",
@@ -204,16 +211,85 @@
       }
     ]
   },
+  "happy_path_finale": {
+    "path": "05-later/lotus-payment.csv",
+    "kind": "payments",
+    "invoice_id": "LE-1005",
+    "action": "CLOSE",
+    "balance_minor": "0",
+    "allocations": [
+      {
+        "transaction_ref": "LOTUS-T9",
+        "bank_description": "NEFT LOTUS ELECTRICALS",
+        "invoice_id": "LE-1005",
+        "amount": "80000",
+        "hint_required": true,
+        "note": "Later settled credit completes the happy path after owner-confirmed allocation."
+      }
+    ]
+  },
+  "presentation": {
+    "scenarios": [
+      {
+        "id": "HAPPY_PATH",
+        "title": "Happy path: supported follow-up to verified payment",
+        "customer_name": "Lotus Electricals",
+        "invoice_id": "LE-1005",
+        "start_action": "FOLLOW_UP",
+        "start_balance_minor": "8000000",
+        "later_payment_path": "05-later/lotus-payment.csv",
+        "final_action": "CLOSE",
+        "final_balance_minor": "0",
+        "requires_owner_closure": true
+      },
+      {
+        "id": "PAYMENT_VERIFICATION",
+        "title": "Problematic payment evidence: claimed payment without a matching receipt",
+        "customer_name": "Arun Traders",
+        "invoice_id": "AT-1002",
+        "start_action": "VERIFY_PAYMENT",
+        "start_balance_minor": "3250000",
+        "claim_reference": "ARUN-T9",
+        "later_payment_path": "05-later/payments-later.csv",
+        "final_action": "CLOSE",
+        "final_balance_minor": "0",
+        "requires_owner_closure": true
+      }
+    ],
+    "background_invoice_ids": [
+      "MT-1001",
+      "SF-1003",
+      "KP-1004",
+      "PH-1006"
+    ],
+    "initial_upload_files": [
+      "01-customers.csv",
+      "02-invoices.csv",
+      "03-bank-statement.csv",
+      "04-messages/meera-whatsapp-hinglish.txt",
+      "04-messages/arun-payment-claim.eml",
+      "04-messages/kaveri-promise.eml",
+      "04-messages/lotus-promise.eml"
+    ],
+    "staged_receipt_files": [
+      "05-later/lotus-payment.csv",
+      "05-later/payments-later.csv"
+    ],
+    "presenter_guide": "TWO-SCENARIOS.md"
+  },
   "files": [
     "01-customers.csv",
     "02-invoices.csv",
     "03-bank-statement.csv",
     "04-messages/arun-payment-claim.eml",
     "04-messages/kaveri-promise.eml",
+    "04-messages/lotus-promise.eml",
     "04-messages/meera-whatsapp-hinglish.txt",
+    "05-later/lotus-payment.csv",
     "05-later/payments-later.csv",
     "06-refused/patel-conditional.txt",
     "EXPECTED-RESULTS.json",
-    "START-HERE.md"
+    "START-HERE.md",
+    "TWO-SCENARIOS.md"
   ]
 }

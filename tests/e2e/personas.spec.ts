@@ -29,7 +29,7 @@ test('P1 busy owner: one morning review gives a briefing and a ready follow-up d
   await expect(page.getByRole('region',{name:'How your AI team worked on this case'})).toHaveCount(0);
   await page.screenshot({path:`${shots}owner-phase1-desktop.png`});
   let writes=0;page.on('request',request=>{if(request.method()==='POST')writes++;});
-  await page.getByText('Developer insights',{exact:true}).click();
+  await page.getByText('Processing details',{exact:true}).click();
   await expect(page.getByRole('region',{name:'How your AI team worked on this case'})).toContainText('Tone reviewer');
   expect(writes).toBe(0);
   await shot(page,'p1-findings-trace');
@@ -89,7 +89,7 @@ test('P5 sceptical owner: unsafe edits are blocked, feedback is saved and the tr
   await investigate(request,copy.id,northstar.id);await open(page,copy.id);
   await page.getByRole('link',{name:/^Cases/}).click();await page.getByRole('button',{name:/PK-001.*Northstar Analytics/}).click();
   await page.getByRole('button',{name:'Overview',exact:true}).click();
-  await page.getByText('Developer insights',{exact:true}).click();
+  await page.getByText('Processing details',{exact:true}).click();
   await expect(page.getByText('→ Safety check: personal note')).toBeVisible();
   await page.getByRole('region',{name:'Was this recommendation useful?'}).getByRole('button',{name:'Needs work'}).click();
   await page.getByLabel('What should be better? (optional)').fill('Please mention the earlier promise date.');

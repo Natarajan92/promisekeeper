@@ -2,7 +2,6 @@ import { afterEach,expect,it,vi } from 'vitest';
 import { act,cleanup,fireEvent,render,screen } from '@testing-library/react';
 import '@testing-library/jest-dom/vitest';
 import { OwnerDecisions } from '../src/history/OwnerDecisions';
-import { ScenarioUpdate } from '../src/history/ScenarioUpdate';
 import { CaseHistory } from '../src/history/CaseHistory';
 import { ApiClient } from '../src/api/client';
 import { caseView,cid,did } from './fixtures';
@@ -46,7 +45,7 @@ it('recovers a committed deletion receipt once while preserving another copy pen
   const other='other-copy';localStorage.setItem(`promisekeeper.pending.${other}.${cid}`,'other payload');
   localStorage.setItem(`promisekeeper.pending.${did}.${cid}`,JSON.stringify({kind:'deletion',path:`/demonstrations/${did}/deletion`,operation:{schema_version:'1',operation_id:'pending-delete',confirm:true,confirmed_demonstration_id:did}}));
   const api=new ApiClient(async()=>new Response(JSON.stringify({...committed,receipt:{...committed.receipt,outcome:'DELETED'}})));
-  render(<OwnerDecisions api={api} view={view as any} onRefresh={()=>{}}/>);await screen.findByText('Selected demonstration deleted.');expect(localStorage.getItem(`promisekeeper.pending.${did}.${cid}`)).toBeNull();expect(localStorage.getItem(`promisekeeper.pending.${other}.${cid}`)).toBe('other payload');
+  render(<OwnerDecisions api={api} view={view as any} onRefresh={()=>{}}/>);await screen.findByText('Selected workspace deleted.');expect(localStorage.getItem(`promisekeeper.pending.${did}.${cid}`)).toBeNull();expect(localStorage.getItem(`promisekeeper.pending.${other}.${cid}`)).toBe('other payload');
 });
 
 it('inspects an exact historical review and source without altering the current record',async()=>{
@@ -67,24 +66,6 @@ it('ignores a historical response after navigating to another case',async()=>{
   const props={api,view:view as any,events:events as any,cursor:null,onMore:()=>{},onSource:()=>{}};const {rerender}=render(<CaseHistory {...props}/>);
   fireEvent.click(screen.getByRole('button',{name:'Inspect saved draft'}));rerender(<CaseHistory {...props} view={{...view,id:'another-case'} as any}/>);
   await act(async()=>finish(new Response(JSON.stringify({schema_version:'1',draft_version:{id:'draft-old',exact_text:'Stale response text'}}))));expect(screen.queryByText('Stale response text')).not.toBeInTheDocument();
-});
-it('allows a fresh scenario preview after case revision changes during a preview request',async()=>{
-  let finish!:(value:Response)=>void;const api=new ApiClient(()=>new Promise(resolve=>{finish=resolve;}));
-  const props={api,view:view as any,selectedVariantId:null,events:[{id:'U1',case_id:'PK-001',kind:'CLOCK' as const,eligible_variant_ids:[null],evaluation_at:'2026-10-25T00:00:00Z'}],onRefresh:()=>{}};
-  const {rerender}=render(<ScenarioUpdate {...props}/>);fireEvent.click(screen.getByRole('button',{name:'Preview selected fictional update'}));
-  rerender(<ScenarioUpdate {...props} view={{...view,case_revision:1} as any}/>);
-  await act(async()=>finish(new Response(JSON.stringify({schema_version:'1',demonstration_id:did,case_id:cid,event_id:'U1',expected_case_revision:0}))));
-  expect(screen.queryByText('Exact update preview')).not.toBeInTheDocument();expect(screen.getByRole('button',{name:'Preview selected fictional update'})).toBeEnabled();
-});
-it('requires the exact visible fixture preview before confirmation and discards stale previews',async()=>{
-  const posts:any[]=[];const preview={schema_version:'1',catalogue_version:'release-0.1',demonstration_id:did,case_id:cid,event_id:'U1',expected_case_revision:0,evidence_changes:[],clock_change:{from:'2026-10-24T00:00:00Z',to:'2026-10-25T00:00:00Z'},preview_hash:'b'.repeat(64)};
-  const api=new ApiClient(async(_url,init)=>{if(!init?.body)return new Response(JSON.stringify(preview));posts.push(JSON.parse(init.body as string));return new Response(JSON.stringify({schema_version:'1',error:{code:'PREVIEW_CHANGED',message:'Preview changed. Review again.'}}),{status:409});});
-  render(<ScenarioUpdate api={api} view={view as any} selectedVariantId={null} events={[{id:'U1',case_id:'PK-001',kind:'CLOCK',eligible_variant_ids:[null],evaluation_at:'2026-10-25T00:00:00Z'}]} onRefresh={()=>{}}/>);
-  fireEvent.click(screen.getByRole('button',{name:'Preview selected fictional update'}));await screen.findByText(/Exact update preview/);
-  fireEvent.click(screen.getByLabelText('I reviewed this exact fictional update'));
-  fireEvent.click(screen.getByRole('button',{name:'Confirm fictional update'}));await screen.findByText('Preview changed. Review again.');
-  expect(posts[0]).toMatchObject({expected_case_revision:0,confirmed_preview_hash:preview.preview_hash,event_id:'U1'});
-  expect(screen.queryByRole('button',{name:'Confirm fictional update'})).not.toBeInTheDocument();
 });
 it('opens prior exact result and draft from immutable event references',async()=>{
   const api=new ApiClient(async(url)=>new Response(JSON.stringify(String(url).includes('draft-versions')?{schema_version:'1',draft_version:{id:'draft-old',recipient:'Studio North',invoice_id:'INV-001',version:1,exact_text:'Original exact draft.'}}:{schema_version:'1',result:{...result,action:'FOLLOW_UP'}})));

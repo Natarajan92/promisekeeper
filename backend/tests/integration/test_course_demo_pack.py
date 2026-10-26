@@ -83,6 +83,28 @@ def test_generator_writes_only_named_files_and_keeps_existing_notes(tmp_path):
     assert 'presenter-note.txt' not in manifest['files']
 
 
+def test_full_upload_pack_has_exactly_two_presenter_stories_and_staged_receipts(tmp_path):
+    folder=tmp_path/'two-stories'
+    manifest=generate(folder,FIXED)
+    presentation=manifest['presentation']
+    assert [(s['id'],s['invoice_id'],s['start_action'],s['start_balance_minor']) for s in presentation['scenarios']]==[
+        ('HAPPY_PATH','LE-1005','FOLLOW_UP','8000000'),
+        ('PAYMENT_VERIFICATION','AT-1002','VERIFY_PAYMENT','3250000'),
+    ]
+    assert set(presentation['background_invoice_ids'])=={'MT-1001','SF-1003','KP-1004','PH-1006'}
+    assert len(manifest['invoices'])==6 and len(manifest['documents'])==4
+    initial=set(presentation['initial_upload_files'])
+    assert {'01-customers.csv','02-invoices.csv','03-bank-statement.csv','04-messages/lotus-promise.eml'}<=initial
+    assert initial.isdisjoint(presentation['staged_receipt_files'])
+    assert set(presentation['staged_receipt_files'])=={'05-later/lotus-payment.csv','05-later/payments-later.csv'}
+    assert set(presentation['staged_receipt_files'])<=set(manifest['files'])
+    script=read(folder,'TWO-SCENARIOS.md')
+    assert script.index('Scenario 1')<script.index('Scenario 2')
+    assert 'Lotus Electricals' in script and 'Arun Traders' in script
+    assert 'Confirm import' in read(folder,'START-HERE.md')
+    assert 'supporting context' in read(folder,'START-HERE.md')
+
+
 def expected_action(item, as_of):
     """Independent real-clock drift: a 'by' promise is active through its whole IST day."""
     if item['action'] == 'WAIT' and today() > date.fromisoformat(item['promise_by']):
@@ -233,6 +255,62 @@ def test_course_demo_finale_closes_after_later_statement(tmp_path):
         events = client.get(f'/api/v1/cases/{cid}/history', params={'demonstration_id': did, 'limit': 100}).json()['events']
         mentioned = {json.dumps(e['payload']) for e in events}
         assert any(first['investigation_id'] in text for text in mentioned)
+
+
+def test_two_presenter_stories_cover_approval_receipt_closure_and_unverified_claim(tmp_path):
+    folder=tmp_path/'two-story-journey';manifest=generate(folder,today())
+    with TestClient(app_for(tmp_path,'two-stories'),base_url='http://127.0.0.1') as client:
+        did,ids=journey(client,folder,manifest)
+        assert morning_review(client,did)['status']=='COMPLETE'
+        def view(invoice):return client.get(f'/api/v1/cases/{ids[invoice]}',params={'demonstration_id':did}).json()
+        lotus=view('LE-1005');original=lotus['current_result']
+        assert original['action']=='FOLLOW_UP'
+        assert original['financial_facts']['balance']['minor_units']=='8000000'
+        assert original['commitments']
+        assert 'INR 80,000.00' in lotus['draft']['exact_text']
+        assert lotus['allowed_commands']['close']['allowed'] is False
+        draft=lotus['draft']
+        approved=client.post(f"/api/v1/cases/{ids['LE-1005']}/draft-reviews",params={'demonstration_id':did},headers=HEADERS,
+            json=operation(expected_case_revision=lotus['case_revision'],draft_version_id=draft['id'],payload_hash=draft['payload_hash'],expected_review_epoch=lotus['review_epoch'],decision='APPROVE'))
+        assert approved.status_code==200,approved.text
+        assert view('LE-1005')['review_state']=='APPROVED'
+        later=manifest['happy_path_finale']
+        commit(client,'payments',read(folder,later['path']),did)
+        state=overview(client,did)
+        receipt=next(p for p in state['payments'] if p['transaction_ref']=='LOTUS-T9')
+        assert receipt['allocations']==[] and receipt['remaining_minor']=='8000000'
+        assert next(c for c in state['cases'] if c['invoice_id']=='LE-1005')['remaining_minor']=='8000000'
+        assert view('LE-1005')['review_state']!='APPROVED'
+        apply_allocations(client,did,later['allocations']);coverage(client,did)
+        paid=investigate(client,did,ids['LE-1005']);result=paid['current_result']
+        assert result['action']=='CLOSE' and result['financial_facts']['balance']['minor_units']=='0'
+        assert paid['lifecycle']=='OPEN'
+        closed=client.post(f"/api/v1/cases/{ids['LE-1005']}/closure",params={'demonstration_id':did},headers=HEADERS,
+            json=operation(expected_case_revision=paid['case_revision'],investigation_id=result['investigation_id'],confirmed_result_hash=result['result_hash'],confirm=True))
+        assert closed.status_code==200,closed.text
+        assert view('LE-1005')['lifecycle']=='CLOSED'
+        assert sum(int(row['balance']['minor_units']) for row in cases(client,did).values() if row['lifecycle']=='OPEN')==17050000
+        history=client.get(f"/api/v1/investigations/{original['investigation_id']}",params={'demonstration_id':did}).json()
+        assert history['result']==original
+
+        # Another customer's valid receipt cannot substantiate Arun's claim.
+        arun=investigate(client,did,ids['AT-1002'])
+        assert arun['current_result']['action']=='VERIFY_PAYMENT'
+        assert arun['current_result']['financial_facts']['balance']['minor_units']=='3250000'
+        assert arun['current_result']['claims'] and not all(c['resolved'] for c in arun['current_result']['claims'])
+        assert arun['allowed_commands']['close']['allowed'] is False
+        assert 'ARUN-T9' not in {p['transaction_ref'] for p in overview(client,did)['payments']}
+        claim_result=arun['current_result']
+        commit(client,'payments',read(folder,manifest['finale']['path']),did)
+        apply_allocations(client,did,manifest['finale']['allocations']);coverage(client,did)
+        resolved=investigate(client,did,ids['AT-1002'])
+        assert resolved['current_result']['action']=='CLOSE'
+        assert resolved['current_result']['financial_facts']['balance']['minor_units']=='0'
+        assert all(c['resolved'] for c in resolved['current_result']['claims'])
+        assert resolved['lifecycle']=='OPEN'
+        assert view('LE-1005')['lifecycle']=='CLOSED'
+        assert sum(int(row['balance']['minor_units']) for row in cases(client,did).values() if row['lifecycle']=='OPEN')==13800000
+        assert client.get(f"/api/v1/investigations/{claim_result['investigation_id']}",params={'demonstration_id':did}).json()['result']==claim_result
 
 
 def test_checked_in_copy_matches_the_generator_for_its_anchor(tmp_path):

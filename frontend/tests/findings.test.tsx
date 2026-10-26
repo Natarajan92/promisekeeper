@@ -129,7 +129,7 @@ it('labels legacy findings and requests reinvestigation without adding fields to
 it('puts money and case actions before developer insights and mounts the trace only on request', () => {
   const {container}=render(<FindingsView result={saved} view={{...view,freshness:'CURRENT'}} onSource={()=>{}} team={<p>AI TEAM TRACE</p>} actions={<h3>Case actions</h3>}/>);
   expect(screen.queryByText('AI TEAM TRACE')).not.toBeInTheDocument();
-  const summary=screen.getByText('Developer insights');
+  const summary=screen.getByText('Processing details');
   expect(container.querySelector('.financial-summary')!.compareDocumentPosition(screen.getByText(saved.explanation.text))&Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
   expect(screen.getByRole('heading',{name:'Case actions'}).compareDocumentPosition(summary)&Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
   const details=summary.closest('details')!;

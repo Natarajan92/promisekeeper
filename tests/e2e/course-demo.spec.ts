@@ -3,13 +3,15 @@ import {randomUUID} from 'node:crypto';
 import {mkdirSync, readFileSync} from 'node:fs';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
-import {test, expect, type Page} from './support/test';
+import {test, expect, type Page, type APIRequestContext} from './support/test';
 
 type Allocation={transaction_ref:string;invoice_id:string;amount:string;hint_required:boolean};
 type Document={path:string;kind:string;invoice_id:string;sender_role:string};
 type Expected={invoice_id:string;customer_name:string;action:string;balance_minor:string};
+type Finale={path:string;kind:string;invoice_id:string;action:string;balance_minor:string;allocations:Allocation[]};
 type Manifest={as_of:string;documents:Document[];allocations:Allocation[];expected:Expected[];refused:Document[];
-  finale:{path:string;kind:string;invoice_id:string;action:string;balance_minor:string;allocations:Allocation[]}};
+  finale:Finale;happy_path_finale:Finale;
+  presentation:{scenarios:{id:string;invoice_id:string;start_action:string;start_balance_minor:string}[]}};
 
 const repo=fileURLToPath(new URL('../../',import.meta.url));
 const folder=path.join(repo,'.runtime/course-demo-e2e');
@@ -53,7 +55,7 @@ async function upload(page:Page,kind:string,file:string,caseId?:string){
   await preview(page,kind,file,caseId);
   await expect(page.locator('.intake-preview [role=alert]')).toHaveCount(0);
   if(caseId)await expect(page.locator('.intake-extracted blockquote').first()).toBeVisible();
-  await page.getByLabel('I reviewed this preview and confirm these are fictional sample records.',{exact:true}).check();
+  await page.getByLabel('I reviewed this preview and confirm the records are correct.',{exact:true}).check();
   await page.getByRole('button',{name:'Confirm import',exact:true}).click();
   await expect(page.getByRole('heading',{name:'Import preview',exact:true})).toHaveCount(0);
   await expect(page.locator('.intake-workspace-summary')).toBeVisible();
@@ -100,7 +102,7 @@ test('course demo pack runs end to end through every page',async({page,request,c
   await context.grantPermissions(['clipboard-read','clipboard-write']);
   const health=await (await request.get('/api/v1/health')).json();
   expect(health.agent_mode).toBe('STUB');
-  // Retain a separate imported workspace to prove "New upload workspace" never appends to it.
+  // Retain a separate imported workspace to prove "New workspace" never appends to it.
   const originalCommand={schema_version:'1',operation_id:randomUUID(),kind:'customers',filename:'01-customers.csv',
     content:readFileSync(path.join(folder,'01-customers.csv'),'utf8'),demonstration_id:null};
   const originalPreview=await request.post('/api/v1/intake/previews',{headers:{'X-PromiseKeeper-Request':'1'},data:originalCommand});
@@ -117,10 +119,10 @@ test('course demo pack runs end to end through every page',async({page,request,c
   await page.addInitScript(id=>localStorage.setItem('selected_demonstration_id',id),originalDid);
   const discovered=page.waitForResponse(response=>response.url().endsWith('/api/v1/demonstrations')&&response.request().method()==='GET');
   await page.goto('/#/dashboard');await discovered;
-  await expect(page.getByText('Loading saved demonstrations…',{exact:true})).toHaveCount(0);
+  await expect(page.getByText('Loading saved workspaces…',{exact:true})).toHaveCount(0);
   await page.getByRole('button',{name:/^Workspace/}).click();
-  await expect(page.getByRole('combobox',{name:'Demonstration copy',exact:true})).toHaveValue(originalDid);
-  await page.getByRole('link',{name:'New upload workspace',exact:true}).click();
+  await expect(page.getByRole('combobox',{name:'Workspace',exact:true})).toHaveValue(originalDid);
+  await page.getByRole('link',{name:'New workspace',exact:true}).click();
   await expect(page.getByRole('heading',{level:1,name:'Bring in your records',exact:true})).toBeVisible();
   await expect(page.getByRole('combobox',{name:'File type',exact:true})).toBeVisible();
   expect(await page.evaluate(()=>localStorage.getItem('selected_demonstration_id'))).toBeNull();
@@ -242,4 +244,115 @@ test('course demo pack runs end to end through every page',async({page,request,c
   expect(history.ok()).toBe(true);expect((await history.json()).result).toEqual(originalArun);
   expect(await (await request.get(originalUrl)).json()).toEqual(originalSnapshot);
   await screenshot(page,'arun-finale');
+});
+
+async function preparePresentation(request:APIRequestContext){
+  const headers={'X-PromiseKeeper-Request':'1'};
+  async function importFile(kind:string,file:string,did:string|null=null,cid?:string){
+    const command={schema_version:'1',operation_id:randomUUID(),kind,filename:path.basename(file),content:readFileSync(path.join(folder,file),'utf8'),demonstration_id:did,case_id:cid??null,sender_role:cid?'CUSTOMER':'UNVERIFIED'};
+    const preview=await request.post('/api/v1/intake/previews',{headers,data:command});
+    expect(preview.status()).toBe(200);const checked=await preview.json();expect(checked.errors).toEqual([]);
+    const committed=await request.post('/api/v1/intake/commits',{headers,data:{...command,operation_id:randomUUID(),confirmed_preview_hash:checked.preview_hash,confirm:true,fictional_data:true,settled_confirmed:false}});
+    expect(committed.status()).toBe(200);return committed.json();
+  }
+  const did=(await importFile('customers','01-customers.csv')).demonstration_id as string;
+  await importFile('invoices','02-invoices.csv',did);
+  await importFile('payments','03-bank-statement.csv',did);
+  const state=async()=>{
+    const response=await request.get(`/api/v1/demonstrations/${did}/intake`);expect(response.status()).toBe(200);return response.json();
+  };
+  const ids:Record<string,string>=Object.fromEntries((await state()).cases.map((row:any)=>[row.invoice_id,row.id]));
+  for(const document of manifest.documents)await importFile(document.kind,document.path,did,ids[document.invoice_id]);
+  for(const allocation of manifest.allocations){
+    const current=await state();const receipt=current.payments.find((row:any)=>row.transaction_ref===allocation.transaction_ref);
+    const row=current.cases.find((row:any)=>row.invoice_id===allocation.invoice_id);
+    const saved=await request.post(`/api/v1/demonstrations/${did}/intake/allocations`,{headers,data:{schema_version:'1',operation_id:randomUUID(),payment_id:receipt.id,case_id:row.id,expected_case_revision:row.case_revision,amount_text:allocation.amount,confirm:true,settled_confirmed:true}});
+    expect(saved.status()).toBe(200);
+  }
+  for(const invoice of (await state()).cases){
+    const current=await state();const row=current.cases.find((entry:any)=>entry.id===invoice.id);
+    const saved=await request.post(`/api/v1/demonstrations/${did}/intake/ledger-reviews`,{headers,data:{schema_version:'1',operation_id:randomUUID(),case_id:row.id,expected_case_revision:row.case_revision,reviewed_through:current.as_of,complete:true,confirm:true}});
+    expect(saved.status()).toBe(200);
+  }
+  expect((await state()).payments).toHaveLength(3);
+  return {did,ids,state};
+}
+
+test('two presenter stories: Lotus approval to closure, then Arun payment discrepancy and evidence resolution',async({page,request,context})=>{
+  test.setTimeout(180_000);
+  expect(manifest.presentation.scenarios.map(item=>item.invoice_id)).toEqual(['LE-1005','AT-1002']);
+  await context.grantPermissions(['clipboard-read','clipboard-write']);
+  const {did,ids,state}=await preparePresentation(request);
+  await page.addInitScript(id=>localStorage.setItem('selected_demonstration_id',id),did);
+  const readCase=async(invoice:string)=>{
+    const response=await request.get(`/api/v1/cases/${ids[invoice]}?demonstration_id=${did}`);expect(response.status()).toBe(200);return response.json();
+  };
+  await page.goto('/#/dashboard');
+  await page.getByRole('button',{name:/Start morning review$/}).click();
+  await expect(page.getByText('Review complete. Choose a case to see its recommendation.',{exact:true})).toBeVisible({timeout:45_000});
+  const initialLotus=(await readCase('LE-1005')).current_result;
+  expect(initialLotus.action).toBe('FOLLOW_UP');expect(initialLotus.financial_facts.balance.minor_units).toBe('8000000');
+
+  // Scenario 1: every presented step belongs to Lotus, including exact approval/copy.
+  await pageLink(page,'Cases');await page.getByRole('button',{name:/PK-005.*Lotus Electricals/}).click();
+  await expect(page.getByRole('heading',{level:1,name:'Lotus Electricals',exact:true})).toBeVisible();
+  await expect(page.getByRole('region',{name:'What happened',exact:true}).locator('blockquote')).toContainText('we will pay INR 80000 by');
+  await screenshot(page,'two-stories-happy-evidence');
+  await pageLink(page,'Assistant');
+  await page.getByRole('combobox',{name:'Case to follow',exact:true}).selectOption(ids['LE-1005']);
+  await expect(page.getByRole('list',{name:'Steps for Lotus Electricals',exact:true})).toBeVisible();
+  await pageLink(page,'Approvals');
+  await page.locator('.approval-items').getByRole('link').filter({hasText:'Lotus Electricals'}).click();
+  const exact=(await readCase('LE-1005')).draft.exact_text;
+  await expect(page.getByLabel('Draft text',{exact:true})).toHaveValue(exact);
+  await page.getByRole('button',{name:'Approve exact saved version',exact:true}).click();
+  await page.getByRole('button',{name:'Copy approved message',exact:true}).click();
+  expect((await page.evaluate(()=>navigator.clipboard.readText())).replaceAll('\r\n','\n')).toBe(exact);
+  await expect(page.getByRole('region',{name:'Approved message handoff',exact:true})).toContainText('Nothing has been sent.');
+  await screenshot(page,'two-stories-happy-approval');
+  await step(page,3);await upload(page,manifest.happy_path_finale.kind,manifest.happy_path_finale.path);
+  let data=await state();const receipt=data.payments.find((row:any)=>row.transaction_ref==='LOTUS-T9');
+  expect(receipt.allocations).toEqual([]);
+  expect(data.cases.find((row:any)=>row.invoice_id==='LE-1005').remaining_minor).toBe('8000000');
+  await step(page,5);for(const item of manifest.happy_path_finale.allocations)await allocate(page,item,ids);
+  await step(page,6);await coverage(page);
+  await pageLink(page,'Cases');await page.getByRole('button',{name:/PK-005.*Lotus Electricals/}).click();
+  await page.getByRole('button',{name:'Investigate case',exact:true}).click();
+  await expect(page.getByText('COMPLETE result saved.',{exact:true})).toBeVisible({timeout:30_000});
+  const paid=await readCase('LE-1005');expect(paid.current_result.action).toBe('CLOSE');expect(paid.current_result.financial_facts.balance.minor_units).toBe('0');expect(paid.lifecycle).toBe('OPEN');
+  await page.getByRole('button',{name:'Review case closure',exact:true}).click();
+  await page.getByLabel('Confirm closure of invoice LE-1005',{exact:true}).check();
+  await page.getByRole('button',{name:'Confirm case closure',exact:true}).click();
+  await expect(page.locator('.case-heading')).toContainText('CLOSED');
+  await screenshot(page,'two-stories-happy-closed');
+  const historical=await request.get(`/api/v1/investigations/${initialLotus.investigation_id}?demonstration_id=${did}`);
+  expect((await historical.json()).result).toEqual(initialLotus);
+
+  // Scenario 2: the other customer's valid receipt cannot resolve Arun's claim.
+  await pageLink(page,'Cases');await page.getByRole('button',{name:/PK-002.*Arun Traders/}).click();
+  await page.getByRole('button',{name:'Investigate case',exact:true}).click();
+  await expect(page.getByText('COMPLETE result saved.',{exact:true})).toBeVisible({timeout:30_000});
+  const problem=(await readCase('AT-1002')).current_result;
+  expect(problem.action).toBe('VERIFY_PAYMENT');expect(problem.financial_facts.balance.minor_units).toBe('3250000');
+  expect(problem.claims.some((claim:any)=>!claim.resolved)).toBe(true);
+  expect((await state()).payments.some((row:any)=>row.transaction_ref==='ARUN-T9')).toBe(false);
+  await expect(page.getByRole('region',{name:'What happened',exact:true}).locator('blockquote')).toContainText('ARUN-T9');
+  await expect(page.locator('.suggestion-card').getByRole('heading',{name:'Verify the payment',exact:true})).toBeVisible();
+  await screenshot(page,'two-stories-problem-detected');
+  await page.getByRole('button',{name:'History',exact:true}).click();
+  await expect(page.getByRole('button',{name:'Review case closure',exact:true})).toBeDisabled();
+  await step(page,3);await upload(page,manifest.finale.kind,manifest.finale.path);
+  await step(page,5);for(const item of manifest.finale.allocations)await allocate(page,item,ids);
+  await step(page,6);await coverage(page);
+  await pageLink(page,'Cases');await page.getByRole('button',{name:/PK-002.*Arun Traders/}).click();
+  await page.getByRole('button',{name:'Investigate case',exact:true}).click();
+  await expect(page.getByText('COMPLETE result saved.',{exact:true})).toBeVisible({timeout:30_000});
+  const resolved=await readCase('AT-1002');expect(resolved.current_result.action).toBe('CLOSE');expect(resolved.current_result.financial_facts.balance.minor_units).toBe('0');expect(resolved.current_result.claims.every((claim:any)=>claim.resolved)).toBe(true);expect(resolved.lifecycle).toBe('OPEN');
+  expect((await readCase('LE-1005')).lifecycle).toBe('CLOSED');
+  await page.getByRole('button',{name:'Compare',exact:true}).click();
+  await page.getByRole('button',{name:'Compare saved investigations',exact:true}).click();
+  await expect(page.locator('.what-changed').getByText('Recommendation changed',{exact:true})).toBeVisible();
+  await expect(page.getByLabel('Earlier saved values')).toContainText('₹32,500.00');
+  await expect(page.getByLabel('Later saved values')).toContainText('₹0.00');
+  await screenshot(page,'two-stories-problem-resolved');
 });

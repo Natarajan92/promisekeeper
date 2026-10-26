@@ -13,7 +13,7 @@ async function select(page: Page, id: string) {
   await page.goto("/");
 }
 
-test("empty discovery requires explicit creation, then preserves the sole copy on reload", async ({ page, playwright }) => {
+test("empty discovery guides uploads without writes, then preserves an explicitly seeded workspace on reload", async ({ page, playwright }) => {
   const server=await isolatedServer();
   await server.start();
   const request=await playwright.request.newContext({baseURL:server.url});
@@ -21,9 +21,11 @@ test("empty discovery requires explicit creation, then preserves the sole copy o
   expect((await (await request.get("/api/v1/demonstrations")).json()).demonstrations).toEqual([]);
   await page.goto(server.url);
   await openWorkspace(page);
-  await expect(page.getByRole("button", {name:/create.*demonstration/i}).first()).toBeVisible();
+  await expect(page.getByRole("link", {name:"New workspace"})).toBeVisible();
+  await expect(page.getByRole("button",{name:/create.*demonstration/i})).toHaveCount(0);
   expect((await (await request.get("/api/v1/demonstrations")).json()).demonstrations).toEqual([]);
-  await page.getByRole("button", {name:/create.*demonstration/i}).first().click();
+  await createCopy(request);
+  await page.reload();
   await expect(page.getByText("Northstar Analytics", {exact:true}).first()).toBeVisible();
   const copies = (await (await request.get("/api/v1/demonstrations")).json()).demonstrations;
   expect(copies).toHaveLength(1);
@@ -38,7 +40,7 @@ test("multiple copies need selection and valid saved selection opens exact raw e
   const copy = await createCopy(request);
   await page.goto("/");
   await openWorkspace(page);
-  await expect(page.getByLabel("Demonstration copy")).toBeVisible();
+  await expect(page.getByRole("combobox",{name:"Workspace",exact:true})).toBeVisible();
   await select(page, copy.id);
   await page.getByRole('link',{name:/^Cases/}).click();await page.getByRole("button", {name:/PK-001|Northstar Analytics/i}).first().click();await page.getByRole('button',{name:/^Evidence \(\d+\)$/}).click();
   await expect(page.getByText(/Fictional invoice NS-104; client Northstar Analytics/)).toBeVisible();
@@ -111,7 +113,7 @@ test("listing failure preserves saved selection and never creates or resets", as
 test("missing saved selection clears it and offers a chooser for retained copies", async ({ page }) => {
   await select(page, "00000000-0000-0000-0000-000000000000");
   await openWorkspace(page);
-  await expect(page.getByLabel("Demonstration copy")).toBeVisible();
+  await expect(page.getByRole("combobox",{name:"Workspace",exact:true})).toBeVisible();
   expect(await page.evaluate(() => localStorage.getItem("selected_demonstration_id"))).not.toBe("00000000-0000-0000-0000-000000000000");
 });
 
@@ -126,7 +128,7 @@ test("confirmed deletion clears the removed browser selection without creating a
   const retained=(await (await request.get("/api/v1/demonstrations")).json()).demonstrations;
   await page.reload();
   await openWorkspace(page);
-  await expect(page.getByLabel("Demonstration copy")).toBeVisible();
+  await expect(page.getByRole("combobox",{name:"Workspace",exact:true})).toBeVisible();
   expect(await page.evaluate(()=>localStorage.getItem("selected_demonstration_id"))).not.toBe(copy.id);
   expect((await (await request.get("/api/v1/demonstrations")).json()).demonstrations).toEqual(retained);
 });

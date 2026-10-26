@@ -13,7 +13,6 @@ import {WhatChanged} from '../investigations/WhatChanged';
 import {Timeline} from '../investigations/Timeline';
 import {DraftReview} from '../reviews/DraftReview';
 import {OwnerDecisions} from '../history/OwnerDecisions';
-import {ScenarioUpdate} from '../history/ScenarioUpdate';
 import {CaseHistory} from '../history/CaseHistory';
 import {AgentTrace} from '../agents/AgentTrace';
 import {FeedbackButtons} from '../agents/FeedbackButtons';
@@ -29,7 +28,7 @@ const LEGACY:Record<LegacyTab,[CaseSection,Target]>={evidence:['evidence',null],
 const sectionFor=(route:Route):CaseSection=>route.page==='case'&&route.section?route.section:'overview';
 
 export function CasePage({ws,route,navigate}:PageProps) {
-  const {api,selected,refresh,refreshTick,catalogue,copies}=ws;
+  const {api,selected,refresh,refreshTick}=ws;
   const caseId=route.page==='case'?route.caseId:null;
   const [view,setView]=useState<CaseView|null>(null);const [caseError,setCaseError]=useState('');const [loading,setLoading]=useState(false);
   const caseHeading=useRef<HTMLHeadingElement>(null);
@@ -168,7 +167,6 @@ export function CasePage({ws,route,navigate}:PageProps) {
         {shown==='history'&&<div className="case-grid case-grid-history">
           <div className="case-column">
           <div className="pk-card"><OwnerDecisions key={`owner:${selected}:${caseId}`} api={api} view={currentView} onRefresh={refresh}/></div>
-          {!ws.imported&&<div className="pk-card"><ScenarioUpdate key={`scenario:${selected}:${caseId}`} api={api} view={currentView} events={catalogue?.events??[]} selectedVariantId={copies.find(copy=>copy.id===selected)?.selected_variant_id} onRefresh={refresh}/></div>}
             {check}
           </div>
           <div className="case-column"><div className="pk-card"><CaseHistory key={`history:${selected}:${caseId}`} api={api} view={currentView} events={history} cursor={cursor} onMore={()=>void moreHistory()} onSource={onSource} onCompare={id=>{setComparisonRequest({did:currentView.demonstration_id,cid:currentView.id,id});openSection('compare');}}/></div></div>

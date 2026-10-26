@@ -2,7 +2,7 @@ import {afterEach,expect,it,vi} from 'vitest';
 import {cleanup,fireEvent,render,screen,within} from '@testing-library/react';
 import '@testing-library/jest-dom/vitest';
 import {ApiClient} from '../src/api/client';
-import {DemonstrationPicker} from '../src/cases/DemonstrationPicker';
+import {WorkspacePicker} from '../src/cases/WorkspacePicker';
 import {CaseHistory} from '../src/history/CaseHistory';
 import {WhatChanged} from '../src/investigations/WhatChanged';
 import {before,after,attempt,completed,comparisonView} from './comparisonFixtures';
@@ -11,12 +11,13 @@ import {demo,source} from './fixtures';
 afterEach(()=>{cleanup();localStorage.clear();vi.restoreAllMocks();});
 
 it('distinguishes friendly copy choices with identical dates and preserves the selected exact identity without writes',()=>{
-  const onSelect=vi.fn(),fetcher=vi.fn();const other={...demo,id:'11111111-1111-4111-8111-111111111112'};
-  render(<DemonstrationPicker api={new ApiClient(fetcher)} copies={[demo,other]} selected={other.id} catalogue={null} onSelect={onSelect} onCreated={()=>{}}/>);
-  const picker=screen.getByLabelText('Demonstration copy');const options=within(picker).getAllByRole('option').slice(1);
-  expect(options[0]).toHaveTextContent('1. Standard payment examples');expect(options[1]).toHaveTextContent('2. Standard payment examples');
-  expect(options[1]).toHaveTextContent('Fixed sample date');fireEvent.change(picker,{target:{value:demo.id}});expect(onSelect).toHaveBeenCalledWith(demo.id);
-  fireEvent.click(screen.getByText('Saved copy details'));expect(screen.getByText(other.id)).toBeVisible();expect(fetcher).not.toHaveBeenCalled();
+  const onSelect=vi.fn();const other={...demo,id:'11111111-1111-4111-8111-111111111112'};
+  render(<WorkspacePicker workspaces={[demo,other]} selected={other.id} onSelect={onSelect}/>);
+  const picker=screen.getByLabelText('Workspace');const options=within(picker).getAllByRole('option').slice(1);
+  expect(picker).toHaveValue(other.id);
+  expect(options[0]).toHaveTextContent('1. Saved workspace');expect(options[1]).toHaveTextContent('2. Saved workspace');
+  fireEvent.change(picker,{target:{value:demo.id}});expect(onSelect).toHaveBeenCalledWith(demo.id);
+  fireEvent.click(screen.getByText('Workspace details'));expect(screen.getByText(`Workspace ID: ${other.id}`)).toBeVisible();expect(onSelect).toHaveBeenCalledTimes(1);
 });
 it('loads ascending history through its human label while preserving the exact event code and payload on demand',()=>{
   const onMore=vi.fn(),fetcher=vi.fn();

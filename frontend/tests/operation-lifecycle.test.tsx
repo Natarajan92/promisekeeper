@@ -34,7 +34,7 @@ function workspace({twoCopies=false,delayedLookups=false}={}) {
       };});
     }
     const copy=path.includes(second)?second:did;
-    const view={...caseView,demonstration_id:copy,client:copy===second?'Other Studio':'Studio North',case_revision:revision,draft:{...saved,demonstration_id:copy},current_draft_version_id:saved.id,draft_state:'READY',review_state:'UNAPPROVED',allowed_commands:{...caseView.allowed_commands,edit_draft:allowed,approve_draft:allowed,reject_draft:allowed}};
+    const view={...caseView,demonstration_id:copy,client:copy===second?'Other Studio':'Studio North',case_revision:revision,draft:{...saved,demonstration_id:copy},current_draft_version_id:saved.id,draft_state:'READY',review_state:'UNAPPROVED',allowed_commands:{...caseView.allowed_commands,reopen:allowed,edit_draft:allowed,approve_draft:allowed,reject_draft:allowed}};
     if(path.endsWith('/health'))return reply({schema_version:'1',ready:true,agent_mode:'STUB'});
     if(path.endsWith('/catalogue'))return reply({schema_version:'1',catalogue_version:'release-0.1',variant_ids:[],events:[{id:'U1',kind:'CLOCK',eligible_variant_ids:[null],case_id:'PK-001',evaluation_at:caseView.evaluation_at}]});
     if(path.endsWith('/demonstrations'))return reply({schema_version:'1',demonstrations:copies});
@@ -51,9 +51,9 @@ async function openHistory() {
 // Selected-copy deletion lives only in the Workspace switcher.
 function deleteSelected() {
   openSwitcher();
-  fireEvent.click(screen.getByRole('button',{name:'Review selected-copy deletion'}));
-  fireEvent.click(screen.getByLabelText('Confirm deletion of this selected demonstration'));
-  fireEvent.click(screen.getByRole('button',{name:'Delete this demonstration'}));
+  fireEvent.click(screen.getByRole('button',{name:'Review workspace deletion'}));
+  fireEvent.click(screen.getByLabelText('Confirm deletion of this workspace'));
+  fireEvent.click(screen.getByRole('button',{name:'Delete this workspace'}));
 }
 
 it('unlocks both History consumers when the unmounted Review save later commits',async()=>{
@@ -64,11 +64,11 @@ it('unlocks both History consumers when the unmounted Review save later commits'
   fireEvent.click(screen.getByRole('button',{name:'Save unapproved version'}));
   fireEvent.click(screen.getByRole('button',{name:'History'}));
   await screen.findAllByText(/Request not recorded/);
-  openSwitcher();expect(screen.getByRole('button',{name:'Review selected-copy deletion'})).toBeDisabled();
-  expect(screen.getByRole('button',{name:'Preview selected fictional update'})).toBeDisabled();
+  openSwitcher();expect(screen.getByRole('button',{name:'Review workspace deletion'})).toBeDisabled();
+  expect(screen.getByRole('button',{name:'Review case reopening'})).toBeDisabled();
   await act(async()=>app.complete());
-  await waitFor(()=>expect(screen.getByRole('button',{name:'Review selected-copy deletion'})).toBeEnabled());
-  expect(screen.getByRole('button',{name:'Preview selected fictional update'})).toBeEnabled();
+  await waitFor(()=>expect(screen.getByRole('button',{name:'Review workspace deletion'})).toBeEnabled());
+  expect(screen.getByRole('button',{name:'Review case reopening'})).toBeEnabled();
   expect(screen.queryByRole('button',{name:'Retry original request'})).not.toBeInTheDocument();
   expect(screen.getByText(/Business time.*revision 1/)).toBeInTheDocument();
   fireEvent.click(screen.getByRole('button',{name:'Overview'}));
@@ -94,14 +94,17 @@ it('preserves newer unsaved wording after an older save commits outside Review',
   expect(screen.getByText(/A newer saved version exists/)).toBeInTheDocument();
 });
 
-it('a known receipt unlocks the sibling even while its earlier recovery lookup is outstanding',async()=>{
+it('a known receipt unlocks the current view while another recovery lookup is outstanding',async()=>{
   const app=workspace({delayedLookups:true});
   localStorage.setItem(pendingKey(),JSON.stringify({kind:'closure',path:'/closure',operation:{schema_version:'1',operation_id:'shared-operation'}}));
   window.location.hash=`${caseHash}?section=history`;render(<App api={app.api}/>);await screen.findByRole('heading',{name:'Studio North'});
+  await waitFor(()=>expect(app.lookups).toHaveLength(1));
+  fireEvent.click(screen.getByRole('button',{name:'Overview'}));
   await waitFor(()=>expect(app.lookups).toHaveLength(2));
   await act(async()=>app.lookups[0](reply({schema_version:'1',receipt:{operation_id:'shared-operation',operation_type:'CLOSE_CASE',target_id:cid,committed_at:caseView.evaluation_at,outcome:'CLOSED',case_revision:1}})));
-  await waitFor(()=>expect(screen.getByRole('button',{name:'Preview selected fictional update'})).toBeEnabled());
-  openSwitcher();expect(screen.getByRole('button',{name:'Review selected-copy deletion'})).toBeEnabled();
+  fireEvent.click(screen.getByRole('button',{name:'History'}));
+  await waitFor(()=>expect(screen.getByRole('button',{name:'Review case reopening'})).toBeEnabled());
+  openSwitcher();expect(screen.getByRole('button',{name:'Review workspace deletion'})).toBeEnabled();
   await act(async()=>app.lookups[1](absent()));
   expect(screen.queryByText(/Request not recorded/)).not.toBeInTheDocument();
   expect(screen.queryByRole('button',{name:'Retry original request'})).not.toBeInTheDocument();
@@ -114,8 +117,8 @@ it('checking a disappeared pending record releases stale local controls without 
   await screen.findAllByText(/Request not recorded/);
   localStorage.removeItem(pendingKey());
   fireEvent.click(screen.getAllByRole('button',{name:'Check saved request outcome'})[0]);
-  openSwitcher();await waitFor(()=>expect(screen.getByRole('button',{name:'Review selected-copy deletion'})).toBeEnabled());
-  expect(screen.getByRole('button',{name:'Preview selected fictional update'})).toBeEnabled();
+  openSwitcher();await waitFor(()=>expect(screen.getByRole('button',{name:'Review workspace deletion'})).toBeEnabled());
+  expect(screen.getByRole('button',{name:'Review case reopening'})).toBeEnabled();
   expect(screen.queryByText('Decision saved.')).not.toBeInTheDocument();
 });
 
@@ -124,7 +127,7 @@ it('confirmed deletion rediscovery clears its selected scope after navigating aw
   fireEvent.click(screen.getByRole('button',{name:'Overview'}));
   expect(screen.getByRole('heading',{name:'Studio North'})).toBeInTheDocument();
   await act(async()=>app.complete('DELETED'));
-  expect(await screen.findByText(/No saved demonstrations/)).toBeInTheDocument();
+  expect(await screen.findByText(/No saved workspaces/)).toBeInTheDocument();
   expect(screen.queryByRole('heading',{name:'Studio North'})).not.toBeInTheDocument();
   expect(localStorage.getItem('selected_demonstration_id')).toBeNull();
 });
@@ -135,15 +138,15 @@ it('deletion of the previous copy preserves the new selected copy and its unsave
   const otherBuffer=JSON.stringify({text:'Other unsaved wording',recipient:'Other Studio',base:'draft-one'});
   localStorage.setItem(pendingKey(second),otherPending);localStorage.setItem(bufferKey(second),otherBuffer);
   const app=workspace({twoCopies:true});window.location.hash=caseHash;render(<App api={app.api}/>);await openHistory();deleteSelected();
-  fireEvent.change(screen.getByLabelText('Demonstration copy'),{target:{value:second}});
+  fireEvent.change(screen.getByLabelText('Workspace'),{target:{value:second}});
   await goTo(caseHash);
   await screen.findByRole('heading',{name:'Other Studio'});
   fireEvent.click(screen.getByRole('button',{name:'Overview'}));
   await screen.findByDisplayValue('Other unsaved wording');
   await act(async()=>app.complete('DELETED'));
-  await waitFor(()=>expect(screen.queryByText('Loading saved demonstrations…')).not.toBeInTheDocument());openSwitcher();
-  await waitFor(()=>expect(screen.getByLabelText('Demonstration copy').querySelectorAll('option')).toHaveLength(2));
-  expect(screen.getByLabelText('Demonstration copy')).toHaveValue(second);
+  await waitFor(()=>expect(screen.queryByText('Loading saved workspaces…')).not.toBeInTheDocument());openSwitcher();
+  await waitFor(()=>expect(screen.getByLabelText('Workspace').querySelectorAll('option')).toHaveLength(2));
+  expect(screen.getByLabelText('Workspace')).toHaveValue(second);
   expect(screen.getByRole('heading',{name:'Other Studio'})).toBeInTheDocument();
   expect(screen.getByLabelText('Draft text')).toHaveValue('Other unsaved wording');
   expect(localStorage.getItem('selected_demonstration_id')).toBe(second);

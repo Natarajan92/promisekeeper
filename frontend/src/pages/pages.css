@@ -43,7 +43,7 @@
 .dashboard .dash-morning-action button:disabled{opacity:.85}
 .dashboard .dash-morning-action button::before{content:"✦ "}
 .dashboard .dash-morning button:focus-visible,.dashboard .dash-hero a:focus-visible{outline-color:#fff}
-.dash-mode{padding:3px 10px;border-radius:var(--radius-pill);background:#151a3333;color:#fff;font-size:.74rem;font-weight:800;letter-spacing:.04em}
+
 .dashboard .dash-morning .subtle{margin:0;color:#e4defe;font-size:.82rem}
 .dashboard .dash-morning .notice{margin:10px 0 0;border-radius:10px;border-left-color:var(--coral)}
 .dashboard .dash-morning>button{margin-top:10px;background:#fff;color:var(--indigo);border:0;font-weight:800}
@@ -228,7 +228,7 @@
 .case-page .case-journey ol{gap:4px 18px}
 .case-page .case-journey button{border-radius:var(--radius-pill);padding:5px 10px;font-weight:700}
 .case-page .case-journey button[aria-current]{background:var(--lav);color:var(--indigo);text-decoration:none}
-.case-page .case-column>.pk-card>.owner-decisions,.case-page .case-column>.pk-card>.scenario-update{margin:0;padding:0;border:0;max-width:none}
+.case-page .case-column>.pk-card>.owner-decisions{margin:0;padding:0;border:0;max-width:none}
 .case-page .view-content .pk-card h2{font:800 1.12rem/1.3 var(--font)}
 .case-page .evidence-record{padding:16px;margin-top:10px;border:1px solid var(--line);border-radius:14px}
 .case-page .financial-summary{border-radius:14px}

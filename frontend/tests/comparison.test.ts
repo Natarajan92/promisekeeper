@@ -6,7 +6,7 @@ import {cid,did} from './fixtures';
 
 it('orders completed results by server sequence, excludes incomplete attempts, and rejects another scope',()=>{
   expect(completedInvestigations([completed('after',20),{...completed('failed',30),event_type:'INVESTIGATION_INCOMPLETE'},completed('before',2),completed('after',20)],did,cid)).toEqual(['before','after']);
-  expect(()=>completedInvestigations([{...completed('foreign',1),demonstration_id:'other'}],did,cid)).toThrow(/another copy or case/);
+  expect(()=>completedInvestigations([{...completed('foreign',1),demonstration_id:'other'}],did,cid)).toThrow(/another workspace or case/);
 });
 it('shows the Cedar action change and exact newly included ledger version without changing saved results',()=>{
   const original=JSON.stringify([before,after]);const diff=compareResults(before,after);

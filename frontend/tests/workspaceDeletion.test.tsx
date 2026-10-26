@@ -26,15 +26,15 @@ function deletionApp({post='commit',lookup='absent'}:{post?:'commit'|'lost'|'los
     if(url.endsWith('/cases'))return reply({demonstration_id:did,clock_mode:'REFERENCE',evaluation_at:caseView.evaluation_at,cases:[{...caseView,currency:'INR',due_at:null,has_previous_investigation:false,balance:null,balance_label:'UNKNOWN_REMAINDER',recommended_action:null,review_at:null}]});
     if(url.includes('/history'))return reply({events:[],next_cursor:null});
     if(url.includes('/morning-reviews/latest'))return reply({morning_review:null});
-    return reply(caseView);
+    return reply({...caseView,allowed_commands:{...caseView.allowed_commands,reopen:{allowed:true,blocking_reasons:[]}}});
   });
   return {api,posts};
 }
 const openSwitcher=()=>fireEvent.click(screen.getByRole('button',{name:/^Workspace/}));
 function confirmDeletion() {
-  fireEvent.click(screen.getByRole('button',{name:'Review selected-copy deletion'}));
-  expect(screen.getByRole('button',{name:'Delete this demonstration'})).toBeDisabled();
-  fireEvent.click(screen.getByLabelText('Confirm deletion of this selected demonstration'));
+  fireEvent.click(screen.getByRole('button',{name:'Review workspace deletion'}));
+  expect(screen.getByRole('button',{name:'Delete this workspace'})).toBeDisabled();
+  fireEvent.click(screen.getByLabelText('Confirm deletion of this workspace'));
 }
 
 it('requires explicit confirmation before selected-copy deletion and reports only committed deletion',async()=>{
@@ -43,12 +43,12 @@ it('requires explicit confirmation before selected-copy deletion and reports onl
   await waitFor(()=>expect(screen.getByRole('button',{name:/^Workspace/})).toBeEnabled());
   openSwitcher();confirmDeletion();
   expect(app.posts).toHaveLength(0);
-  fireEvent.click(screen.getByRole('button',{name:'Delete this demonstration'}));
-  await screen.findByText('Selected demonstration deleted.');
+  fireEvent.click(screen.getByRole('button',{name:'Delete this workspace'}));
+  await screen.findByText('Selected workspace deleted.');
   expect(localStorage.getItem(workspaceKey)).toBeNull();
   expect(app.posts).toHaveLength(1);expect(app.posts[0]).toMatchObject({confirmed_demonstration_id:did,confirm:true});
   // The committed deletion clears the selection and rediscovers without creating a replacement.
-  expect(await screen.findByText(/No saved demonstrations/)).toBeInTheDocument();
+  expect(await screen.findByText(/No saved workspaces/)).toBeInTheDocument();
   expect(localStorage.getItem('selected_demonstration_id')).toBeNull();
   expect(app.posts).toHaveLength(1);
 });
@@ -59,14 +59,14 @@ it('keeps the switcher deletion locked while a case request is pending, at rende
   await waitFor(()=>expect(screen.getByRole('button',{name:/^Workspace/})).toBeEnabled());
   await screen.findByRole('region',{name:'Still to collect'});
   openSwitcher();
-  expect(screen.getByRole('button',{name:'Review selected-copy deletion'})).toBeDisabled();
+  expect(screen.getByRole('button',{name:'Review workspace deletion'})).toBeDisabled();
   unmount();localStorage.clear();
   localStorage.setItem(`promisekeeper.operation.${did}.${cid}.investigation`,JSON.stringify({schema_version:'1',operation_id:'start-operation'}));
   render(<App api={app.api}/>);
   await waitFor(()=>expect(screen.getByRole('button',{name:/^Workspace/})).toBeEnabled());
   await screen.findByRole('region',{name:'Still to collect'});
   openSwitcher();
-  expect(screen.getByRole('button',{name:'Review selected-copy deletion'})).toBeDisabled();
+  expect(screen.getByRole('button',{name:'Review workspace deletion'})).toBeDisabled();
   cleanup();localStorage.clear();
   render(<App api={app.api}/>);
   await waitFor(()=>expect(screen.getByRole('button',{name:/^Workspace/})).toBeEnabled());
@@ -74,8 +74,8 @@ it('keeps the switcher deletion locked while a case request is pending, at rende
   openSwitcher();confirmDeletion();
   // Retained by another tab after this control rendered: no notification reaches it, so the click re-checks.
   localStorage.setItem(`promisekeeper.pending.${did}.${cid}`,JSON.stringify({kind:'closure',path:'/closure',operation:{schema_version:'1',operation_id:'late-operation'}}));
-  fireEvent.click(screen.getByRole('button',{name:'Delete this demonstration'}));
-  expect(screen.getByRole('alert')).toHaveTextContent('Reconcile the pending case request before deleting this copy.');
+  fireEvent.click(screen.getByRole('button',{name:'Delete this workspace'}));
+  expect(screen.getByRole('alert')).toHaveTextContent('Reconcile the pending case request before deleting this workspace.');
   expect(app.posts).toHaveLength(0);expect(localStorage.getItem(workspaceKey)).toBeNull();
 });
 
@@ -83,13 +83,13 @@ it('keeps an uncertain deletion pending until its committed receipt is found',as
   const app=deletionApp({post:'lost',lookup:'committed'});render(<App api={app.api}/>);
   await waitFor(()=>expect(screen.getByRole('button',{name:/^Workspace/})).toBeEnabled());
   await screen.findByRole('region',{name:'Still to collect'});
-  openSwitcher();confirmDeletion();fireEvent.click(screen.getByRole('button',{name:'Delete this demonstration'}));
+  openSwitcher();confirmDeletion();fireEvent.click(screen.getByRole('button',{name:'Delete this workspace'}));
   await screen.findByText(/Connection unavailable/);
-  expect(screen.queryByText('Selected demonstration deleted.')).not.toBeInTheDocument();
+  expect(screen.queryByText('Selected workspace deleted.')).not.toBeInTheDocument();
   expect(localStorage.getItem(workspaceKey)).toContain(app.posts[0].operation_id);
-  const notice=screen.getByRole('region',{name:'Pending demonstration deletion'});
+  const notice=screen.getByRole('region',{name:'Pending workspace deletion'});
   fireEvent.click(within(notice).getByRole('button',{name:'Check saved request outcome'}));
-  await screen.findByText('Selected demonstration deleted.');
+  await screen.findByText('Selected workspace deleted.');
   expect(localStorage.getItem(workspaceKey)).toBeNull();
   expect(app.posts).toHaveLength(1);
 });
@@ -99,19 +99,19 @@ it('an uncertain deletion stays visible outside the switcher, locks case command
   const app=deletionApp({post:'lost-then-commit'});render(<App api={app.api}/>);
   await screen.findByRole('heading',{level:1,name:'Studio North'});
   expect(screen.getByRole('button',{name:'Investigate case'})).toBeEnabled();
-  await waitFor(()=>expect(screen.getByRole('button',{name:'Preview selected fictional update'})).toBeEnabled());
-  openSwitcher();confirmDeletion();fireEvent.click(screen.getByRole('button',{name:'Delete this demonstration'}));
+  await waitFor(()=>expect(screen.getByRole('button',{name:'Review case reopening'})).toBeEnabled());
+  openSwitcher();confirmDeletion();fireEvent.click(screen.getByRole('button',{name:'Delete this workspace'}));
   await screen.findByText(/Connection unavailable/);
   openSwitcher();
-  expect(screen.queryByRole('button',{name:'Delete this demonstration'})).not.toBeInTheDocument();
-  const notice=screen.getByRole('region',{name:'Pending demonstration deletion'});
+  expect(screen.queryByRole('button',{name:'Delete this workspace'})).not.toBeInTheDocument();
+  const notice=screen.getByRole('region',{name:'Pending workspace deletion'});
   expect(notice).toHaveTextContent('case actions stay locked');
   // Every case command in this copy is fenced while the deletion outcome is unknown.
   expect(screen.getByRole('button',{name:'Investigate case'})).toBeDisabled();
-  expect(screen.getByRole('button',{name:'Preview selected fictional update'})).toBeDisabled();
-  expect(screen.getAllByText('A request is pending for this copy and case. Its exact payload is retained.').length).toBeGreaterThan(0);
+  expect(screen.getByRole('button',{name:'Review case reopening'})).toBeDisabled();
+  expect(screen.getAllByText('A request is pending for this workspace and case. Its exact payload is retained.').length).toBeGreaterThan(0);
   fireEvent.click(within(notice).getByRole('button',{name:'Retry original request'}));
-  await screen.findByText('Selected demonstration deleted.');
+  await screen.findByText('Selected workspace deleted.');
   expect(app.posts).toHaveLength(2);expect(app.posts[1]).toEqual(app.posts[0]);
   expect(localStorage.getItem(workspaceKey)).toBeNull();
   await waitFor(()=>expect(localStorage.getItem('selected_demonstration_id')).toBeNull());

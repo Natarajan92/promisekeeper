@@ -4,7 +4,7 @@ import { FinancialSummary } from '../cases/CaseEvidence';
 import { actionTitle, instant, localDates, money, words } from '../components/format';
 
 export function FindingsView({result,view,onSource,onNavigate,actions,team}:{result:Result;view:CaseView;onSource:(id:string)=>void;onNavigate?:(section:'evidence'|'review')=>void;actions?:ReactNode;team?:ReactNode}) {
-  const [developerOpen,setDeveloperOpen]=useState(false);
+  const [processingOpen,setProcessingOpen]=useState(false);
   const headingId=useId();
   const draftState=view.draft_generation_attempt?.status ?? view.draft_generation_state;
   const messageAction=draftState==='RUNNING'?'Check message preparation':draftState==='FAILED'?'Review message recovery':'Review suggested message';
@@ -57,7 +57,7 @@ export function FindingsView({result,view,onSource,onNavigate,actions,team}:{res
         {result.action==='VERIFY_PAYMENT'&&<button onClick={()=>onNavigate('evidence')}>Inspect payment evidence</button>}
       </div>}
     </div>
-    {result.action==='VERIFY_PAYMENT'&&<aside className="notice"><p>Verify the evidence before any payment demand.</p><p>Check your bank statement or accounting records outside PromiseKeeper to confirm that the claimed payment settled and belongs to this invoice. This app shows the evidence saved in this case; it does not connect to your bank.</p>{view.catalogue_case_id==='PK-003'&&<p>In this demo, the fictional settlement update in History supplies the verified payment record. Review and confirm that update, then investigate again to get a new saved recommendation.</p>}</aside>}
+    {result.action==='VERIFY_PAYMENT'&&<aside className="notice"><p>Verify the evidence before any payment demand.</p><p>Check your bank statement or accounting records outside PromiseKeeper to confirm that the claimed payment settled and belongs to this invoice. This app shows the evidence saved in this case; it does not connect to your bank.</p></aside>}
     {result.action==='CLOSE'&&<p className="notice">This recommendation does not close the case. Review the settlement in Case actions and explicitly confirm case closure.</p>}
     {result.action==='WAIT'&&<div className="review-boundary">
       <h3>Review at {instant(result.review_at)}</h3>
@@ -65,7 +65,7 @@ export function FindingsView({result,view,onSource,onNavigate,actions,team}:{res
       <p>Invoice overdue boundary {instant(result.financial_facts.due_at)}</p>
     </div>}
     {actions}
-    {team&&<details className="developer-insights" onToggle={event=>setDeveloperOpen(event.currentTarget.open)}><summary>Developer insights</summary>{developerOpen&&team}</details>}
+    {team&&<details className="processing-details" onToggle={event=>setProcessingOpen(event.currentTarget.open)}><summary>Processing details</summary>{processingOpen&&team}</details>}
     {result.financial_facts.issues.length>0&&<><h3>Financial issues</h3>{issueList(result.financial_facts.issues)}</>}
     {!!result.commitment_issues?.length&&<><h3>Commitment issues</h3>{issueList(result.commitment_issues)}</>}
     {!!result.evidence_observations?.length&&<><h3>Evidence observations</h3><p className="subtle">Captured in this investigation's saved snapshot.</p><ul>{result.evidence_observations.map((observation,index)=><li key={index}>

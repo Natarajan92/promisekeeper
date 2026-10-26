@@ -9,14 +9,13 @@ import {routeLink} from '../routing';
 import type {PageProps} from '../store/useWorkspace';
 import '../intake/upload.css';
 
-const PACK='docs/demo-import/course-demo';
-const GUIDE:Record<UploadStep,{intro:string;file:string|null}>={
-  1:{intro:'Upload your customer list, a CSV export from your accounting tool. You see a preview first; nothing is saved until you confirm.',file:'01-customers.csv'},
-  2:{intro:'Upload the invoices you are waiting to be paid for. Each invoice becomes a case that PromiseKeeper keeps track of.',file:'02-invoices.csv'},
-  3:{intro:'Upload your bank statement or receipts export. We only read it. Nothing is matched to an invoice until you say so in step 5.',file:'03-bank-statement.csv'},
-  4:{intro:'Add customer emails or WhatsApp chats, one file at a time. Choose the invoice each message is about and confirm who sent it. Promises are only taken from customer messages.',file:'04-messages/ (one file at a time)'},
-  5:{intro:'Tell PromiseKeeper which receipt pays which invoice. Suggestions are hints from names only; you confirm every match. You may leave a receipt unallocated.',file:null},
-  6:{intro:'Confirm that you checked the payment records for each invoice, then start the morning check. Your AI assistant then suggests the next step for every case.',file:null},
+const GUIDE:Record<UploadStep,string>={
+  1:'Upload your customer list, a CSV export from your accounting tool. You see a preview first; nothing is saved until you confirm.',
+  2:'Upload the invoices you are waiting to be paid for. Each invoice becomes a case that PromiseKeeper keeps track of.',
+  3:'Upload your bank statement or receipts export. We only read it. Nothing is matched to an invoice until you say so in step 5.',
+  4:'Add customer emails or WhatsApp chats, one file at a time. Choose the invoice each message is about and confirm who sent it. Promises are only taken from customer messages.',
+  5:'Tell PromiseKeeper which receipt pays which invoice. Suggestions are hints from names only; you confirm every match. You may leave a receipt unallocated.',
+  6:'Confirm that you checked the payment records for each invoice, then start the morning check to get a suggested next step for every case.',
 };
 
 // How many receipts were still open when the owner moved past Match payments with Continue.
@@ -32,7 +31,7 @@ function writePassed(did:string,open:number|null) {
 }
 
 export function UploadPage({ws,route,navigate}:PageProps) {
-  // A demonstration copy is never imported into: without an imported selection, step 1 starts a new workspace.
+  // Uploads only modify imported workspaces; other saved workspaces remain read-only to intake.
   const did=ws.imported?ws.selected:null;
   const [overview,setOverview]=useState<{did:string;data:IntakeOverview}|null>(null);
   const [review,setReview]=useState<{did:string;view:MorningReviewView|null}|null>(null);
@@ -73,17 +72,14 @@ export function UploadPage({ws,route,navigate}:PageProps) {
   return <div className="upload-page">
     <div className="upload-head">
       <div><h1>Bring in your records</h1><p>Use the CSV exports from your accounting tool and bank, plus any customer messages. Go step by step; nothing is saved until you confirm.</p></div>
-      <p className="upload-samples">Demo files: {PACK} (see START-HERE.md)</p>
     </div>
-    <p className="upload-fictional">Fictional local demonstration only. No source connections, authentication or customer sending. Offline text rules extract supported message wording; no live model is called by intake.</p>
     {!active?<p role="status">Loading your upload progress…</p>:<div className="upload-layout">
       <aside className="upload-steps-card"><Stepper steps={steps} active={active} navigate={navigate}/></aside>
       <section className="upload-step-card" aria-labelledby="upload-step-heading">
         <header className="upload-step-head">
           <h2 id="upload-step-heading">Step {active} · {STEP_LABEL[active]}</h2>
-          <p>{GUIDE[active].intro}</p>
-          {GUIDE[active].file&&<p className="upload-file-hint">Demo file: <code>{GUIDE[active].file}</code></p>}
-          {ws.selected&&!ws.imported&&active<=2&&<p className="upload-kind-note">You are viewing a demonstration copy. Uploading here starts a separate new workspace; the copy is not changed.</p>}
+          <p>{GUIDE[active]}</p>
+          {ws.selected&&!ws.imported&&active<=2&&<p className="upload-kind-note">Uploading here creates a new workspace. Use the Workspace menu to return to your saved records.</p>}
           {active===6&&allCovered&&<p className="upload-ready">Every invoice is confirmed. <button className="text-button" onClick={()=>document.getElementById('morning-heading')?.scrollIntoView?.({block:'start'})}>Jump to the morning check</button></p>}
         </header>
         {!did&&active>=3?<div className="upload-needs-workspace notice"><p>This step adds to an upload workspace, and none is selected yet. Start with step 1, Customers, to create one.</p><button onClick={()=>go(1)}>Go to step 1, Customers</button></div>:
